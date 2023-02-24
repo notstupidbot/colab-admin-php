@@ -9,9 +9,9 @@ $assets = APPPATH.'../assets/';
 
 foreach (glob($assets.'source*.css') as $filename) {
 	?>
-    <link rel="stylesheet" href="/assets/<?=basename($filename)?>">
+    <link rel="stylesheet" href="/assets/<?php echo basename($filename)?>">
 
-	<?
+	<?php
 	break;
 }
 ?>	
@@ -24,8 +24,8 @@ foreach (glob($assets.'source*.css') as $filename) {
 
 foreach (glob($assets.'app*.js') as $filename) {
 	?>
-	<script type="module" crossorigin src="/assets/<?=basename($filename)?>"></script>
-	<?
+	<script type="module" crossorigin src="/assets/<?php echo basename($filename)?>"></script>
+	<?php
 	break;
 }?>
 </body>
