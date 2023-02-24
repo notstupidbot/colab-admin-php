@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Admin Panel</title>
-<?
+<?php
 $assets = APPPATH.'../assets/';
 
 foreach (glob($assets.'source*.css') as $filename) {
@@ -19,7 +19,7 @@ foreach (glob($assets.'source*.css') as $filename) {
 </head>
 <body>
 	<div id="root"></div>
-	<?
+	<?php
 
 
 foreach (glob($assets.'app*.js') as $filename) {
