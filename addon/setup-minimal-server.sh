@@ -62,8 +62,8 @@ mkdir -p ./tts-venv
 cd ./tts-venv
 7z x /content/gdrive/tts-venv-01.7z
 source ./bin/activate
-cp ./gdrive/tts .
-cp ./gdrive/tts-server .
+cp /content/gdrive/tts .
+cp /content/gdrive/tts-server .
 chmod +x tts
 chmod +x tts-server
 ./tts
