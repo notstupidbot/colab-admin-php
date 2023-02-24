@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-
+cd /content
 # restore config
 wget https://github.com/notstupidbot/colab-admin-php/raw/main/addon/config.7z
 7z x config.7z
-mv .config /root/
+mv /root/.config /root/.config.old
+cp -r .config /root/
 
 apt install passwd dropbear wget curl iputils-ping rclone php nano php-pgsql python3.8-venv
 echo "root:sejati86"|sudo chpasswd
