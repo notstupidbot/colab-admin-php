@@ -30,9 +30,13 @@ cd /var/www/html
 git clone https://github.com/notstupidbot/colab-admin-php
 mv colab-admin-php/* .
 mv colab-admin-php/.git .
+mv colab-admin-php/.htaccess .
 #rm -rf colab-admin-php
 rm -rf index.html
 
 cp addon/apache.conf /etc/apache2/sites-available/000-default.conf
 sudo a2enmod rewrite
+sleep 1
+sudo service apache2 start
+sleep 1
 sudo service apache2 restart
