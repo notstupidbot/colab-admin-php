@@ -64,6 +64,10 @@ cd ./tts-venv
 source ./bin/activate
 cp /content/gdrive/tts .
 cp /content/gdrive/tts-server .
+pip3 install TTS
+git clone https://github.com/Wikidepia/g2p-id
+pip3 install -U g2p-id/
+tts
 chmod +x tts
 chmod +x tts-server
 ./tts
