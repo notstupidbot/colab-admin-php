@@ -59,7 +59,7 @@ echo "Waiting for 5s for drive mounted"
 sleep 5
 ls ./gdrive
 mkdir -p ./tts-venv
-cd ../tts-venv
+cd ./tts-venv
 7z x ./gdrive/tts-venv-01.7z
 source ./bin/activate
 cp ./gdrive/tts .
