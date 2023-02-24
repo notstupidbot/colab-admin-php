@@ -52,6 +52,7 @@ sudo service apache2 restart
 # 10m6VHirMIBjT3ZKxRyWlKhS0DQyQVGhb
 #!wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=10m6VHirMIBjT3ZKxRyWlKhS0DQyQVGhb' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=10m6VHirMIBjT3ZKxRyWlKhS0DQyQVGhb" -O sid_amd64.7z && rm -rf /tmp/cookies.txt
 #001https://drive.google.com/file/d/1KHxm9FY15t-gwPUYRVzh1AOglKreVGKQ/view?usp=share_link
+cd /content
 mkdir -p gdrive
 rclone mount gdrive: gdrive --daemon
 ls gdrive
