@@ -55,13 +55,15 @@ sudo service apache2 restart
 cd /content
 mkdir -p gdrive
 rclone mount gdrive: ./gdrive --daemon
-echo "Waiting for 10s"
-sleep 10
+echo "Waiting for 5s for drive mounted"
+sleep 5
 ls ./gdrive
-
+mkdir -p ./tts-venv
+cd ../tts-venv
 7z x ./gdrive/tts-venv-01.7z
-
-source ./tts-venv/bin/activate
+source ./bin/activate
 cp ./gdrive/tts .
+cp ./gdrive/tts-server .
 chmod +x tts
+chmod +x tts-server
 ./tts
