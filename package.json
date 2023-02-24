@@ -1,0 +1,21 @@
+{
+  "name": "colab-admin-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -rfv assets/*{.js,.css,.svg} && rm -fv index.html && cp -v source.html source.html.orig && vite build && mv -v source.html index.html&&mv -v source.html.orig source.html",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "vite": "^4.1.0"
+  }
+}
