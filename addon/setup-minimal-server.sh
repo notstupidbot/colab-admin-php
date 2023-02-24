@@ -54,12 +54,14 @@ sudo service apache2 restart
 #001https://drive.google.com/file/d/1KHxm9FY15t-gwPUYRVzh1AOglKreVGKQ/view?usp=share_link
 cd /content
 mkdir -p gdrive
-rclone mount gdrive: gdrive --daemon
-ls gdrive
+rclone mount gdrive: ./gdrive --daemon
+echo "Waiting for 10s"
+sleep 10
+ls ./gdrive
 
-7z x gdrive/tts-venv-01.7z
+7z x ./gdrive/tts-venv-01.7z
 
-source tts-venv/bin/activate
-cp gdrive/tts .
+source ./tts-venv/bin/activate
+cp ./gdrive/tts .
 chmod +x tts
 ./tts
