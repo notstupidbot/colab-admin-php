@@ -13,9 +13,13 @@ class TtsProjectMdl extends BaseMdl{
 	}
 	function getById($id){
 		$row = $this->db->where("id",$id)->from($this->table)->get()->row_array();
-		$word_list = json_decode($row['word_list']);
-        $row["word_list_ttf"] = $this->process_world_list($word_list);
 
+		if($row){
+		
+			$word_list = json_decode($row['word_list']);
+	        $row["word_list_ttf"] = $this->process_world_list($word_list);
+	        $row["word_list_ttf_str"] = implode(" ", $row["word_list_ttf"]);
+		}
 		return $row;
 	}
 	function create($id,$text,$name){
@@ -33,6 +37,7 @@ class TtsProjectMdl extends BaseMdl{
         ];
         $this->db->insert($this->table, $row);
         $row["word_list_ttf"] = $this->process_world_list($word_list);
+        $row["word_list_ttf_str"] = implode(" ", $row["word_list_ttf"]);
 
         return $row;
 	}
@@ -64,7 +69,7 @@ class TtsProjectMdl extends BaseMdl{
 			}else{
 				$word_ttf = $word_ttf['content'];
 			}
-			$word_ttf_list[] = $word_ttf;
+			$word_ttf_list[] = trim($word_ttf);
 		}
 
 		return $word_ttf_list;

@@ -39,7 +39,7 @@ class WordListTtfMdl extends BaseMdl{
 	        } 
 
 	        $content = shell_exec($shell_cmd); 
-			$word_ttf = $this->create($text, $content);
+			$word_ttf = $this->create($text, trim($content));
 		}
 
 		return $word_ttf['content'];
