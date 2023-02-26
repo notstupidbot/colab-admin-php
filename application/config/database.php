@@ -75,9 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'db.tpoausqyzvpuuxuuwmni.supabase.co',
+	'hostname' => 'localhost',
+	// 'hostname' => 'db.tpoausqyzvpuuxuuwmni.supabase.co',
 	'username' => 'postgres',
-	'password' => 'rOcUSkrs6WfOlcC3',
+	'password' => 'postgres',
+	// 'password' => 'rOcUSkrs6WfOlcC3',
 	'database' => 'postgres',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
