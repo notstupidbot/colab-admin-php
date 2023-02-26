@@ -10,6 +10,8 @@ class Tts extends REST_Controller {
         parent::__construct($config);
         $this->load->database();
         $this->load->model("TtsProjectMdl","model");
+        $this->load->model("WordListMdl","m_word_list");
+        $this->load->model("WordListTtfMdl","m_word_list_ttf");
 
     }
 
@@ -23,7 +25,7 @@ class Tts extends REST_Controller {
         $project = $this->model->getById($id);
 
         if(!$project){
-            $project = $this->model->create($id,$text);
+            $project = $this->model->create($id,$text,$id);
         }
 
 
@@ -47,20 +49,13 @@ class Tts extends REST_Controller {
 
     function convertTtf_get(){
         $text = $this->get("text");
-        $python = "python";
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            // $md5sum = shell_exec("md5sum -u ".$output_file);
-        } else {
-            $python = "python3";
-        }
-        if($text){
-            $shell_cmd = $python . " ". realpath(APPPATH . "../addon/convert-ttf.py")." ". $text;
-            $output_text = shell_exec($shell_cmd);
-            $this->response(["output_text" => $output_text])    ;
-        }        
+        $this->response([
+            "text" => $text,
+            "output_text" => $this->m_word_list_ttf->convert($text)
+        ]);
+             
         
-
 
     }        
 

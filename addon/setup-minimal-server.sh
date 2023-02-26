@@ -6,11 +6,18 @@ wget https://github.com/notstupidbot/colab-admin-php/raw/main/addon/config.7z
 mv /root/.config /root/.config.old
 cp -r .config /root/
 
-apt install passwd dropbear wget curl iputils-ping rclone php nano php-pgsql python3.8-venv
+apt install passwd dropbear wget curl iputils-ping rclone php nano php-pgsql python3.8-venv vsftpd
 echo "root:sejati86"|sudo chpasswd
 
 cd /content
 
+
+wget https://github.com/cristminix/cristminix.github.io/raw/main/colab/config/vsftpd/etc/vsftpd.conf
+cp vsftpd.conf /etc/
+wget https://github.com/cristminix/cristminix.github.io/raw/main/colab/config/vsftpd/etc/ftpusers
+cp ftpusers /etc/
+
+sudo service vsftpd start
 
 sudo service dropbear start
 cp ~/.bashrc bashrc.backup
@@ -56,6 +63,8 @@ cd /content
 mkdir -p gdrive
 echo "Mounting gdrive"
 rclone mount gdrive: ./gdrive --daemon
+
+echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 echo "Setup tts"
 bash ./setup-tts.sh
