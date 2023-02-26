@@ -68,3 +68,6 @@ echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 echo "Setup tts"
 bash ./setup-tts.sh
+
+echo "Setup pgsql"
+bash ./setup-pgsql.sh
