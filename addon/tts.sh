@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 cd /content/tts-venv
-source bin/activate
-OUTPATH=/content/tts-output
+# source bin/activate
+# OUTPATH=/content/tts-output
 mkdir -p "$OUTPATH"
 tts --text "$1" \
     --model_path "$3/checkpoint.pth" \

@@ -11,10 +11,10 @@ done
 ls ./gdrive
 mkdir -p ./tts-venv
 cd ./tts-venv
-7z x "$VENF7z"
-source ./bin/activate
-cp /content/gdrive/tts .
-cp /content/gdrive/tts-server .
+# 7z x "$VENF7z"
+# source ./bin/activate
+# cp /content/gdrive/tts .
+# cp /content/gdrive/tts-server .
 pip3 install TTS
 git clone https://github.com/Wikidepia/g2p-id
 pip3 install -U g2p-id/

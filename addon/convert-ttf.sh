@@ -6,7 +6,7 @@ tmp_file=$2
 CONVERT_TTF_PY=/var/www/html/addon/convert-ttf.py
 PWD=`pwd`
 cd /content/tts-venv
-source bin/activate
+# source bin/activate
 
 python3 $CONVERT_TTF_PY "$1" #>$tmp_file
 
