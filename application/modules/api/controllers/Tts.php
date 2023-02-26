@@ -9,71 +9,59 @@ class Tts extends REST_Controller {
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
+        $this->load->model("TtsProjectMdl","model");
+
     }
 
     function index_post() {
-        $text = $this->post('text');
-        $word_list = explode(" ",$text);
         
-        $output_file =  tempnam(sys_get_temp_dir(), md5('tts-api'.date('YmdHis')));
+        $text = $this->post('text');
 
-        file_put_contents($output_file, $text);
+        
+        $id = $this->model->createId($text);
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $md5sum = shell_exec("md5sum -u ".$output_file);
-        } else {
-            $md5sum = shell_exec("md5sum ".$output_file);
-            
+        $project = $this->model->getById($id);
+
+        if(!$project){
+            $project = $this->model->create($id,$text);
         }
-        $md5sum = explode(' ', $md5sum);
+
 
         $output = [
-            "id" => $md5sum[0],
-            "text" => $text,
-            "word_count" => count($word_list),
-            "word_list" => $word_list,
-            "output_path" => "",
-            
-        ];
-        if ($text){
-            
-        }
+            "id" => $id,
+            "project" => $project
+
+        ]; 
         $this->response($output, 200);
     }
 
-    function word_list_get() {
-        // $text = $this->post('text');
+    
 
-        $results = [
-            // "output_path" => "",
-            // "id" => "",
-            // "word_count" => 0,
-            // "text" => $text
-        ];
-       
-        $this->response($results, 200);
+    function project_get() {
+        
+        $id = $this->get("id");
+        $project = $this->model->getById($id);
+
+        $this->response($project, 200);
     }
-    //http://localhost/api/tts/md5sum
-    function md5sum_post() {
-        error_reporting(E_ALL);
-        $text = $this->post('text');
-        $output_file =  tempnam(sys_get_temp_dir(), md5('tts-api'.date('YmdHis')));
 
-        file_put_contents($output_file, $text);
+    function convertTtf_get(){
+        $text = $this->get("text");
+        $python = "python";
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $md5sum = shell_exec("md5sum -u ".$output_file);
+            // $md5sum = shell_exec("md5sum -u ".$output_file);
         } else {
-            $md5sum = shell_exec("md5sum ".$output_file);
-            
+            $python = "python3";
         }
-        $md5sum = explode(' ', $md5sum);
-        $results = [
-            "output_file" => $output_file,
-            "md5sum" => $md5sum[0]
-        ];
-       // print_r($results);
-        $this->response($results, 200);
-    }    
+        if($text){
+            $shell_cmd = $python . " ". realpath(APPPATH . "../addon/convert-ttf.py")." ". $text;
+            $output_text = shell_exec($shell_cmd);
+            $this->response(["output_text" => $output_text])    ;
+        }        
+        
+
+
+    }        
 
 }
