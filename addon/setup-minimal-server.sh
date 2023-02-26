@@ -54,20 +54,8 @@ sudo service apache2 restart
 #001https://drive.google.com/file/d/1KHxm9FY15t-gwPUYRVzh1AOglKreVGKQ/view?usp=share_link
 cd /content
 mkdir -p gdrive
+echo "Mounting gdrive"
 rclone mount gdrive: ./gdrive --daemon
-echo "Waiting for 5s for drive mounted"
-sleep 5
-ls ./gdrive
-mkdir -p ./tts-venv
-cd ./tts-venv
-7z x /content/gdrive/tts-venv-01.7z
-source ./bin/activate
-cp /content/gdrive/tts .
-cp /content/gdrive/tts-server .
-pip3 install TTS
-git clone https://github.com/Wikidepia/g2p-id
-pip3 install -U g2p-id/
-tts
-chmod +x tts
-chmod +x tts-server
-./tts
+
+echo "Setup tts"
+bash ./setup-tts.sh
