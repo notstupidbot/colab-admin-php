@@ -32,14 +32,8 @@ class WordListTtfMdl extends BaseMdl{
 		$word_ttf = $this->getByWord($text);
 
 		if(!$word_ttf){
-			$shell_path = realpath(APPPATH . "../addon/convert-ttf.sh");
-	        $shell_cmd =  "sudo bash ".$shell_path ." \"". $text . "\" ";
-	  
-	        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-	            $shell_cmd = $python . " ". realpath(APPPATH . "../addon/convert-ttf.py")." ". $text;
-	        } 
-
-	        $content = shell_exec($shell_cmd); 
+			
+	        $content =  convert_ttf($text); 
 			$word_ttf = $this->create($text, trim($content));
 		}
 
