@@ -8,7 +8,7 @@ class WordListMdl extends BaseMdl{
 	
 	function create($content){
         
-
+		$content = strtolower($content);
 		$row = ["content"=>$content];
         $this->db->insert($this->table, $row);
         $row["id"] = $this->db->insert_id();
@@ -17,6 +17,7 @@ class WordListMdl extends BaseMdl{
 	}
 
 	function getByWord($word){
+		$word = strtolower($word);
 		return $this->db->where("content", $word)->from($this->table)->get()->row_array();
 	}
 }

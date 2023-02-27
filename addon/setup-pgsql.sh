@@ -6,3 +6,5 @@ sudo apt update
 apt install postgresql postgresql-contrib
 
 sudo service postgresql start
+
+su - postgres -c "psql -U postgres -d postgres -c \"alter user postgres with password 'sejati86';\""

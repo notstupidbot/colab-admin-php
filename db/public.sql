@@ -154,48 +154,16 @@ INSERT INTO "public"."word_list_ttf" VALUES (28, 'jaŋ
 INSERT INTO "public"."word_list_ttf" VALUES (29, 'kruˈsial
 ', '', 25);
 
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-ALTER SEQUENCE "public"."app_id_seq"
-OWNED BY "public"."app"."id";
-SELECT setval('"public"."app_id_seq"', 1, true);
 
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-ALTER SEQUENCE "public"."telepon_id_seq"
-OWNED BY "public"."telepon"."id";
-SELECT setval('"public"."telepon_id_seq"', 3, true);
 
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-ALTER SEQUENCE "public"."word_list_id_seq"
-OWNED BY "public"."word_list"."id";
-SELECT setval('"public"."word_list_id_seq"', 25, true);
 
--- ----------------------------
--- Alter sequences owned by
--- ----------------------------
-ALTER SEQUENCE "public"."word_list_ttf_id_seq"
-OWNED BY "public"."word_list_ttf"."id";
-SELECT setval('"public"."word_list_ttf_id_seq"', 29, true);
-
--- ----------------------------
--- Auto increment value for app
--- ----------------------------
-SELECT setval('"public"."app_id_seq"', 1, true);
 
 -- ----------------------------
 -- Primary Key structure for table app
 -- ----------------------------
 ALTER TABLE "public"."app" ADD CONSTRAINT "app_pkey" PRIMARY KEY ("id");
 
--- ----------------------------
--- Auto increment value for telepon
--- ----------------------------
-SELECT setval('"public"."telepon_id_seq"', 3, true);
+
 
 -- ----------------------------
 -- Primary Key structure for table telepon
@@ -207,20 +175,13 @@ ALTER TABLE "public"."telepon" ADD CONSTRAINT "telepon_pkey" PRIMARY KEY ("id");
 -- ----------------------------
 ALTER TABLE "public"."tts_project" ADD CONSTRAINT "tts_project_pkey" PRIMARY KEY ("id");
 
--- ----------------------------
--- Auto increment value for word_list
--- ----------------------------
-SELECT setval('"public"."word_list_id_seq"', 25, true);
+
 
 -- ----------------------------
 -- Primary Key structure for table word_list
 -- ----------------------------
 ALTER TABLE "public"."word_list" ADD CONSTRAINT "word_list_pkey" PRIMARY KEY ("id");
 
--- ----------------------------
--- Auto increment value for word_list_ttf
--- ----------------------------
-SELECT setval('"public"."word_list_ttf_id_seq"', 29, true);
 
 -- ----------------------------
 -- Primary Key structure for table word_list_ttf

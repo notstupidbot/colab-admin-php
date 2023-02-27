@@ -10,6 +10,7 @@ class WordListTtfMdl extends BaseMdl{
 		$this->load->model("WordListTtfMdl","m_word_list");
 	}
 	function create($text, $content){
+		$text = strtolower($text);
         $word = $this->m_word_list->getByWord($text);
 
 		$row = ["content" => $content, "path" => "", "word_id" => $word['id']];
@@ -19,7 +20,7 @@ class WordListTtfMdl extends BaseMdl{
 	}
 
 	function getByWord($text){
-		// print_r(__FILE__.":".__LINE__.":".$text);
+		$text = strtolower($text);
 
 		$word = $this->m_word_list->getByWord($text);
 		if(!$word){
@@ -28,6 +29,7 @@ class WordListTtfMdl extends BaseMdl{
 		return $this->db->where("word_id", $word["id"])->from($this->table)->get()->row_array();
 	}
 	function convert($text){
+		$text = strtolower($text);
 		$word_ttf = $this->getByWord($text);
 
 		if(!$word_ttf){
