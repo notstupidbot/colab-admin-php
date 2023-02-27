@@ -71,3 +71,6 @@ bash ./setup-tts.sh
 
 echo "Setup pgsql"
 bash ./setup-pgsql.sh
+
+echo "Setup push-server"
+bash ./setup-push-server.sh

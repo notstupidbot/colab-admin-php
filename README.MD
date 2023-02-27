@@ -1,5 +1,10 @@
 ***Colab Admin PHP***
-
+**Must be running Service**
+```
+httpd or nginx on port 80
+pgsql on port 5432
+socket server on port 7000
+```
 **CLI List**
 
 Server related setup
