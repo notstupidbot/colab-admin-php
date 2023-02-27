@@ -12,9 +12,9 @@ class Restore extends MX_Controller {
 	{
 		echo "Restoring database\n";
 		
-		// $this->tts_project();
-		// $this->word_list();
-		// $this->word_list_ttf();
+		$this->tts_project();
+		$this->word_list();
+		$this->word_list_ttf();
 
 
 		$this->load_db_dump();
