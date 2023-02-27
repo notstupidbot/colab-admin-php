@@ -10,6 +10,6 @@ class Welcome extends MY_Controller {
 	public function index()
 	{
 		$data = $this->db->list_tables();
-		print_r($data);
+		echo json_encode($data);
 	}
 }

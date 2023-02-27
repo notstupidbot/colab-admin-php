@@ -10,7 +10,7 @@ class Restore extends MX_Controller {
 	}
 	public function index()
 	{
-		echo "restore";
+		echo "Restoring database\n";
 		/*
 "id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "text" text COLLATE "pg_catalog"."default",
@@ -42,7 +42,9 @@ class Restore extends MX_Controller {
 		        ),
 		);
 		*/
-		
+		$this->tts_project();
+		$this->word_list();
+		$this->word_list_ttf();
 	}
 
 	function tts_project(){
@@ -69,12 +71,65 @@ class Restore extends MX_Controller {
 	        ),
 	        'output_file' => array(
                 'type' => 'VARCHAR',
+                'constraint' => '225',
+	        ),
+		);
+		$this->dbforge->add_field($fields);
+		echo "DROP TABLE tts_project\n";
+
+		$this->dbforge->drop_table('tts_project',true);
+		echo "CREATE TABLE tts_project\n";
+
+		$this->dbforge->create_table('tts_project');
+	}
+	function word_list(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'content' => array(
+                'type' => 'VARCHAR',
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
 		);
 		$this->dbforge->add_field($fields);
-		$this->dbforge->create_table('tts_project');
+		echo "DROP TABLE word_list\n";
+		$this->dbforge->drop_table('word_list',true);
+		echo "CREATE TABLE word_list\n";
+
+		$this->dbforge->create_table('word_list');
+	}
+	function word_list_ttf(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'content' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'word_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+	        ),
+	        'path' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '225',
+	        ),
+		);
+		$this->dbforge->add_field($fields);
+		echo "DROP TABLE word_list_ttf\n";
+
+		$this->dbforge->drop_table('word_list_ttf',true);
+		echo "CREATE TABLE word_list_ttf\n";
+
+		$this->dbforge->create_table('word_list_ttf');
 	}
 
 }

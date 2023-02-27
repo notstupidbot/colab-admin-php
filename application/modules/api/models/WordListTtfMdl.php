@@ -13,9 +13,8 @@ class WordListTtfMdl extends BaseMdl{
 		$text = strtolower($text);
         $word = $this->m_word_list->getByWord($text);
 
-		$row = ["content" => $content, "path" => "", "word_id" => $word['id']];
+		$row = ["id"=>gen_uuid(),"content" => $content, "path" => "", "word_id" => $word['id']];
         $this->db->insert($this->table, $row);
-        $row["id"] = $this->db->insert_id();
         return $row;
 	}
 
