@@ -23,11 +23,53 @@ Get tts-project list
 
 ```
 [GET]/api/tts/project
+
+example json output 
+
+[
+    {
+        "id": "0eb81f8c52f3f50e5c7fdcd50e124d33",
+        "name": "0eb81f8c52f3f50e5c7fdcd50e124d33",
+        "text": "keputusan politik harus di ukur sejauh mungkin",
+        "word_list": "[\"keputusan\",\"politik\",\"harus\",\"di\",\"ukur\",\"sejauh\",\"mungkin\"]",
+        "word_count": "7",
+        "output_file": ""
+    },
+    {
+        "id": "7f634e946b04f9564d2d96ca65dcfee6",
+        "name": "7f634e946b04f9564d2d96ca65dcfee6",
+        "text": "keputusan politik harus di ukur sejauh mungkin karena akan mempengaruhi beberapa hal yang krusial",
+        "word_list": "[\"keputusan\",\"politik\",\"harus\",\"di\",\"ukur\",\"sejauh\",\"mungkin\",\"karena\",\"akan\",\"mempengaruhi\",\"beberapa\",\"hal\",\"yang\",\"krusial\"]",
+        "word_count": "14",
+        "output_file": ""
+    }
+]
 ```
 Get tts-project detail
 
 ```
 [GET]/api/tts/project?id=0eb81f8c52f3f50e5c7fdcd50e124d33
+
+output json example
+
+{
+    "id": "0eb81f8c52f3f50e5c7fdcd50e124d33",
+    "name": "0eb81f8c52f3f50e5c7fdcd50e124d33",
+    "text": "keputusan politik harus di ukur sejauh mungkin",
+    "word_list": "[\"keputusan\",\"politik\",\"harus\",\"di\",\"ukur\",\"sejauh\",\"mungkin\"]",
+    "word_count": "7",
+    "output_file": "",
+    "word_list_ttf": [
+        "kəpuˈtusan",
+        "poˈlitɪʔ",
+        "ˈharʊs",
+        "di",
+        "ˈukʊr",
+        "səˈdʒaʊh",
+        "ˈmuŋkɪn"
+    ],
+    "word_list_ttf_str": "kəpuˈtusan poˈlitɪʔ ˈharʊs di ˈukʊr səˈdʒaʊh ˈmuŋkɪn"
+}
 ```
 Create tts-project
 
@@ -38,4 +80,32 @@ params , type FormData post
 text="akan selalu ada yang bisa membuatku tertawa dan sedih atau 
 bahagia"
 
+
+example json output
+
+{
+    "id": "0d217ca1a4cb131858258fc4c1fb41f4",
+    "project": {
+        "id": "0d217ca1a4cb131858258fc4c1fb41f4",
+        "name": "0d217ca1a4cb131858258fc4c1fb41f4",
+        "text": "akan selalu ada yang bisa membuatku tertawa dan sedih atau \nbahagia",
+        "word_list": "[\"akan\",\"selalu\",\"ada\",\"yang\",\"bisa\",\"membuatku\",\"tertawa\",\"dan\",\"sedih\",\"atau\",\"\\nbahagia\"]",
+        "word_count": "11",
+        "output_file": "",
+        "word_list_ttf": [
+            "ˈakan",
+            "səˈlalu",
+            "ˈada",
+            "jaŋ",
+            "ˈbisa",
+            "məmbuˈatku",
+            "tərˈtawa",
+            "dan",
+            "səˈdih",
+            "aˈtau",
+            "bahaˈɡia"
+        ],
+        "word_list_ttf_str": "ˈakan səˈlalu ˈada jaŋ ˈbisa məmbuˈatku tərˈtawa dan səˈdih aˈtau bahaˈɡia"
+    }
+}
 ```
