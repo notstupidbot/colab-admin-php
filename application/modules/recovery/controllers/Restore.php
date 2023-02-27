@@ -15,6 +15,7 @@ class Restore extends MX_Controller {
 		$this->tts_project();
 		$this->word_list();
 		$this->word_list_ttf();
+		$this->socket_session();
 
 
 		$this->load_db_dump();
@@ -120,13 +121,13 @@ class Restore extends MX_Controller {
 		$backup_dir = APPPATH . '../db';
 
 		foreach($tables as $table){
-			echo "Processing table $table\n";
 			$dump_files = glob("$backup_dir/$table@*.json");
 
 			$tm_latest = strtotime("1986-09-18");
 			$dump_file_latest = "";
 
 			foreach($dump_files as $dump_file){
+				
 				$filename = basename($dump_file);
 				$dt_filename = dt_dump_filename($dump_file);
 				// echo $dt_filename . "\n";
@@ -136,9 +137,42 @@ class Restore extends MX_Controller {
 					$dump_file_latest = $dump_file;
 				}
 			}
+			if(!is_file($dump_file_latest)){
+				continue;
+			}
+			echo "Processing table $table\n";
 			echo "Processing ".realpath($dump_file_latest)."\n";
+
 			restore_json_dump($table, $dump_file);
 		}
 
+	}
+
+	function socket_session(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'ip_addr' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+	        ),
+	        'uuid' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+	        ),
+	        'connected' => array(
+                'type' => 'INT',
+                'constraint' => '1',
+	        ),
+		);
+		$this->dbforge->add_field($fields);
+		echo "DROP TABLE word_list\n";
+		$this->dbforge->drop_table('socket_session',true);
+		echo "CREATE TABLE word_list\n";
+
+		$this->dbforge->create_table('socket_session');
 	}
 }

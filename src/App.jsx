@@ -4,6 +4,7 @@ import './App.css'
 import SideBar from "./components/SideBar"
 import MainContent from "./components/MainContent"
 import { io } from "socket.io-client";
+import { v4 as uuidv4 } from 'uuid';
 
 import { useBetween } from "use-between";
 import useSocketClient from "./shared/useSocketClient";
@@ -14,13 +15,15 @@ import useSocketState from "./shared/useSocketState";
 const useSharedSocketState = () => useBetween(useSocketState);
 const useSharedSocketClient = () => useBetween(useSocketClient)
 
+const socketUuid = uuidv4();
+
 function App() {
   const [count, setCount] = useState(0)
   const {socketConnected,setSocketConnected} = useSharedSocketState();
   const {socketClient,setSocketClient} = useSharedSocketClient();
   let socketReconnecting = false;  
-    let socket = null;
-  
+  let socket = null;
+
   const createSocket = ()=>{
         const url = 'ws://localhost:7000';
         if(!url){
@@ -37,12 +40,20 @@ function App() {
             setSocketConnected(true);
 
             socket.on("disconnect",()=>{
-                console.log("socket disconnect")
+                console.log("socket disconnect");
+                socket.emit("logout", {id : socket.id, uuid : socketUuid});
+
                 setSocketConnected(false);
                 // socketClient.changeUrl(url);
                 reconnectSocket();
 
             });
+
+            socket.on("log", (message)=>{
+
+            });
+
+            socket.emit("login", {id : socket.id, uuid : socketUuid});
         });
 
         setSocketClient(socket);
@@ -51,7 +62,7 @@ function App() {
     const reconnectSocket = ()=>{
         setTimeout(()=>{
             console.log("reconnecting in 5 second");
-            createSocket();
+            initSocket();
         },5000);
     }
     const initSocket = ()=>{

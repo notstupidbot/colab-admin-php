@@ -15,43 +15,48 @@ export default function SocketTesterChat (){
 	const {socketConnected} = useSharedSocketState();
 	const {socketClient} = useSharedSocketClient();
 	const [chats,setChats] = useState([]);
+	const chatStateRef = useRef();
+	chatStateRef.current = chats;
 	const online = socketConnected;
 	const chatBox = useRef(null);
-	function displayServerTyping(text){
-		const chats_ = Object.assign([],chats);
-		chats_.push({type:'server',text})
-
-		setChats(chats_)
-		scrollToBottom()
-
-	}
+	
 	function displayUserTyping(text){
-		socketClient.emit('chat',text);
-		const chats_ = Object.assign([],chats);
-		chats_.push({type:'client',text})
-		setChats(chats_)
+
+		setChats([...chats,{type:'client',text}])
 		scrollToBottom()
+		
+
 	}
 	function scrollToBottom(){
-		  chatBox.current.scrollTop=chatBox.current.scrollHeight;
+		setTimeout(()=>{
+		chatBox.current.scrollTop=chatBox.current.scrollHeight;
+
+	},250)
 
 	}
 	function _handleKeyDown(e) {
 	    if (e.key === 'Enter') {
-	      // console.log(e.target.value);
 	      displayUserTyping(e.target.value)
+	      if(socketClient){
+	      	socketClient.emit('chat',e.target.value)
+	      }
 	    }
 	  }	
+	
 	useEffect(()=>{
-		// displayUserTyping("Hello world")
 		if(socketClient){
+			if(!dontRunTwice){
+				return
+				dontRunTwice = false
+			}
 			socketClient.on("connect",()=>{
-				socketClient.on('chat',message=>{
-					displayServerTyping(message)
+				socketClient.on('chat',(message)=>{
+					setChats([...chatStateRef.current,{type:'server',text:message}])
 				})
 			});
-		}
-	},[socketConnected,socketClient])
+		} 
+		
+	},[socketClient])
 	let userCls = "absolute w-3 h-3 rounded-full left-10 top-3 ";
 	if(online){
 		userCls += "bg-green-600";
@@ -79,7 +84,7 @@ export default function SocketTesterChat (){
           		chats.map((r,index)=>{
           			if(r.type == 'server'){
           				return (
-          					<li key={index} className="flex justify-start">
+          					<li key={index} className="flex justify-end">
 				              <div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
 				                <span className="block">{r.text}</span>
 				              </div>
@@ -87,7 +92,7 @@ export default function SocketTesterChat (){
           				)
           			}else{
           				return (
-							<li  key={index} className="flex justify-end">
+							<li  key={index} className="flex justify-start">
 				              <div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
 				                <span className="block">{r.text}</span>
 				              </div>

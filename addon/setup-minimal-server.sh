@@ -74,3 +74,6 @@ bash ./setup-pgsql.sh
 
 echo "Setup push-server"
 bash ./setup-push-server.sh
+
+echo "Restore db"
+bash ./restore-db.sh
