@@ -7,5 +7,8 @@ class BaseMdl extends CI_Model{
 
 		return $row;
 	}
+	function getAll($limit=10){
 
+		return $this->db->limit($limit)->get($this->table)->result_array();
+	}
 }

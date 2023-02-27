@@ -15,7 +15,8 @@ class Tts extends REST_Controller {
 
     }
 
-    function index_post() {
+
+    function project_post() {
         
         $text = $this->post('text');
 
@@ -42,9 +43,15 @@ class Tts extends REST_Controller {
     function project_get() {
         
         $id = $this->get("id");
-        $project = $this->model->getById($id);
-
-        $this->response($project, 200);
+        if($id){
+            $project = $this->model->getById($id);
+            $this->response($project, 200);
+        }else{
+            $limit = 10;
+            $projects = $this->model->getAll($limit);
+            $this->response($projects, 200);
+        }
+ 
     }
 
     function convertTtf_get(){
