@@ -104,3 +104,39 @@ function dump_table($table, $backup_dir, $verbose = true)
 		}
 	}
 }
+
+function dt_dump_filename($filename){
+	/* Convert filename to date */
+	$filename_split = explode('@',str_replace('.json', '', $filename));
+	$dt_filename_src = $filename_split[1];
+	$dt_d_filename = substr($dt_filename_src, 0,2);
+	$dt_m_filename = substr($dt_filename_src, 2,2);
+	$dt_y_filename = substr($dt_filename_src, 4,4);
+	$dt_h_filename = substr($dt_filename_src, 8,2);
+	$dt_i_filename = substr($dt_filename_src, 10, 2);
+	$dt_s_filename = substr($dt_filename_src, 12,2);
+	$dt_filename = "$dt_y_filename-$dt_m_filename-$dt_d_filename $dt_h_filename:$dt_i_filename:$dt_s_filename";
+
+	// echo $dt_filename_src."\n";
+	// echo $dt_filename."\n";
+	return $dt_filename;
+}
+
+function restore_json_dump($table, $filename, $pk = "id"){
+	$ci = get_instance();
+	$json_buffer = file_get_contents($filename);
+	$rows = json_decode($json_buffer);
+	// print_r($json_buffer);
+	foreach($rows as $row){
+		// echo $row->id . "\n";
+		$existing_row = $ci->db->where($pk,$row->$pk)->get($table)->row();
+		if($existing_row){
+			$ci->db->from($table)->where($pk,$row->$pk)->delete();
+		}
+		// sleep(1);
+		echo ".";
+		$ci->db->insert($table, $row);	
+
+	}
+	echo "\n";
+}

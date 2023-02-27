@@ -11,40 +11,13 @@ class Restore extends MX_Controller {
 	public function index()
 	{
 		echo "Restoring database\n";
-		/*
-"id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "text" text COLLATE "pg_catalog"."default",
-  "word_count" int4,
-  "word_list" json,
-  "output_file" varchar(255) COLLATE "pg_catalog"."default",
-  "name" varchar COLLATE "pg_catalog"."default"
+		
+		// $this->tts_project();
+		// $this->word_list();
+		// $this->word_list_ttf();
 
-  $fields = array(
-		        'id' => array(
-		                'type' => 'INT',
-		                'constraint' => 5,
-		                'unsigned' => TRUE,
-		                'auto_increment' => TRUE
-		        ),
-		        'blog_title' => array(
-		                'type' => 'VARCHAR',
-		                'constraint' => '100',
-		                'unique' => TRUE,
-		        ),
-		        'blog_author' => array(
-		                'type' =>'VARCHAR',
-		                'constraint' => '100',
-		                'default' => 'King of Town',
-		        ),
-		        'blog_description' => array(
-		                'type' => 'TEXT',
-		                'null' => TRUE,
-		        ),
-		);
-		*/
-		$this->tts_project();
-		$this->word_list();
-		$this->word_list_ttf();
+
+		$this->load_db_dump();
 	}
 
 	function tts_project(){
@@ -132,4 +105,40 @@ class Restore extends MX_Controller {
 		$this->dbforge->create_table('word_list_ttf');
 	}
 
+	function load_db_dump()
+	{
+		echo "Loading db tables dump\n";
+
+		// Declare two dates in different
+		// format
+		$filename = "tts_project@27022023121011.json";
+
+		$dt_filename = dt_dump_filename($filename);
+
+
+		$tables = $this->db->list_tables();
+		$backup_dir = APPPATH . '../db';
+
+		foreach($tables as $table){
+			echo "Processing table $table\n";
+			$dump_files = glob("$backup_dir/$table@*.json");
+
+			$tm_latest = strtotime("1986-09-18");
+			$dump_file_latest = "";
+
+			foreach($dump_files as $dump_file){
+				$filename = basename($dump_file);
+				$dt_filename = dt_dump_filename($dump_file);
+				// echo $dt_filename . "\n";
+				$tm_filename = strtotime($dt_filename);
+				if($tm_filename > $tm_latest){
+					$tm_latest = $tm_filename;
+					$dump_file_latest = $dump_file;
+				}
+			}
+			echo "Processing ".realpath($dump_file_latest)."\n";
+			restore_json_dump($table, $dump_file);
+		}
+
+	}
 }
