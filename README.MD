@@ -109,3 +109,14 @@ example json output
     }
 }
 ```
+Test g2p convert ttf
+this will cache the output to database word_list_ttf
+
+```
+[GET]http://localhost/api/tts/convertTtf?text=halo
+
+{
+    "text": "halo",
+    "output_text": "ˈhalo"
+}
+```
