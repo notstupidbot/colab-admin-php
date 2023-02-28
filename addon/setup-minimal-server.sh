@@ -54,7 +54,8 @@ sleep 1
 sudo service apache2 start
 sleep 1
 sudo service apache2 restart
-
+echo "export PATH=$PATH:/tools/node/bin:/usr/local/bin">>/root/.bashrc
+echo "cd /var/www/html">>/root/.bashrc
 # tts-venv link
 # 10m6VHirMIBjT3ZKxRyWlKhS0DQyQVGhb
 #!wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=10m6VHirMIBjT3ZKxRyWlKhS0DQyQVGhb' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=10m6VHirMIBjT3ZKxRyWlKhS0DQyQVGhb" -O sid_amd64.7z && rm -rf /tmp/cookies.txt

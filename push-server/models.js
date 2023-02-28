@@ -175,6 +175,19 @@ const m_jobs = {
 
 		}
 		return null;
+	},
+	updateTtsJobStatus: async(project_id,status)=>{
+		console.log(`UPDATING STATUS ${project_id} ${status}`)
+		try{
+			const res = await client.query(`UPDATE jobs SET status='${status}' WHERE params->>'project_id' = '${project_id}'`);
+			if(res.rows){
+				return res.rows[0];
+			}
+		}catch(e){
+			console.log(e);
+
+		}
+		return null;
 	}
 }
 module.exports = {
