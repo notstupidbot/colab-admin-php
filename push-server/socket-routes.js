@@ -1,4 +1,4 @@
-const {m_socket} = require("./models");
+const {m_socket,init_db,m_jobs} = require("./models");
 
 const SocketManager = {
 	instances : {},
@@ -45,7 +45,6 @@ const SocketManager = {
 				}
 			}
 
-			return emitedSocketLength; 
 		}
 		else if(SOCKET_CLIENT_INSTANCE_ID){
 			if(typeof SocketManager.instances[SOCKET_CLIENT_INSTANCE_ID] == 'object'){
@@ -54,16 +53,15 @@ const SocketManager = {
 				emitedSocketLength += 1;
 
 			}	
-			return emitedSocketLength; 
-			
+
 		}
-		return false;
+		return emitedSocketLength;
 	}
 }
 
 function SocketRoute(SOCKET_SERVER){
 	// console.log(SOCKET_SERVER);
-	m_socket.init();
+	init_db();
 	SocketManager.server = SOCKET_SERVER;
 
 	SOCKET_SERVER.on("connection", async(SOCKET_CLIENT_INSTANCE) => {

@@ -165,3 +165,48 @@ function convert_ttf($text){
     return $content;
    
 }
+
+function init_db_table($fields, $table, $verbose=true){
+	$ci = get_instance();
+	$ci->load->dbforge();
+
+	$ci->dbforge->add_field($fields);
+	if($verbose)
+		echo "DROP TABLE $table\n";
+	$ci->dbforge->drop_table($table,true);
+	if($verbose)
+		echo "CREATE TABLE $table\n";
+
+	$ci->dbforge->create_table($table);
+}
+
+function load_db_dump($backup_dir){
+	$ci = get_instance();
+	$tables = $ci->db->list_tables();
+
+	foreach($tables as $table){
+		$dump_files = glob("$backup_dir/$table@*.json");
+
+		$tm_latest = strtotime("1986-09-18");
+		$dump_file_latest = "";
+
+		foreach($dump_files as $dump_file){
+			
+			$filename = basename($dump_file);
+			$dt_filename = dt_dump_filename($dump_file);
+			// echo $dt_filename . "\n";
+			$tm_filename = strtotime($dt_filename);
+			if($tm_filename > $tm_latest){
+				$tm_latest = $tm_filename;
+				$dump_file_latest = $dump_file;
+			}
+		}
+		if(!is_file($dump_file_latest)){
+			continue;
+		}
+		echo "Processing table $table\n";
+		echo "Processing ".realpath($dump_file_latest)."\n";
+
+		restore_json_dump($table, $dump_file);
+	}
+}

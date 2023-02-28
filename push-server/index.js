@@ -11,7 +11,8 @@ const JobRoute = require("./job-routes");
 
 const SOCKET_SERVER = new Server(httpServer, {cors: {origin: "*"}});
 const port = 7000;
-
+// app.use(express.json())
+app.use(express.urlencoded({extended: true}));
 const socketManager = SocketRoute(SOCKET_SERVER);
 JobRoute(socketManager, app);
 async function main(){

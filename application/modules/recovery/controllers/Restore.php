@@ -16,6 +16,7 @@ class Restore extends MX_Controller {
 		$this->word_list();
 		$this->word_list_ttf();
 		$this->socket_session();
+		$this->jobs();
 
 
 		$this->load_db_dump();
@@ -48,13 +49,10 @@ class Restore extends MX_Controller {
                 'constraint' => '225',
 	        ),
 		);
-		$this->dbforge->add_field($fields);
-		echo "DROP TABLE tts_project\n";
+		
+		$table = 'tts_project';
+		init_db_table($fields, $table);
 
-		$this->dbforge->drop_table('tts_project',true);
-		echo "CREATE TABLE tts_project\n";
-
-		$this->dbforge->create_table('tts_project');
 	}
 	function word_list(){
 		$fields = array(
@@ -69,12 +67,10 @@ class Restore extends MX_Controller {
                 'unique' => TRUE,
 	        ),
 		);
-		$this->dbforge->add_field($fields);
-		echo "DROP TABLE word_list\n";
-		$this->dbforge->drop_table('word_list',true);
-		echo "CREATE TABLE word_list\n";
+		
+		$table = 'word_list';
+		init_db_table($fields, $table);
 
-		$this->dbforge->create_table('word_list');
 	}
 	function word_list_ttf(){
 		$fields = array(
@@ -97,55 +93,17 @@ class Restore extends MX_Controller {
                 'constraint' => '225',
 	        ),
 		);
-		$this->dbforge->add_field($fields);
-		echo "DROP TABLE word_list_ttf\n";
+		$table = 'word_list_ttf';
+		init_db_table($fields, $table);
 
-		$this->dbforge->drop_table('word_list_ttf',true);
-		echo "CREATE TABLE word_list_ttf\n";
-
-		$this->dbforge->create_table('word_list_ttf');
 	}
 
 	function load_db_dump()
 	{
 		echo "Loading db tables dump\n";
-
-		// Declare two dates in different
-		// format
-		$filename = "tts_project@27022023121011.json";
-
-		$dt_filename = dt_dump_filename($filename);
-
-
-		$tables = $this->db->list_tables();
 		$backup_dir = APPPATH . '../db';
 
-		foreach($tables as $table){
-			$dump_files = glob("$backup_dir/$table@*.json");
-
-			$tm_latest = strtotime("1986-09-18");
-			$dump_file_latest = "";
-
-			foreach($dump_files as $dump_file){
-				
-				$filename = basename($dump_file);
-				$dt_filename = dt_dump_filename($dump_file);
-				// echo $dt_filename . "\n";
-				$tm_filename = strtotime($dt_filename);
-				if($tm_filename > $tm_latest){
-					$tm_latest = $tm_filename;
-					$dump_file_latest = $dump_file;
-				}
-			}
-			if(!is_file($dump_file_latest)){
-				continue;
-			}
-			echo "Processing table $table\n";
-			echo "Processing ".realpath($dump_file_latest)."\n";
-
-			restore_json_dump($table, $dump_file);
-		}
-
+		load_db_dump($backup_dir);
 	}
 
 	function socket_session(){
@@ -168,11 +126,35 @@ class Restore extends MX_Controller {
                 'constraint' => '1',
 	        ),
 		);
-		$this->dbforge->add_field($fields);
-		echo "DROP TABLE word_list\n";
-		$this->dbforge->drop_table('socket_session',true);
-		echo "CREATE TABLE word_list\n";
+		$table = 'socket_session';
+		init_db_table($fields, $table);
+	}
 
-		$this->dbforge->create_table('socket_session');
+	function jobs(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'job_name' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+	        ),
+	        'cmdline' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '225',
+	        ),
+	        'params' => array(
+                'type' => 'JSON',
+	        ),
+	        'status' => array(
+                'type' => 'INT',
+                'constraint' => '1',
+	        ),
+		);
+		$table = "jobs";
+
+		init_db_table($fields, $table);
 	}
 }
