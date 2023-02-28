@@ -50,6 +50,7 @@ rm -rf index.html
 
 cp addon/apache.conf /etc/apache2/sites-available/000-default.conf
 sudo a2enmod rewrite
+sudo a2enmod headers
 sleep 1
 sudo service apache2 start
 sleep 1

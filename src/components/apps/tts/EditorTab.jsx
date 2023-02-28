@@ -1,6 +1,7 @@
 import React ,{useEffect,useState,useRef}from "react";
 import { useBetween } from "use-between";
 import axios from "axios"
+// import qs from 'qs';
 
 import useActiveTabState from "../shared/useActiveTabState";
 import useActiveProjectState from "../shared/useActiveProjectState";
@@ -26,8 +27,36 @@ export default function EditorTab(){
 	const textInputRef = useRef(null);
 	const ttfTextInputRef = useRef(null);
 	const [ttfText,setTtfText] = useState("")
+	const socketClientRef = useRef();
+  socketClientRef.current = socketClient;
+
 	const textInputChangeHandler = ()=>{
 
+	}
+
+	const runTttsJob = (ttfText_)=>{
+		const uuid = localStorage.socketUuid;
+		const url = `http://localhost:7000/job?uuid=${uuid}&job_name=tts`;
+
+		const params = new URLSearchParams({  });
+		params.append('project_id', activeProject.id);
+		params.append('text',ttfText_);
+
+		console.log(ttfText_);
+		
+		// const data = {  text: ttfText };
+		// const options = {
+		//   method: 'POST',
+		//   headers: { 'content-type': 'application/x-www-form-urlencoded' },
+		//   data: qs.stringify(data),
+		//   url,
+		// };
+
+		axios.post(url, params).then(r=>{
+			console.log(r)
+		}).catch(e=>{
+			console.log(e);
+		})
 	}
 
 	const runHandler = ()=>{
@@ -44,6 +73,7 @@ export default function EditorTab(){
 			//handle success
 			console.log(response);
 			setTtfText(response.data.project.word_list_ttf_str)
+			runTttsJob(response.data.project.word_list_ttf_str)
 		})
 		.catch(function (response) {
 			//handle error
@@ -59,8 +89,16 @@ export default function EditorTab(){
 	},[activeProject])
 
 	useEffect(()=>{
-
-	},[])
+		if(socketClientRef.current){
+			if(socketClientRef.current.connected){
+				socketClientRef.current.on('log',message=>{
+					if(message.match(/success/)){
+						console.log(`http://localhost/public/tts-output/${activeProject.id}.wav`);
+					}
+				});
+			}
+		}
+	},[socketClient])
 	return(<>
 		<div className="container">
 			<div>
