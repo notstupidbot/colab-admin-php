@@ -139,12 +139,28 @@ job_name=           # job name currently defined in job-routes.js
 
 request body
 x-www-form-urlencoded
-text=               # for example for job tts require text param as form data
+text=kəpuˈtusan poˈlitɪʔ ˈharʊs di ˈukʊr səˈdʒaʊh ˈmuŋkɪn # for example for job tts require text param as form data
+project_id=0c0bveb81f8c52f3f50e5c7fdcd50e124d33xxxxxxc
 
 example output 
 
 {
+    "create_job_status": [
+        {
+            "id": "8f4058ec-803e-4bbd-a9ed-e6a469440e58",
+            "job_name": "tts",
+            "cmdline": "bash /var/www/html/addon/tts-job.sh 0c0bveb81f8c52f3f50e5c7fdcd50e124d33xxxxxxc \"kəpuˈtusan poˈlitɪʔ ˈharʊs di ˈukʊr səˈdʒaʊh ˈmuŋkɪn\"",
+            "params": {
+                "project_id": "0c0bveb81f8c52f3f50e5c7fdcd50e124d33xxxxxxc",
+                "uuid": "189b9019-f090-4e6e-bd30-8f49104fb13e"
+            },
+            "status": 0
+        }
+    ],
     "status": true,
+    "emitedSocketLength": 1,
     "message": "Job tts created with id 1"
 }
+
+example tts job will running specified tts thread
 ```
