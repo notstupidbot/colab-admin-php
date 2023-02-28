@@ -18,6 +18,10 @@ const m_socket = {
 	client : client,
 	init : async()=>{
 		await m_socket.client.connect();
+		client.on('error', (err) => {
+			console.log(err);
+		})
+
 	},
 	getAll : async ()=>{
 		const res = await pgquery(`SELECT * FROM socket_session`);
@@ -26,41 +30,91 @@ const m_socket = {
 
 	},
 	getById : async (id)=>{
-		const res = await pgquery(`SELECT * FROM socket_session WHERE id='${id}'`);
-		return res;
+		try{
+			const res = await pgquery(`SELECT * FROM socket_session WHERE id='${id}'`);
+			if(res.rows){
+				return res.rows[0];
+			}
+		}catch(e){
+
+		}
+		return null;
+		
 	},
-	getByUuid : async (uuid)=>{
-		const res = await pgquery(`SELECT * FROM socket_session WHERE uuid='${uuid}'`);
-		return res;
+	getByUuid : async (uuid, connectedOnly)=>{
+		const connected = connectedOnly ? 1 : 0;
+		const text = `SELECT * FROM socket_session WHERE uuid='${uuid}' AND connected=${connected}`;
+		try {
+		  const res = await client.query(text);
+		  return res.rows;
+		} catch (err) {
+		  console.log(err.stack)
+		}	
+		return [];
+	},
+	getIdsByUuid : async(uuid, connectedOnly)=>{
+		const connected = connectedOnly ? 1 : 0;
+		const text = `SELECT id FROM socket_session WHERE uuid='${uuid}' AND connected=${connected}`;
+		try {
+		  const res = await client.query(text);
+		  return res.rows;
+		} catch (err) {
+		  console.log(err.stack)
+		}	
+		return [];
 	},
 	getByIpAddr : async (ipAddr)=>{
-		const res = await pgquery(`SELECT * FROM socket_session WHERE ip_addr='${ipAddr}'`);
-		return res;
+		try{
+			const res = await pgquery(`SELECT * FROM socket_session WHERE ip_addr='${ipAddr}'`);
+			if(res.rows){
+				return res.rows[0];
+			}
+		}catch(e){
+
+		}
+		return null;
 	},
 
 	delete : async (id)=>{
-
+		const text = `DELETE  socket_session WHERE id ='${id}'`;
+		try {
+		  const res = await client.query(text);
+		  return res;
+		} catch (err) {
+		  console.log(err.stack)
+		}		
+		return null;
 	},
-	update: async(id,data)=>{
-
+	setDiconnectedExcept: async(id, uuid)=>{
+		const text = `UPDATE socket_session SET connected=0 WHERE id !='${id}' AND uuid='${uuid}'`;
+		try {
+		  const res = await client.query(text);
+		  return res;
+		} catch (err) {
+		  console.log(err.stack)
+		}		
+		return null;
 	},
-	create: async(id,ip_addr,uuid,connected)=>{
+	create: async(id,ip_addr,uuid)=>{
 		
 		const text = 'INSERT INTO socket_session (id, ip_addr, uuid, connected) VALUES($1, $2, $3, $4) RETURNING *'
-		const values = [id,ip_addr,uuid,connected]
+		const values = [id,ip_addr,uuid,1]
 
-		// async/await
 		try {
-		  const res = await client.query(text, values)
-		  console.log(res.rows[0])
-		  // { name: 'brianc', email: 'brian.m.carlson@gmail.com' }
+		  const res = await client.query(text, values);
+		  if(res.rows){
+		  	const row = res.rows[0];
+		  	m_socket.setDiconnectedExcept(row.id, row.uuid);
+		  }
+		  console.log(res.rows);
+		  return res.rows;
 		} catch (err) {
 		  console.log(err.stack)
 		}
+		return null;
 	}
 
 }
-m_socket.init().then(r=>{console.log(r)});
 module.exports = {
 	m_socket
 }

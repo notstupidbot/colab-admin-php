@@ -1,4 +1,4 @@
-import { useState , useEffect} from 'react'
+import { useState , useEffect, useRef} from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import SideBar from "./components/SideBar"
@@ -15,14 +15,21 @@ import useSocketState from "./shared/useSocketState";
 const useSharedSocketState = () => useBetween(useSocketState);
 const useSharedSocketClient = () => useBetween(useSocketClient)
 
-const socketUuid = uuidv4();
-
+let socketUuid = localStorage.socketUuid || uuidv4();
+localStorage.socketUuid = socketUuid;
+let dontRunTwice = true
 function App() {
   const [count, setCount] = useState(0)
   const {socketConnected,setSocketConnected} = useSharedSocketState();
   const {socketClient,setSocketClient} = useSharedSocketClient();
-  let socketReconnecting = false;  
+
   let socket = null;
+
+  const socketClientRef = useRef();
+  socketClientRef.current = socketClient;
+
+  const socketConnectedRef = useRef();
+  socketConnectedRef.current = socketConnected;
 
   const createSocket = ()=>{
         const url = 'ws://localhost:7000';
@@ -38,60 +45,46 @@ function App() {
         });
         socket.on("connect",() => {
             setSocketConnected(true);
+            const uuid = socketUuid;
 
             socket.on("disconnect",()=>{
                 console.log("socket disconnect");
-                socket.emit("logout", {id : socket.id, uuid : socketUuid});
+                socket.emit("logout", uuid);
 
                 setSocketConnected(false);
-                // socketClient.changeUrl(url);
-                reconnectSocket();
 
             });
 
             socket.on("log", (message)=>{
-
+              console.log(`server log with message ${message}`)
             });
+            socket.emit("login", uuid);
 
-            socket.emit("login", {id : socket.id, uuid : socketUuid});
         });
 
         setSocketClient(socket);
     }
     
     const reconnectSocket = ()=>{
-        setTimeout(()=>{
-            console.log("reconnecting in 5 second");
-            initSocket();
+        setInterval(()=>{ 
+            if(!socketConnectedRef.current){
+              console.log("socketConnected is false");
+              return createSocket();
+            }
+            if(!socketClientRef.current.connected){
+              console.log("socketClient.connected is false");
+
+              return createSocket();
+            }
         },5000);
     }
-    const initSocket = ()=>{
-        // console.log(socketClient);
-        
-        let socketMustBeCreated = false;
-
-        if(!socketClient){
-            socketMustBeCreated = true;
-        }
-        else if(typeof socketClient == "object"){
-            setSocketConnected(socketClient.connected);
-
-            if(!socketClient.connected){
-                socketMustBeCreated = true;
-            }
-        }
-        if(socketMustBeCreated){
-            if(socketReconnecting){
-                console.log("skip initSoket: caused reconnecting");
-                return;
-            }
-            
-            createSocket();
-        }
-
-    }
+    
     useEffect(() => {
-        initSocket();
+        if(dontRunTwice){
+            createSocket();
+            reconnectSocket();
+            dontRunTwice=false
+        }
     }, []);
   return (
 <>
