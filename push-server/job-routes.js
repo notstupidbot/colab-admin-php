@@ -9,8 +9,12 @@ function JobRoute(socketManager, app){
 				case 'tts':
 					const job_id = 1;
 					const create_job_messages = `Job ${job_name} created with id ${job_id}`;
-					socketManager.emit('log', create_job_messages, socket_id, uuid);
-					return res.status(200).send({status:true, message: create_job_messages});
+					const emitedSocketLength = socketManager.emit('log', create_job_messages, socket_id, uuid);
+					if(emitedSocketLength){
+						return res.status(200).send({status:true, message: create_job_messages});
+					}else{
+						return res.status(200).send({status:false, message: 'no socket emited by current uuid'});
+					}
 				break;
 			}
 		}

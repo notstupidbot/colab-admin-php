@@ -32,25 +32,32 @@ const SocketManager = {
 		SocketManager.emit('chat', `You said ${message}`, SOCKET_CLIENT_INSTANCE_ID)
 	},
 	emit:async(event_name, data, SOCKET_CLIENT_INSTANCE_ID, uuid)=>{
-
+		let emitedSocketLength = 0;
 		if(uuid){
 			const sockectByUuids = await m_socket.getIdsByUuid(uuid, true);
-			console.log(sockectByUuids)
+			
 			for(let i in sockectByUuids){
 				const id = sockectByUuids[i].id;
 				if(typeof SocketManager.instances[id] == 'object'){
 					console.log(`socket id ${id} emit ${event_name}`, data);
 					SocketManager.instances[id].emit(event_name, data);
+					emitedSocketLength += 1;
 				}
 			}
+
+			return emitedSocketLength; 
 		}
 		else if(SOCKET_CLIENT_INSTANCE_ID){
 			if(typeof SocketManager.instances[SOCKET_CLIENT_INSTANCE_ID] == 'object'){
 				console.log(`socket id ${SOCKET_CLIENT_INSTANCE_ID} emit ${event_name}`, data);
 				SocketManager.instances[SOCKET_CLIENT_INSTANCE_ID].emit(event_name, data);
+				emitedSocketLength += 1;
+
 			}	
+			return emitedSocketLength; 
+			
 		}
-		
+		return false;
 	}
 }
 
