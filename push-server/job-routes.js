@@ -11,9 +11,9 @@ function JobRoute(socketManager, app){
 					const create_job_messages = `Job ${job_name} created with id ${job_id}`;
 					const emitedSocketLength = socketManager.emit('log', create_job_messages, socket_id, uuid);
 					if(emitedSocketLength){
-						return res.status(200).send({status:true, message: create_job_messages});
+						return res.status(200).send({status:true,emitedSocketLength, message: create_job_messages});
 					}else{
-						return res.status(200).send({status:false, message: 'no socket emited by current uuid'});
+						return res.status(200).send({status:false,emitedSocketLength, message: 'no socket emited by current uuid'});
 					}
 				break;
 			}
