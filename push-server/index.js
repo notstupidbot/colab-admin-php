@@ -16,6 +16,7 @@ const port = 7000;
 // app.use(express.json())
 let proxy_mode = process.argv.includes('--proxy');
 app.use(express.urlencoded({extended: true}));
+app.use(cors());
 const socketManager = SocketRoute(SOCKET_SERVER);
 
 JobRoute(socketManager, app);

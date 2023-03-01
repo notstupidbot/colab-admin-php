@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import {v4} from "uuid";
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -112,21 +113,17 @@ export default class EditorTab extends React.Component{
 		}
 	}
 
-	runTttsJob(ttfText_){
+	async runTttsJob(){
 		const uuid = localStorage.socketUuid;
 		const url = `http://localhost:7000/job?uuid=${uuid}&job_name=tts`;
 
 		const params = new URLSearchParams({  });
-		params.append('project_id', activeProject.id);
-		params.append('text',ttfText_);
+		params.append('project_id', v4());
+		params.append('text',this.ttfTextInputRef.current.value);
 
-		console.log(ttfText_);
+	
 
-		axios.post(url, params).then(r=>{
-			console.log(r)
-		}).catch(e=>{
-			console.log(e);
-		})
+		return axios.post(url, params);
 	}
 
 	async runHandler(evt){
@@ -144,15 +141,26 @@ export default class EditorTab extends React.Component{
 
 		// }
 		this.setState({onProcess:true},async ()=>{
+			this.ttfTextInputRef.current.value = ""
 			for(let i in this.state.sentences){
-				const text =  this.state.sentences[i].ref.current.value;
+				const item = this.state.sentences[i];
+				const type = item.type;
+				const text =  item.ref.current.value;
 				console.log(`Processing ${text}`)
 				// await setTimeout(()=>{console.log('HTTP ok')},1000);
-				const r = await this.createTtsProject(text);
-				console.log(r)
-				this.setState({onProcess:false})
-				break;
+				const result = await this.createTtsProject(text);
+				const data = result.data;
+				const project = data.project;
+				const ttfText = project.word_list_ttf_str;
+				const lastTtfText = this.ttfTextInputRef.current.value;
+				this.ttfTextInputRef.current.value = lastTtfText + ' ' + (type=='dot'?'. ':', ') + ttfText;
+				// console.log(r)
+				// break;
 			}
+			const jobs = await this.runTttsJob();
+			console.log(jobs);
+			this.setState({onProcess:false})
+
 		});
 		// console.log(runBtnCls)
 	}	

@@ -10,31 +10,14 @@ class Backup extends MX_Controller {
 	public function index()
 	{
 		echo "Backup database\n";
-		$this->tts_project();
-		$this->word_list();
-		$this->word_list_ttf();
-	}
 
-	public function tts_project()
-	{
-		$table = "tts_project";
-
+		$tables = $this->db->list_tables();
 		$backup_dir = APPPATH . '../db';
-		dump_table($table, $backup_dir);
-	}
 
-
-	public function word_list()
-	{
-		$table = "word_list";
-		$backup_dir = APPPATH . '../db';
-		dump_table($table, $backup_dir);
-	}
-	public function word_list_ttf()
-	{
-		$table = "word_list_ttf";
-		$backup_dir = APPPATH . '../db';
-		dump_table($table, $backup_dir);
+		foreach($tables as $table){
+			dump_table($table, $backup_dir);
+		}
+		
 	}
 
 }
