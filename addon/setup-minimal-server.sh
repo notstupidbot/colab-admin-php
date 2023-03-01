@@ -79,3 +79,6 @@ bash ./setup-push-server.sh
 sleep 1
 echo "Restore db"
 bash ./restore-db.sh
+
+cd /content
+./gotty -w --port 1986 bash & ./bore local 22 --to=bore.pub
