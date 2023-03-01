@@ -14,16 +14,16 @@ export default function ProjectTab(){
 	]);
 
 	const {activeProject,setActiveProject} = useSharedActiveProjectState();
-	const {acttiveTab,setActiveTab} = useSharedActiveTabState();
+	const {activeTab,setActiveTab} = useSharedActiveTabState();
 
 	const updateProjectList = async()=>{
 		axios(`http://localhost/api/tts/project`).then(r=>{
-			console.log(r)
+			// console.log(r)
 			setProjectList(r.data)
 		})
 	}
 	const viewInEditor = (project)=>{
-		console.log(project);
+		// console.log(project);
 		setActiveProject(project);
 		setActiveTab('editor');
 
@@ -33,7 +33,7 @@ export default function ProjectTab(){
 			updateProjectList();
 			dontRunTwice = false
 		}
-	});
+	},[activeTab]);
 	return(<>
 <div className="flex flex-col">
   <div className="-m-1.5 overflow-x-auto">

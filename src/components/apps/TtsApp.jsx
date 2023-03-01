@@ -27,6 +27,7 @@ export default function TtsApp(){
 	socketClientRef.current = socketClient;
 
 	const socketConnectedRef = useRef();
+	const editorTabRef = useRef(null);
 	socketConnectedRef.current = socketConnected;
 
 	const {activeTab, setActiveTab} = useSharedActiveTabState();
@@ -47,6 +48,10 @@ export default function TtsApp(){
 	const activateTabHandler = (tabName) =>{
 		setActiveTab(tabName);
 	}
+
+	useEffect(()=>{
+		editorTabRef.current.reloadData();
+	},[activeProject])
 
 	useEffect(()=>{
 		try{
@@ -90,7 +95,7 @@ return(<>
       This is the <em className="font-semibold text-gray-800 dark:text-gray-200">second</em> item's tab body.
     </p>*/}
   <div className="container">
-  <EditorTab/>
+  <EditorTab ref={editorTabRef} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab} activeProject={activeProject}/>
   </div>
   </div>
   <div id="bar-with-underline-3" className="hidden" role="tabpanel" aria-labelledby="bar-with-underline-item-3">
