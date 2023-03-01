@@ -11,6 +11,7 @@ class Fixtures extends MX_Controller {
 	{
 		echo "Load Fixtures database\n";
 		$this->tts_project();
+		$this->tts_sentence();
 		$this->word_list();
 		$this->word_list_ttf();
 	}
@@ -29,6 +30,22 @@ class Fixtures extends MX_Controller {
 				$i += 1;
 			}
 			$this->db->insert('tts_project',$item);
+		}
+	}
+	function tts_sentence(){
+		$rows = [
+			['0eb81f8c52f3f50e5c7fdcd50e124d33', '0eb81f8c52f3f50e5c7fdcd50e124d33', 'keputusan politik harus di ukur sejauh mungkin','', '','[]'],
+			['7f634e946b04f9564d2d96ca65dcfee6', '7f634e946b04f9564d2d96ca65dcfee6', 'keputusan politik harus di ukur sejauh mungkin karena akan mempengaruhi beberapa hal yang krusial', '', '','[]']
+		];
+		$fields = ['id','name', 'text','ttf_text', 'output_file','sentences'];
+		foreach($rows as $row){
+			$item = [];
+			$i = 0;
+			foreach( $row as $r){
+				$item[$fields[$i]] = $r;
+				$i += 1;
+			}
+			$this->db->insert('tts_sentence',$item);
 		}
 	}
 

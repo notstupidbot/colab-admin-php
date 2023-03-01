@@ -10,6 +10,7 @@ class Tts extends REST_Controller {
         parent::__construct($config);
         $this->load->database();
         $this->load->model("TtsProjectMdl","model");
+        $this->load->model("SentenceMdl","m_sentence");
         $this->load->model("WordListMdl","m_word_list");
         $this->load->model("WordListTtfMdl","m_word_list_ttf");
 
@@ -50,6 +51,46 @@ class Tts extends REST_Controller {
             $limit = 10;
             $projects = $this->model->getAll($limit);
             $this->response($projects, 200);
+        }
+ 
+    }
+    function sentence_get() {
+        
+        $id = $this->get("id");
+       
+
+        if($id){
+            $sentence = $this->m_sentence->getById($id);
+            $this->response($project, 200);
+        }else{
+            $page = $this->get("page"); 
+            $limit = 10;
+            $sentences = $this->m_sentence->getAll($limit);
+            $this->response($sentences, 200);
+        }
+ 
+    }
+    function sentence_post() {
+        
+        $id = $this->input->get("id");
+        // echo 'Hello'.$id;
+        if($id){
+            $sentence = $this->m_sentence->getById($id);
+            $name = $this->input->post('name');
+            $text = $this->input->post('text');
+            $ttf_text = $this->input->post('ttf_text');
+            $sentences = $this->input->post('sentences');
+
+            $sentence = [
+                'name' => $name,
+                'text' => $text,
+                'ttf_text' => $ttf_text,
+                'sentences' => $sentences
+            ];
+
+            $this->m_sentence->update($id, $sentence);
+
+            $this->response($sentence, 200);
         }
  
     }

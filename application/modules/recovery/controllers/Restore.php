@@ -13,6 +13,8 @@ class Restore extends MX_Controller {
 		echo "Restoring database\n";
 		
 		$this->tts_project();
+		$this->tts_sentence();
+
 		$this->word_list();
 		$this->word_list_ttf();
 		$this->socket_session();
@@ -21,7 +23,39 @@ class Restore extends MX_Controller {
 
 		$this->load_db_dump();
 	}
+	function tts_sentence(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'name' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'text' => array(
+                'type' =>'TEXT',
+                'default' => '',
+	        ),
+	        'sentences' => array(
+                'type' =>'JSON'
+	        ),
+	        'ttf_text' => array(
+                'type' =>'TEXT',
+                'default' => '',
+	        ),
+	        'output_file' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '225',
+	        ),
+		);
+		
+		$table = 'tts_sentence';
+		init_db_table($fields, $table);
 
+	}
 	function tts_project(){
 		$fields = array(
 	       'id' => array(
