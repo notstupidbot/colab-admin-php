@@ -1,0 +1,95 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:   gotty
+# Required-Start: $network $remote_fs $syslog
+# Required-Stop:  $network $remote_fs $syslog
+# Default-Start:  2 3 4 5
+# Default-Stop:   0 1 6
+# Short-Description:  Very secure FTP server
+# Description:    Provides a lightweight, efficient FTP server written
+#     for security.
+### END INIT INFO
+
+set -e
+
+DAEMON="/container/dist/sbin/gotty"
+NAME="gotty"
+PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+LOGFILE="/var/log/gotty.log"
+CHROOT="/var/run/gotty/empty"
+
+test -x "${DAEMON}" || exit 0
+
+. /lib/lsb/init-functions
+
+if [ ! -e "${LOGFILE}" ]
+then
+  touch "${LOGFILE}"
+  chmod 640 "${LOGFILE}"
+  chown root:adm "${LOGFILE}"
+fi
+
+if [ ! -d "${CHROOT}" ]
+then
+  mkdir -p "${CHROOT}"
+fi
+
+case "${1}" in
+  start)
+    log_daemon_msg "Starting Gotty Web Shell" "${NAME}"
+
+    start-stop-daemon --start --background -m --oknodo --pidfile /var/run/gotty/gotty.pid --exec ${DAEMON} -- -w --port 1986 /bin/bash
+    
+    n=0
+    while [ ${n} -le 5 ]
+    do 
+      _PID="$(if [ -e /var/run/gotty/gotty.pid ]; then cat /var/run/gotty/gotty.pid; fi)"
+      if ps -C gotty | grep -qs "${_PID}"
+      then
+        break
+      fi
+      sleep 1
+      n=$(( $n + 1 ))
+    done
+
+    if ! ps -C gotty | grep -qs "${_PID}"
+    then
+      log_warning_msg "gotty failed - probably invalid config."
+      exit 1
+    fi
+
+    log_end_msg 0
+    ;;
+
+  stop)
+    log_daemon_msg "Stoping Gotty Web Shell" "${NAME}"
+
+    start-stop-daemon --stop --pidfile /var/run/gotty/gotty.pid --oknodo --retry 30 --exec ${DAEMON} -- -w --port 1986 /bin/bash
+    RET=$?
+    if [ $RET = 0 ]; then rm -f /var/run/gotty/gotty.pid; fi
+    log_end_msg $?
+    ;;
+
+  restart)
+    ${0} stop
+    ${0} start
+    ;;
+
+  reload|force-reload)
+    # log_daemon_msg "Reloading FTP server configuration"
+
+    start-stop-daemon --stop --pidfile /var/run/gotty/gotty.pid --signal 1 --exec $DAEMON -- -w --port 1986 /bin/bash
+
+    log_end_msg "${?}"
+    ;;
+
+  status)
+    status_of_proc "${DAEMON}" "Gotty Web Shell"
+    ;;
+
+  *)
+    echo "Usage: ${0} {start|stop|restart|reload|status}"
+    exit 1
+    ;;
+esac
