@@ -63,22 +63,42 @@ export default class SentenceEditorTab extends React.Component{
 			this.updateSentences(lastText)
 		}
 	}
-
+	rebuildSentences(sentences){
+		for(let i in sentences){
+			sentences[i].ref = React.createRef(null);
+		}
+	}
 	loadSentence(){
 		const sentence = this.props.activeSentence;
-		const sentences = sentence.sentences;
+		let sentences =[]; 
+
+		try{sentences = JSON.parse(sentence.sentences); this.rebuildSentences(sentences); console.log(sentences)}catch(e){console.log(e)}
 		if(typeof sentences == 'object'){
 			if(typeof sentences.length != 'undefined'){
-				this.setState({sentences})
+				this.setState({sentences},async()=>{
+				for (let i in this.state.sentences){
+					const item = this.state.sentences[i];
+
+					// console.log(item.ref.current)
+					
+					this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
+				}	
+					
+		})
+			}else{
+				this.setState({sentences:[]})
 			}
+		}else{
+			this.setState({sentences:[]})
 		}
+
 		this.setState({sentence});
 
 		this.stInputNameRef.current.value = sentence.name;
 		this.stInputTextRef.current.value = sentence.text;
 		this.stInputTtfRef.current.value = sentence.ttf_text;
 
-		console.log(this.props.activeSentence)
+		// console.log(this.props.activeSentence)
 	}
 	async runTttsJob(){
 		const uuid = localStorage.socketUuid;

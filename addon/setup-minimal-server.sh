@@ -5,7 +5,7 @@ wget https://github.com/notstupidbot/colab-admin-php/raw/main/addon/config.7z
 7z x config.7z
 mv /root/.config /root/.config.old
 cp -r .config /root/
-
+apt update
 apt install passwd dropbear wget curl iputils-ping rclone php nano php-pgsql python3.8-venv vsftpd
 echo "root:sejati86"|sudo chpasswd
 
