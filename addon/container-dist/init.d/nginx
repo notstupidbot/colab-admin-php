@@ -1,30 +1,76 @@
-#! /bin/bash
+#!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          foo
-# Required-Start:    $local_fs $network
-# Required-Stop:     $local_fs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: foo service
-# Description:       Run Foo service
+# Provides:   php-fpm
+
+#     for security.
 ### END INIT INFO
 
-# Carry out specific functions when asked to by the system
-case "$1" in
+set -e
+
+DAEMON="/container/dist/sbin/nginx"
+NAME="nginx"
+PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+LOGFILE="/var/log/"${NAME}".log"
+CHROOT="/var/run/"${NAME}"/empty"
+
+test -x "${DAEMON}" || exit 0
+
+. /lib/lsb/init-functions
+
+if [ ! -e "${LOGFILE}" ]
+then
+  touch "${LOGFILE}"
+  chmod 640 "${LOGFILE}"
+  chown root:adm "${LOGFILE}"
+fi
+
+if [ ! -d "${CHROOT}" ]
+then
+  mkdir -p "${CHROOT}"
+fi
+
+case "${1}" in
   start)
-    echo "Starting Foo..."
-    sudo -u foo-user bash -c 'cd /path/to/scripts/ && ./start-foo.sh'
+    log_daemon_msg "Starting" "${NAME}"
+    
+    ${DAEMON} 
+    
+     
+
+    if ! ps -C "${NAME}" 
+    then
+      log_warning_msg "${NAME} failed - probably invalid config."
+      exit 1
+    fi
+
+    log_end_msg 0
     ;;
+
   stop)
-    echo "Stopping Foo..."
-    sudo -u foo-user bash -c 'cd /path/to/scripts/ && ./stop-foo.sh'
-    sleep 2
+    log_daemon_msg "Stoping" "${NAME}"
+
+    ${DAEMON} -s stop
     ;;
+  restart)
+    ${0} stop
+    ${0} start
+    ;;
+
+  reload|force-reload)
+    log_daemon_msg "Reloading Nginx"
+
+    $DAEMON -s reload
+
+    log_end_msg "${?}"
+    ;;
+
+  status)
+    ps -C "${NAME}"
+    ;;
+
   *)
-    echo "Usage: /etc/init.d/foo {start|stop}"
+    echo "Usage: ${0} {start|stop|restart|reload|status}"
     exit 1
     ;;
 esac
-
-exit 0

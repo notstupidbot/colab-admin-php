@@ -46,7 +46,7 @@ mv colab-admin-php/* .
 mv colab-admin-php/.git .
 mv colab-admin-php/.htaccess .
 #rm -rf colab-admin-php
-rm -rf index.html
+# rm -rf index.html
 
 cp addon/apache.conf /etc/apache2/sites-available/000-default.conf
 sudo a2enmod rewrite

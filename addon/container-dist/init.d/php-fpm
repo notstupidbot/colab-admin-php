@@ -1,0 +1,92 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:		php-fpm
+
+#			for security.
+### END INIT INFO
+
+set -e
+
+DAEMON="/container/dist/sbin/php-fpm"
+NAME="php-fpm"
+PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+LOGFILE="/var/log/"${NAME}".log"
+CHROOT="/var/run/"${NAME}"/empty"
+
+test -x "${DAEMON}" || exit 0
+
+. /lib/lsb/init-functions
+
+if [ ! -e "${LOGFILE}" ]
+then
+	touch "${LOGFILE}"
+	chmod 640 "${LOGFILE}"
+	chown root:adm "${LOGFILE}"
+fi
+
+if [ ! -d "${CHROOT}" ]
+then
+	mkdir -p "${CHROOT}"
+fi
+
+case "${1}" in
+	start)
+		log_daemon_msg "The PHP 7.4 FastCGI Process Manager" "${NAME}"
+
+		
+
+		start-stop-daemon --start  --background -m --oknodo --pidfile /var/run/php-fpm.pid --exec ${DAEMON} -- --nodaemonize --fpm-config /container/dist/etc/php-fpm.conf
+		
+		n=0
+		while [ ${n} -le 5 ]
+		do 
+			_PID="$(if [ -e /var/run/php-fpm.pid ]; then cat /var/run/php-fpm.pid; fi)"
+			if ps -C "${NAME}" | grep -qs "${_PID}"
+			then
+				break
+			fi
+			sleep 1
+			n=$(( $n + 1 ))
+		done
+
+		if ! ps -C "${NAME}" | grep -qs "${_PID}"
+		then
+			log_warning_msg "${NAME} failed - probably invalid config."
+			exit 1
+		fi
+
+		log_end_msg 0
+		;;
+
+	stop)
+		log_daemon_msg "The PHP 7.4 FastCGI Process Manager" "${NAME}"
+
+		start-stop-daemon --stop  --pidfile /var/run/php-fpm.pid --oknodo --retry 30 --exec ${DAEMON} -- --nodaemonize --fpm-config /container/dist/etc/php-fpm.conf
+		RET=$?
+		if [ $RET = 0 ]; then rm -f /var/run/php-fpm.pid; fi
+		log_end_msg $?
+		;;
+
+	restart)
+		${0} stop
+		${0} start
+		;;
+
+	reload|force-reload)
+		log_daemon_msg "Reloading The PHP 7.4 FastCGI Process Manager"
+
+		start-stop-daemon --stop --pidfile /var/run/php-fpm.pid --signal 1 --exec $DAEMON -- --nodaemonize --fpm-config /container/dist/etc/php-fpm.conf
+
+		log_end_msg "${?}"
+		;;
+
+	status)
+		status_of_proc "${DAEMON}" "The PHP 7.4 FastCGI Process Manager"
+		;;
+
+	*)
+		echo "Usage: ${0} {start|stop|restart|reload|status}"
+		exit 1
+		;;
+esac

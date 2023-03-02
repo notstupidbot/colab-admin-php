@@ -39,4 +39,22 @@ cp /container/dist/etc/ftpusers /etc/
 /container/dist/etc/init.d/gotty start
 
 # apt install passwd
+echo "Update root password"
 echo "root:sejati86"|sudo chpasswd
+echo "Adding www-data to sudoer"
+useradd -m -p sejati86 "www-data"
+
+echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+#setup pgsql
+echo "Setup pgsql"
+echo "Adding user posgres"
+
+useradd -m -p sejati86 postgres
+cp -r /container/dist/etc/postgresql/10/pgsql /container/dist/etc/postgresql/10/main
+chown -R postgres:postgres /container/dist/etc/postgresql/10/main
+
+echo "Starting pgsql"
+/container/etc/init.d/pgsql start
+
+#./pg_ctl -D /container/dist/pgsql_data/10/main -l logfile start
