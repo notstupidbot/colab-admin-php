@@ -1,6 +1,6 @@
 cd /content
-
-wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1TmT0a3wPyrXrNAjujtPzkCRUeSxoFybG' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1TmT0a3wPyrXrNAjujtPzkCRUeSxoFybG" -O dist.7z && rm -rf /tmp/cookies.txt
+file_id="15LUqVtuEXBo6h3e0Gm_upAqslQ-BMQtS"
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=$file_id' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=file_id" -O dist.7z && rm -rf /tmp/cookies.txt
 
 mkdir -p /container/dist
 mkdir -p /container/src
@@ -34,7 +34,7 @@ echo "www-data ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 #setup pgsql
 echo "Setup pgsql"
-echo "Adding user posgres"
+echo "Adding user postgres"
 
 useradd -m -p sejati86 postgres
 cp -r /container/dist/etc/postgresql/10/pgsql /container/dist/etc/postgresql/10/main
