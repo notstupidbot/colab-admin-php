@@ -46,11 +46,11 @@ echo "Mounting gdrive"
 mkdir -p /content/gdrive
 rclone mount gdrive: /content/gdrive --daemon
 #echo "Starting pgsql"
-/container/etc/init.d/pgsql start
+/container/dist/etc/init.d/pgsql start
 #start dev-server
-/container/etc/init.d/dev-server start
+/container/dist/etc/init.d/dev-server start
 #start push server
-/container/etc/init.d/push-server start
+/container/dist/etc/init.d/push-server start
 # starting gotty
 /container/dist/etc/init.d/gotty start
 #starting ftp

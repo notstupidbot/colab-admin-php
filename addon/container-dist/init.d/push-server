@@ -38,7 +38,7 @@ case "${1}" in
 
   stop)
     log_daemon_msg "Stopping Push Server Port 7000" "${NAME}"
-
+    
     _PID=$(ps aux | grep nodemon|awk '{print $2}')
     for pid in $_PID
       do kill $pid

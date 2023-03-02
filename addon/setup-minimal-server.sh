@@ -21,11 +21,7 @@ sudo service vsftpd start
 
 sudo service dropbear start
 cp ~/.bashrc bashrc.backup
-# mkdir -p /session
-# echo "# RClone Config file">>./bashrc
-# echo "export SESSION_DIR=/session">>./bashrc
-# echo "RCLONE_CONFIG=/deploy/rclone/rclone.conf">>./bashrc
-# echo "export RCLONE_CONFIG">>~/.bashrc
+ 
 
 rm -rf bore
 rm -rf gotty
