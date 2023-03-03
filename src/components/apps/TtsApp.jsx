@@ -66,13 +66,13 @@ export default function TtsApp({onSocketConnect,onSocketLog}){
 	}
 
 	useEffect(()=>{
-		editorTabRef.current.reloadData();
+		// editorTabRef.current.reloadData();
 	},[activeProject])
 
 	useEffect(()=>{
 		// console.log(activeSentence);
 		if(activeSentence){
-			sentenceEditorTabRef.current.loadSentence();
+			sentenceEditorTabRef.current.loadRow();
 			// setActiveTab('sentence-editor');
 		}
 	},[activeSentence]);
@@ -87,34 +87,34 @@ return(<>
 
 <h2>TTS Indonesia</h2>
 <nav className="relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700" aria-label="Tabs" role="tablist">
-  <button type="button" tab="project" onClick={evt=>activateTabHandler('project')} className={activeTabCls('project')} id="bar-with-underline-item-1" data-hs-tab="#bar-with-underline-1" aria-controls="bar-with-underline-1" role="tab">
+  {/*<button type="button" tab="project" onClick={evt=>activateTabHandler('project')} className={activeTabCls('project')} id="bar-with-underline-item-1" data-hs-tab="#bar-with-underline-1" aria-controls="bar-with-underline-1" role="tab">
     TTS Project
-  </button>
+  </button>*/}
   <button type="button" tab="project" onClick={evt=>activateTabHandler('sentence')} className={activeTabCls('sentence')} id="bar-with-underline-item-1" data-hs-tab="#bar-with-underline-4" aria-controls="bar-with-underline-1" role="tab">
     TTS Sentences
   </button>
-  <button type="button" tab="editor" onClick={evt=>activateTabHandler('editor')} className={activeTabCls('editor')} id="bar-with-underline-item-2" data-hs-tab="#bar-with-underline-2" aria-controls="bar-with-underline-2" role="tab">
+  {/*<button type="button" tab="editor" onClick={evt=>activateTabHandler('editor')} className={activeTabCls('editor')} id="bar-with-underline-item-2" data-hs-tab="#bar-with-underline-2" aria-controls="bar-with-underline-2" role="tab">
     Editor
-  </button>
+  </button>*/}
   <button type="button" tab="sentence-editor" onClick={evt=>activateTabHandler('sentence-editor')} className={activeTabCls('sentence-editor')} id="bar-with-underline-item-5" data-hs-tab="#bar-with-underline-5" aria-controls="bar-with-underline-5" role="tab">
     Sentence Editor
   </button>
-  <button type="button" tab="explorer" onClick={evt=>activateTabHandler('explorer')} className={activeTabCls('explorer')} id="bar-with-underline-item-3" data-hs-tab="#bar-with-underline-3" aria-controls="bar-with-underline-3" role="tab">
+  {/*<button type="button" tab="explorer" onClick={evt=>activateTabHandler('explorer')} className={activeTabCls('explorer')} id="bar-with-underline-item-3" data-hs-tab="#bar-with-underline-3" aria-controls="bar-with-underline-3" role="tab">
     Explorer
-  </button>
+  </button>*/}
 </nav>
 
 <div className="mt-3">
   <div id="bar-with-underline-1"  className={activePanelCls('project')} role="tabpanel" aria-labelledby="bar-with-underline-item-1">
   
     <div className="container">
-    	<ProjectTab/>
+    	{/*<ProjectTab/>*/}
     </div>
   </div>
   <div id="bar-with-underline-2" className={activePanelCls('editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-2">
     
   <div className="container">
-  <EditorTab ref={editorTabRef} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab} activeProject={activeProject}/>
+  {/*<EditorTab ref={editorTabRef} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab} activeProject={activeProject}/>*/}
   </div>
   </div>
   <div id="bar-with-underline-3" className={activePanelCls('explorer')} role="tabpanel" aria-labelledby="bar-with-underline-item-3">
