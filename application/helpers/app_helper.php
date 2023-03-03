@@ -147,7 +147,7 @@ function convert_ttf($text){
 	$shell_path = realpath(APPPATH . "../addon/convert-ttf.sh");
     $shell_cmd =  "sudo bash ".$shell_path ." \"". $text . "\" ";
 	$stdout =  tempnam(sys_get_temp_dir(), md5('tts-api'.date('YmdHis')));
-	$content = shell_exec($shell_cmd . " 2>&1");
+	$content = shell_exec("which python3" . " 2>&1");
 	echo $shell_cmd;
 	echo $content;
 	exit();
