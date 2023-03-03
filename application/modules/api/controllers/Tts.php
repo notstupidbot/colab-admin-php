@@ -105,7 +105,7 @@ class Tts extends REST_Controller {
             
             if(empty($text))
                 continue;
-            $output_text[$text] = $this->m_word_list_ttf->convert($text);
+            $output_text[] = ['text'=> $text,'ttf'=>$this->m_word_list_ttf->convert($text)];
         }
         $this->response($output_text,200);
              

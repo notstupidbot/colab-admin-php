@@ -329,7 +329,7 @@ export default class SentenceEditorTab extends React.Component{
 		console.log(output_text);
 		const ttfText = [];
 		for(let i in output_text){
-			ttfText.push(output_text[i])
+			ttfText.push(output_text[i].ttf)
 		}
 		sentences[index].ttf = ttfText.join(" ") 
 		this.setState({sentences});
