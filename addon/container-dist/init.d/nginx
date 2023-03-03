@@ -32,16 +32,36 @@ fi
 
 case "${1}" in
   start)
+    _PID=`ps -ef | awk '/\/container\/dist\/sbin\/nginx/{print $2}'`
+    if [ ! -z "$_PID" ]
+    then
+      echo "Nginx Already Running with PID $_PID"
+      exit 1
+    fi
     log_daemon_msg "Starting" "${NAME}"
     
     ${DAEMON} 
     
-     
 
-    if ! ps -C "${NAME}" 
+    n=0
+    while [ ${n} -le 5 ]
+    do 
+      _PID=`ps -ef | awk '/\/container\/dist\/sbin\/nginx/{print $2}'` 
+
+      if [ ! -z "$_PID" ]
+      then
+        break
+      fi
+      sleep 1
+      n=$(( $n + 1 ))
+    done
+
+    if [ -z "$_PID" ]
     then
-      log_warning_msg "${NAME} failed - probably invalid config."
-      exit 1
+      log_daemon_msg "${NAME} failed - probably invalid config."
+      # exit 1
+    else
+      log_daemon_msg "Nginx Running with PID $_PID"
     fi
 
     log_end_msg 0
@@ -66,7 +86,16 @@ case "${1}" in
     ;;
 
   status)
-    ps -C "${NAME}"
+    _PID=`ps -ef | awk '/\/container\/dist\/sbin\/nginx/{print $2}'`
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} is not Running"
+      # exit 1
+    else
+      log_daemon_msg "Nginx Running with PID $_PID"
+    fi
+    log_end_msg "${?}"
+    
     ;;
 
   *)

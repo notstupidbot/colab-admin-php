@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+PID=`ps -ef | awk '/\/container\/dist\/sbin\/dist-container-deploy.sh/{print $2}'`
+sleep 1
+if [ ! -z "$PID" ];then
+	echo "Another process is running with pid $PID"
+	exit 1
+fi
+
+bash /container/dist/sbin/dist-container-deploy.sh

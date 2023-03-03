@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+
+echo "svc daemon [s,i,k] # start,info,kill"
+echo "====================================="
+daemon=$1
+daemon_path=/container/dist/etc/init.d
+
+if [[ $2 == "s" ]]; then
+	$daemon_path/$daemon start	
+fi
+
+if [[ $2 == "i" ]]; then
+	$daemon_path/$daemon status	
+fi
+
+if [[ $2 == "k" ]]; then
+	$daemon_path/$daemon stop	
+fi
+echo "====================================="

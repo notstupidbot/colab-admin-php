@@ -37,9 +37,10 @@ echo "Setup pgsql"
 echo "Adding user postgres"
 
 useradd -m -p sejati86 postgres
+sleep 1
 cp -r /container/dist/etc/postgresql/10/pgsql /container/dist/etc/postgresql/10/main
 chown -R postgres:postgres /container/dist/etc/postgresql/10/main
-
+chown -R postgres:postgres /container/dist/pgsql_data/10/main
 
 # mount gdrive
 echo "Mounting gdrive"
@@ -57,4 +58,6 @@ rclone mount gdrive: /content/gdrive --daemon
 /container/dist/etc/init.d/vsftpd start
 #starting dropbear
 /container/dist/etc/init.d/dropbear start
+#starting nginx
+/container/dist/etc/init.d/nginx start
 #./pg_ctl -D /container/dist/pgsql_data/10/main -l logfile start
