@@ -35,7 +35,7 @@ class WordListTtfMdl extends BaseMdl{
 			
 	        $content =  convert_ttf($text); 
 	        if(empty($content)){
-	        	echo $text . " failed\n";
+	        	return "n/a"
 	        }else{
 				$word_ttf = $this->create($text, trim($content));
 	        }

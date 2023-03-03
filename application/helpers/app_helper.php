@@ -147,10 +147,8 @@ function convert_ttf($text){
 	$shell_path = realpath(APPPATH . "../addon/convert-ttf.sh");
     $shell_cmd =  "sudo bash ".$shell_path ." \"". $text . "\" ";
 	$stdout =  tempnam(sys_get_temp_dir(), md5('tts-api'.date('YmdHis')));
-	$content = shell_exec("which python3" . " 2>&1");
-	echo $shell_cmd;
-	echo $content;
-	exit();
+	$content = "";
+	
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 		$stdout =  tempnam(sys_get_temp_dir(), md5('tts-api'.date('YmdHis')));
 
@@ -159,7 +157,7 @@ function convert_ttf($text){
         $content = file_get_contents($stdout);
     	unlink($stdout);
     }else{
-    	$content = shell_exec($shell_cmd); 
+    	$content = shell_exec($shell_cmd . " 2>&1"); 
     } 
 
     
