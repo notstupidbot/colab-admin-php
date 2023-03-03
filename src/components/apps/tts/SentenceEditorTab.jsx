@@ -334,6 +334,8 @@ export default class SentenceEditorTab extends React.Component{
 		sentences[index].ttf = ttfText.join(" ") 
 		this.setState({sentences});
 		this.updateTtfText();
+		await this.updateRemoteSentence();
+		
 	}
 	stSentenceItemChangeHandler(evt, index){
 		const text = evt.target.value;
