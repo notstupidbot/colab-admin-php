@@ -102,7 +102,8 @@ class Tts extends REST_Controller {
         $output_text = [];
 
         foreach($input_text_split as $text){
-            
+            $text = strtolower($text);
+            $text = preg_replace("/[^a-z]/", "", $text);
             if(empty($text))
                 continue;
             $output_text[] = ['text'=> $text,'ttf'=>$this->m_word_list_ttf->convert($text)];
