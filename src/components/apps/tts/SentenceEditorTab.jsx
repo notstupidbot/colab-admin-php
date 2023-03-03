@@ -81,29 +81,45 @@ export default class SentenceEditorTab extends React.Component{
 			sentences[i].ref = React.createRef(null);
 		}
 	}
+	fixEmptySentences(){
+		const text = this.props.activeSentence.text;
+		this.updateSentences(text,async()=>{
+			await this.updateRemoteSentence();
+			await this.onStateChanges('sentences');	
+		});
+	}
+	async loadSentences(){
+		for (let i in this.state.sentences){
+			const item = this.state.sentences[i];
+			
+			this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
+		}	
+		await this.onStateChanges('sentences');	
+	}
 	loadSentence(){
 		const sentence = Object.assign({},this.props.activeSentence);
 		let sentences =[]; 
 
-		try{sentences = JSON.parse(sentence.sentences); this.rebuildSentences(sentences); console.log(sentences)}catch(e){console.log(e)}
+		try{
+			sentences = JSON.parse(sentence.sentences); 
+			this.rebuildSentences(sentences); 
+			console.log(sentences)
+		}catch(e){
+			console.log(e)
+		}
 		if(typeof sentences == 'object'){
 			if(typeof sentences.length != 'undefined'){
 				this.setState({sentences},async()=>{
-				for (let i in this.state.sentences){
-					const item = this.state.sentences[i];
-					
-					this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
-				}	
-				await this.onStateChanges('sentences');	
-		})
+						await this.loadSentences();
+				})
 			}else{
-				this.setState({sentences:[]})
+				this.setState({sentences:[]},()=>this.fixEmptySentences())
 			}
 		}else{
-			this.setState({sentences:[]})
+			this.setState({sentences:[]},()=>this.fixEmptySentences())
 		}
 
-		this.setState({sentence});
+		this.setState({sentence},()=>this.fixEmptySentences());
 
 		this.stInputNameRef.current.value = sentence.name;
 		this.stInputTextRef.current.value = sentence.text;
