@@ -5,7 +5,7 @@
 tmp_file=$2
 CONVERT_TTF_PY=/container/dist/www/html/addon/convert-ttf.py
 PWD=`pwd`
-cd /content/tts-venv
+cd /container/dist/tts-indonesia
 # source bin/activate
 
 python3 $CONVERT_TTF_PY "$1" #>$tmp_file
