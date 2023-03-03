@@ -1,17 +1,30 @@
 #! /bin/sh
+NAME=postgres
 PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 # Carry out specific functions when asked to by the system
 case "$1" in
   start)
-    echo "Starting pgsql 10"
+    echo "Starting ${NAME}"
     sudo -u postgres bash -c  "/container/dist/pgsql/bin/pg_ctl -D /container/dist/pgsql_data/10/main -l /tmp/logfile start"
     ;;
   stop)
-    echo "Stopping pgsql 10"
+    echo "Stopping ${NAME}"
     sudo -u postgres bash -c  "/container/dist/pgsql/bin/pg_ctl -D /container/dist/pgsql_data/10/main -l /tmp/logfile stop"
 
     sleep 2
     ;;
+  status)
+    _PID=`ps -ef | awk '/\/container\/dist\/pgsql\/bin\/postgres/{print $2}'`
+    if [ -z "$_PID" ]
+    then
+      echo "${NAME} is not Running"
+      # exit 1
+    else
+      echo "${NAME} Running with PID $_PID"
+    fi
+    # echo "${?}"
+    
+    ;;  
   *)
     echo "Usage: /container/dist/etc/init.d/pgsql {start|stop}"
     exit 1

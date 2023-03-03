@@ -18,45 +18,64 @@ test -x "${DAEMON}" || exit 0
 
 case "${1}" in
   start)
-    log_daemon_msg "Starting Push Server Port 7000" "${NAME}"
+    log_daemon_msg "Starting Dev Server Port 3000" "${NAME}"
 
    
 
     start-stop-daemon --start --background -m --oknodo --pidfile /var/run/dev-server.pid --exec ${DAEMON}
-    
-    
-    _PID="$(ps aux | grep /container/dist/www/html/node_modules/.bin/vite|awk '{print $2}')"
-    # echo $_PID; 
-    for pid in $_PID
-      do echo "$NAME Running with PID $pid"
-
+    n=0
+    while [ ${n} -le 5 ]
+    do 
+      _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/npm-run-dev.sh/{print $2}'`
+      if [ ! -z "$_PID" ]
+      then
+        break
+      fi
+      sleep 1
+      n=$(( $n + 1 ))
     done
+
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} failed - probably invalid config."
+      # exit 1
+    else
+      log_daemon_msg "${NAME} Running with PID $_PID"
+    fi
 
     log_end_msg 0
     ;;
 
   stop)
-    log_daemon_msg "Stopping Push Server Port 7000" "${NAME}"
+    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/npm-run-dev.sh/{print $2}'`
 
-    _PID=$(ps aux | grep /container/dist/www/html/node_modules/.bin/vite|awk '{print $2}')
-    for pid in $_PID
-      do kill $pid
-    done
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} is not Running"
+      # exit 1
+    else
+      log_daemon_msg "Stopping Dev Server Port 3000" "${NAME}"
+      kill "$_PID"
+    fi
     ;;
 
   restart)
     ${0} stop
     ${0} start
     ;;
-
-   
+ 
 
   status)
-    echo "${DAEMON}" "Push Server Port 7000"
-    _PID="$(ps aux | grep /container/dist/www/html/node_modules/.bin/vite|awk '{print $2}')"
-    for pid in $_PID
-      do echo "$NAME Running with PID $pid"
-    done
+    
+    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/npm-run-dev.sh/{print $2}'`
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} is not Running"
+      # exit 1
+    else
+      log_daemon_msg "${NAME} Running with PID $_PID"
+    fi
+ 
     ;;
 
   *)

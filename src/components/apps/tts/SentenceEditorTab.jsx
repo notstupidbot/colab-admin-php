@@ -5,6 +5,7 @@ import {makeDelay,terbilang,fixTttsText,timeout,sleep} from "../../../helper";
 let lastText = localStorage.lastText || "";
 
 var delay = makeDelay(1000);
+let dontRunTwice = true;
 export default class SentenceEditorTab extends React.Component{
 	state = {
 		sentences : [],
@@ -62,6 +63,18 @@ export default class SentenceEditorTab extends React.Component{
 		if(lastText){
 			this.updateSentences(lastText)
 		}
+		if(dontRunTwice){
+				this.props.onSocketConnect((socket)=>{
+					console.log(`${socket.id} connected on SentenceEditorTab`)
+				});
+				this.props.onSocketLog((message, data)=>{
+					console.log(`log ${message} arrived in SentenceEditorTab`)
+					console.log(data);
+
+				});
+				dontRunTwice=false;
+		}
+		
 	}
 	rebuildSentences(sentences){
 		for(let i in sentences){
@@ -69,7 +82,7 @@ export default class SentenceEditorTab extends React.Component{
 		}
 	}
 	loadSentence(){
-		const sentence = this.props.activeSentence;
+		const sentence = Object.assign({},this.props.activeSentence);
 		let sentences =[]; 
 
 		try{sentences = JSON.parse(sentence.sentences); this.rebuildSentences(sentences); console.log(sentences)}catch(e){console.log(e)}
@@ -78,12 +91,10 @@ export default class SentenceEditorTab extends React.Component{
 				this.setState({sentences},async()=>{
 				for (let i in this.state.sentences){
 					const item = this.state.sentences[i];
-
-					// console.log(item.ref.current)
 					
 					this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
 				}	
-					
+				await this.onStateChanges('sentences');	
 		})
 			}else{
 				this.setState({sentences:[]})
@@ -99,6 +110,30 @@ export default class SentenceEditorTab extends React.Component{
 		this.stInputTtfRef.current.value = sentence.ttf_text;
 
 		// console.log(this.props.activeSentence)
+	}
+	async onStateChanges(key){
+		if(key === 'sentences'){
+			if(this.props.activeTab != 'sentence-editor'){
+				console.log('SKIP')
+				return;
+			}
+			delay(async ()=>{
+				console.log("rebuilding ttf");
+				for(let i = 0 ;i < this.state.sentences.length ;i++){
+					if(this.props.activeTab != 'sentence-editor'){
+						console.log('tab changed SKIP');
+						break;
+					}
+					const item = this.state.sentences[i];
+					const text = item.text.trim();
+					if(text){
+						console.log(`Processing ${item.text}`);
+						await timeout(1000)
+					}
+					
+				}
+			})
+		}
 	}
 	async runTttsJob(){
 		const uuid = localStorage.socketUuid;
@@ -239,7 +274,8 @@ export default class SentenceEditorTab extends React.Component{
 			sentence.text = text;
 			this.setState({inputStatus:0, sentence});
 			this.updateSentences(text,async()=>{
-				await this.updateRemoteSentence();	
+				await this.updateRemoteSentence();
+				await this.onStateChanges('sentences');	
 			});
 
 		  
@@ -249,6 +285,26 @@ export default class SentenceEditorTab extends React.Component{
 	ttfTextInputChangeHandler(evt){
 		console.log(evt.target.value)
 
+	}
+
+	async convertTtfRemote(text){
+		const res = await axios(`http://localhost/api/tts/convert?text=${encodeURI(text)}`);
+
+		return res.data;
+	}
+
+	stSentenceItemChangeHandler(evt, index){
+		const text = evt.target.value;
+		delay(async()=>{
+			const sentences = this.state.sentences;
+			const item = sentences[index];
+			item.text = text;
+			const output_text = await this.convertTtfRemote(text);
+			console.log(output_text);
+			this.setState({sentences});
+
+			console.log(item)
+		});
 	}
 	stInputNameChangeHandler(evt){
 		// console.log(evt.target.value)
@@ -323,7 +379,7 @@ export default class SentenceEditorTab extends React.Component{
 					
 					return(
 						<div className={"sentence my-1"} key={index}>
-							<textarea  ref={this.state.sentences[index].ref} onChange={evt=>this.sentenceInputChangeHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
+							<textarea  ref={this.state.sentences[index].ref} onChange={evt=>this.stSentenceItemChangeHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
 						</div>
 					)
 				})

@@ -4,7 +4,7 @@ wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download
 
 mkdir -p /container/dist
 mkdir -p /container/src
-
+#libzip-dev libonig-dev
 cd /container/dist
 
 7z x /content/dist.7z

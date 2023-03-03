@@ -7,7 +7,7 @@
 ### END INIT INFO
 
 set -e
-
+export LD_LIBRARY_PATH=/container/dist/lib/x86_64-linux-gnu
 DAEMON="/container/dist/sbin/php-fpm"
 NAME="php-fpm"
 PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"

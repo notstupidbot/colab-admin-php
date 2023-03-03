@@ -80,18 +80,18 @@ class TtsJob{
 				// console.log(r.stdout);
 				console.log(`${cmdline} SUCCESS`);
 				m_jobs.updateTtsJobStatus(this.project_id,1);
-				this.socketManager.emit('log',`tts job success ${this.project_id}`,null,this.uuid);
+				this.socketManager.emit('log',`tts job success ${this.project_id}`,null,this.uuid,this.project);
 			}else if(r.stderr){
 				console.log(`${cmdline} FAILS`);
 				m_jobs.updateTtsJobStatus(this.project_id,-1);
-				this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid);
+				this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid,this.project);
 
 
 			}
 			console.log(r);
 		}).catch(e=>{
 			m_jobs.updateTtsJobStatus(this.project_id,-1);
-			this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid);
+			this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid,this.project);
 
 		});
 	}

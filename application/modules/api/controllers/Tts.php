@@ -95,13 +95,19 @@ class Tts extends REST_Controller {
  
     }
 
-    function convertTtf_get(){
-        $text = $this->get("text");
+    function convert_get(){
+        $input_text = trim($this->input->get("text"));
 
-        $this->response([
-            "text" => $text,
-            "output_text" => $this->m_word_list_ttf->convert($text)
-        ]);
+        $input_text_split = explode(' ', $input_text);
+        $output_text = [];
+
+        foreach($input_text_split as $text){
+            
+            if(empty($text))
+                continue;
+            $output_text[$text] = $this->m_word_list_ttf->convert($text);
+        }
+        $this->response($output_text,200);
              
         
 

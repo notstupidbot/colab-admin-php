@@ -20,7 +20,7 @@ import EditorTab from "./tts/EditorTab";
 import Explorer from "./tts/ExplorerTab";
 import SentenceEditorTab from "./tts/SentenceEditorTab";
 
-export default function TtsApp(){
+export default function TtsApp({onSocketConnect,onSocketLog}){
 
 	const [displayName,setDisplayName] = useState("Push Server");
 	const {socketConnected} = useSharedSocketState();
@@ -127,7 +127,7 @@ return(<>
 
   <div id="bar-with-underline-5" className={activePanelCls('sentence-editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-5">
     
-  <SentenceEditorTab ref={sentenceEditorTabRef} activeSentence={activeSentence} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab}/>
+  <SentenceEditorTab ref={sentenceEditorTabRef}  onSocketLog={onSocketLog} onSocketConnect={onSocketConnect} activeSentence={activeSentence} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab}/>
   </div>
 </div>	
 

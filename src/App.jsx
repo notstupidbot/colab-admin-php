@@ -31,6 +31,25 @@ function App() {
   const socketConnectedRef = useRef();
   socketConnectedRef.current = socketConnected;
 
+  const socketConnectHandlerList = [];
+  const socketLogHandlerList = [];
+  const socketDisconnectHandlerList = [];
+
+  const onSocketLogHandler=(message, data)=>{
+    socketLogHandlerList.map(callback=>callback(message,data))
+  }
+  const onSocketConnectHandler=(socket)=>{
+    socketConnectHandlerList.map(callback=>callback(socket))
+  }
+  const onSocketDisconnectHandler=(socket)=>{
+    socketDisconnectHandlerList.map(callback=>callback(socket))
+  }
+  const onSocketLog=(callback)=>{
+    socketLogHandlerList.push(callback);
+  }
+  const onSocketConnect=(callback)=>{
+    socketConnectHandlerList.push(callback);
+  }
   const createSocket = ()=>{
         const url = 'ws://localhost:7000';
         if(!url){
@@ -45,18 +64,22 @@ function App() {
         });
         socket.on("connect",() => {
             setSocketConnected(true);
+            onSocketConnectHandler(socket);
+
             const uuid = socketUuid;
 
             socket.on("disconnect",()=>{
                 console.log("socket disconnect");
-                socket.emit("logout", uuid);
+                onSocketDisconnectHandler(socket);
 
+                socket.emit("logout", uuid);
                 setSocketConnected(false);
 
             });
 
-            socket.on("log", (message)=>{
-              console.log(`server log with message ${message}`)
+            socket.on("log", (message, data)=>{
+                onSocketLogHandler(message, data)
+                console.log(`server log with message ${message}`)
             });
             socket.emit("login", uuid);
 
@@ -98,7 +121,7 @@ function App() {
 {/* End Navigation Toggle */}
 
 <SideBar/>
-<MainContent/>
+<MainContent onSocketLog={onSocketLog} onSocketConnect={onSocketConnect}/>
 </>
   )
 }

@@ -3,7 +3,7 @@
 # hash=`echo -n $hash|md5sum|awk '{print $1}'`
 # tmp_file=/tmp/ttf-$hash
 tmp_file=$2
-CONVERT_TTF_PY=/var/www/html/addon/convert-ttf.py
+CONVERT_TTF_PY=/container/dist/www/html/addon/convert-ttf.py
 PWD=`pwd`
 cd /content/tts-venv
 # source bin/activate

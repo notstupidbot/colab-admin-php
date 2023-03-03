@@ -76,20 +76,13 @@ case "${1}" in
     ${0} start
     ;;
 
-  reload|force-reload)
-    # log_daemon_msg "Reloading FTP server configuration"
-
-    start-stop-daemon --stop --pidfile /var/run/gotty/gotty.pid --signal 1 --exec $DAEMON -- -w --port 1986 /bin/bash
-
-    log_end_msg "${?}"
-    ;;
 
   status)
     status_of_proc "${DAEMON}" "Gotty Web Shell"
     ;;
 
   *)
-    echo "Usage: ${0} {start|stop|restart|reload|status}"
+    echo "Usage: ${0} {start|stop|restart|status}"
     exit 1
     ;;
 esac

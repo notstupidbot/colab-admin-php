@@ -30,11 +30,15 @@ class WordListTtfMdl extends BaseMdl{
 	function convert($text){
 		$text = strtolower($text);
 		$word_ttf = $this->getByWord($text);
-
+		
 		if(!$word_ttf){
 			
 	        $content =  convert_ttf($text); 
-			$word_ttf = $this->create($text, trim($content));
+	        if(empty($content)){
+	        	echo $text . " failed\n";
+	        }else{
+				$word_ttf = $this->create($text, trim($content));
+	        }
 		}
 
 		return $word_ttf['content'];
