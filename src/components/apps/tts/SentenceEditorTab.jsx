@@ -52,7 +52,7 @@ export default class SentenceEditorTab extends React.Component{
 
 			}
 		}
-
+		console.log(tmpSentences)
 		return tmpSentences;
 
 	}
@@ -128,7 +128,7 @@ export default class SentenceEditorTab extends React.Component{
 					const text = item.text.trim();
 					if(text){
 						console.log(`Processing ${item.text}`);
-						await timeout(1000)
+						await this.updateRemoteItem(item.text, i);
 					}
 					
 				}
@@ -292,18 +292,40 @@ export default class SentenceEditorTab extends React.Component{
 
 		return res.data;
 	}
-
+	updateTtfText(){
+		delay(()=>{
+			const sentences = this.state.sentences;
+			const ttfText =[];
+			for(let i in sentences){
+				const item = sentences[i];
+				if(item.text){
+					if(item.ttf){
+						ttfText.push(item.ttf + (item.type=='dot'?'.':','));
+					}
+				}
+			}
+			this.stInputTtfRef.current.value = ttfText.join(" ");
+		})
+	}
+	async updateRemoteItem(text, index){
+		const sentences = this.state.sentences;
+		const output_text = await this.convertTtfRemote(text);
+		console.log(output_text);
+		const ttfText = [];
+		for(let i in output_text){
+			ttfText.push(output_text[i])
+		}
+		sentences[index].ttf = ttfText.join(" ") 
+		this.setState({sentences});
+		this.updateTtfText();
+	}
 	stSentenceItemChangeHandler(evt, index){
 		const text = evt.target.value;
 		delay(async()=>{
 			const sentences = this.state.sentences;
 			const item = sentences[index];
 			item.text = text;
-			const output_text = await this.convertTtfRemote(text);
-			console.log(output_text);
-			this.setState({sentences});
-
-			console.log(item)
+			await this.updateRemoteItem(text, index);
 		});
 	}
 	stInputNameChangeHandler(evt){
