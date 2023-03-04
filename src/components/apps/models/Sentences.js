@@ -1,14 +1,25 @@
 import React from "react"
 import axios from "axios"
+import {makeDelay,terbilang,fixTttsText,timeout,sleep} from "../../../helper";
+
 const apiEndpoint = `http://localhost`;
 
 class Sentences{
 	sentence = null
+	content = null
 	items = []
 
-	constructor(sentences_sr){
+	constructor(sentences_sr, content){
+		this.content = content;
 		try{
 			const items = JSON.parse(sentences_sr);
+			if(items.length == 0){
+				// console.log('Here')
+				this.buildItems();
+				return; 
+			}
+			// console.log('Here')
+			// console.log(items)
 			this.items = items.map(item=>{
 				item.ref = React.createRef();
 				return item;
@@ -48,20 +59,48 @@ class Sentences{
 		console.log('A',this.getItems())
 	}
 	
-	build(){
+	buildItems(){
+		console.log('HERE')
+		const content = this.content;
+		console.log(content)
 
+		const textList = content.split('.');
+
+		let tmpSentences = [];
+		const dotSentences = content.split('.');
+
+		for(let i in dotSentences){
+			const commaSentence = dotSentences[i].split(',');
+
+			if(commaSentence.length > 1){
+				const lastIndex = commaSentence.length - 1;
+				for(let j in commaSentence){
+					const item = commaSentence[j].replace(/^\s+/,'');
+					const type = j == lastIndex ? 'dot':'comma';
+					tmpSentences.push({text:item, type,ttf:'', ref: React.createRef(null)})
+				}
+			}else{
+				tmpSentences.push({text:commaSentence[0].replace(/^\s+/,''), type:'dot',ttf:'', ref: React.createRef(null)})
+
+			}
+		}
+		console.log(tmpSentences)
+		this.items = tmpSentences;
 	}
 
 	rebuild(){
 
 	}
 
-	rebuildSentences(sentences){
+	 
+	/*-------------------------------------------*/
+
+	/*rebuildSentences(sentences){
 		for(let i in sentences){
 			sentences[i].ref = React.createRef(null);
 		}
-	}
-	async onStateChanges(key){
+	}*/
+	/*async onStateChanges(key){
 		if(key === 'sentences'){
 			if(this.props.activeTab != 'sentence-editor'){
 				console.log('SKIP')
@@ -85,38 +124,12 @@ class Sentences{
 			})
 		}
 	}
-	splitSentences(text){
-		let tmpSentences = [];
-		const dotSentences = text.split('.');
-
-		for(let i in dotSentences){
-			const commaSentence = dotSentences[i].split(',');
-
-			if(commaSentence.length > 1){
-				const lastIndex = commaSentence.length - 1;
-				for(let j in commaSentence){
-					const item = commaSentence[j].replace(/^\s+/,'');
-					const type = j == lastIndex ? 'dot':'comma';
-					tmpSentences.push({text:item, type,ttf:'', ref: React.createRef(null)})
-				}
-			}else{
-					tmpSentences.push({text:commaSentence[0].replace(/^\s+/,''), type:'dot',ttf:'', ref: React.createRef(null)})
-
-			}
-		}
-		console.log(tmpSentences)
-		return tmpSentences;
-
-	}
+	*/
 	// loadSample(){
 	// 	const text= "Kim Tae-ri (24 April 1990) adalah aktris asal Korea Selatan. Dia terkenal karena membintangi film The Hen maiden (2016), Litel Fores (2018), Spes Swipers (2020) dan drama sejarah Mister Sunshine (2018). Baru-baru ini, Kim mendapatkan pengakuan lebih lanjut untuk peran utamanya dalam drama percintaan remaja di Twenti Faiv Twenti wan (2022), ia memenangkan kategori Penghargaan Aktris Terbaik pada  Baeksang Arts Awards ke 58";
 	// }
 	
-	rebuildSentences(sentences){
-		for(let i in sentences){
-			sentences[i].ref = React.createRef(null);
-		}
-	}
+	/*
 	fixEmptySentences(){
 		console.log(`sentences is empty`)
 		const text = this.props.activeSentence.text;
@@ -125,6 +138,8 @@ class Sentences{
 			await this.onStateChanges('sentences');	
 		});
 	}
+	*/
+	/*
 	async loadSentences(){
 		for (let i in this.state.sentences){
 			const item = this.state.sentences[i];
@@ -132,7 +147,8 @@ class Sentences{
 			this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
 		}	
 		// await this.onStateChanges('sentences');	
-	}
+	}*/
+	/*
 	loadRow(){
 		console.log(`STEP 0`);
 		const sentence = Sentence.fromRow(this.props.activeSentence);
@@ -173,7 +189,10 @@ class Sentences{
 
 		// console.log(this.props.activeSentence)
 	}
-updateSentences(text, callback){
+
+	*/
+	/*
+	updateSentences(text, callback){
 		const newSentences = this.splitSentences(text);
 
 		this.setState({sentences:newSentences},async()=>{
@@ -189,7 +208,8 @@ updateSentences(text, callback){
 				}	
 		})
 	}
-
+	*/
+	/*
 	reloadData(){
 		// console.log(this.props.activeProject)
 		// console.log(this.props.activeTab)
@@ -209,8 +229,8 @@ updateSentences(text, callback){
 		}
 		
 	}
-
-	
+	*/
+	/*
 	updateTtfText(){
 		delay(()=>{
 			const sentences = this.state.sentences;
@@ -226,6 +246,8 @@ updateSentences(text, callback){
 			this.stInputTtfRef.current.value = ttfText.join(" ");
 		})
 	}
+	*/
+	/*
 	async updateRemoteItem(text, index){
 		const sentences = this.state.sentences;
 		const output_text = await this.convertTtfRemote(text);
@@ -239,6 +261,7 @@ updateSentences(text, callback){
 		this.updateTtfText();
 
 	}
+	*/
 }
 
 class Sentence {
@@ -257,11 +280,11 @@ class Sentence {
 	}
 	
 	static fromRow(row){
-		const sentences = new Sentences(row.sentences);
+		const sentences = new Sentences(row.sentences, row.text);
 		const sentence = new Sentence(row.text, sentences);
 
 		sentence.setSentences(sentences);
-		sentences.setSentence(sentence);
+		// sentences.setSentence(sentence);
 
 		sentence.setPk(row.id);
 		sentence.setContent(row.text);
@@ -301,7 +324,7 @@ class Sentence {
 		const ttf_text = this.contentTtf;
 		const output_file = this.outputFile;
 		const sentences = this.sentences.getItems().map(item=>{
-			return {tex : item.text, ttf : item.ttf , type : item.type}
+			return {text : item.text, ttf : item.ttf , type : item.type}
 		});
 
 		return {id, name, text, sentences, ttf_text, output_file};
@@ -325,7 +348,7 @@ class Sentence {
 
 	getContentTtf(latest){
 		if(!latest)
-			return this.contentTtf;
+			return this.contentTtf.replace(/\s+/g,' ').replace(/^\s+/,'').replace(/\s.$/,'');
 		// console.log('B',this.getSentences().getItems())
 
 		const contentTtf = this.getSentences().getItems().map(item =>  {
@@ -334,7 +357,7 @@ class Sentence {
 
 		});
 		console.log(contentTtf)
-		this.contentTtf = contentTtf.join(' ')
+		this.contentTtf = contentTtf.join(' ').replace(/\s+/g,' ').replace(/^\s+/,'').replace(/\s.$/,'')
 		return this.contentTtf;
 	}
 

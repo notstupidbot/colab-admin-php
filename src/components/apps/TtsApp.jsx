@@ -20,7 +20,7 @@ import EditorTab from "./tts/EditorTab";
 import Explorer from "./tts/ExplorerTab";
 import SentenceEditorTab from "./tts/SentenceEditorTab";
 
-export default function TtsApp({onSocketConnect,onSocketLog}){
+export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
 
 	const [displayName,setDisplayName] = useState("Push Server");
 	const {socketConnected} = useSharedSocketState();
@@ -85,7 +85,7 @@ export default function TtsApp({onSocketConnect,onSocketLog}){
 	});
 return(<>
 
-<h2>TTS Indonesia</h2>
+{/*<h2>TTS Indonesia</h2>*/}
 <nav className="relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700" aria-label="Tabs" role="tablist">
   {/*<button type="button" tab="project" onClick={evt=>activateTabHandler('project')} className={activeTabCls('project')} id="bar-with-underline-item-1" data-hs-tab="#bar-with-underline-1" aria-controls="bar-with-underline-1" role="tab">
     TTS Project
@@ -127,7 +127,7 @@ return(<>
 
   <div id="bar-with-underline-5" className={activePanelCls('sentence-editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-5">
     
-  <SentenceEditorTab ref={sentenceEditorTabRef}  onSocketLog={onSocketLog} onSocketConnect={onSocketConnect} activeSentence={activeSentence} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab}/>
+  <SentenceEditorTab ref={sentenceEditorTabRef} mainContent={mainContent} onSocketLog={onSocketLog} onSocketConnect={onSocketConnect} activeSentence={activeSentence} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab}/>
   </div>
 </div>	
 

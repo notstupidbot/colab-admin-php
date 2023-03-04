@@ -12,13 +12,18 @@ cd /container/dist
 # Setting Envoronment
 export PATH=/container/dist/bin:/container/dist/sbin:$PATH
 echo "export PATH=/container/dist/bin:/container/dist/sbin:$PATH" >> /root/.bashrc
+echo "export DIST_DIR=/container/dist" >> /root/.bashrc
+echo "export WWW_DIR=/container/dist/www/html" >> /root/.bashrc
+echo "export WWW_PUSH_DIR=/container/dist/www/html/push-server" >> /root/.bashrc
+echo "export ETC_DIR=/container/dist/www/html/push-server" >> /root/.bashrc
+echo "export INITD_DIR=/container/dist/etc/init.d" >> /root/.bashrc
+echo "export GDRIVE=/content/gdrive" >> /root/.bashrc
 
 # Restore rclone config
 cd /content
-wget https://github.com/notstupidbot/colab-admin-php/raw/main/addon/config.7z
-7z x config.7z
-mv /root/.config /root/.config.old
-cp -r .config /root/
+wget https://raw.githubusercontent.com/notstupidbot/colab-admin-php/main/addon/container-dist/config/rclone/rclone.conf
+mkdir -p /root/.config/rclone
+cp rclone.conf /root/.config/rclone/rclone.conf
  
 #starting vsftpd
 cp /container/dist/etc/vsftpd.conf /etc/
@@ -46,11 +51,18 @@ chown -R postgres:postgres /container/dist/pgsql_data/10/main
 echo "Mounting gdrive"
 mkdir -p /content/gdrive
 rclone mount gdrive: /content/gdrive --daemon
+#starting php-fpm
+ln -ns /container/dist/lib/x86_64-linux-gnu/libonig.so.5 /lib/x86_64-linux-gnu/libonig.so.5
+ln -ns /container/dist/lib/x86_64-linux-gnu/libzip.so.5 /lib/x86_64-linux-gnu/libzip.so.5
+/container/dist/etc/init.d/php-fpm start
+
 #echo "Starting pgsql"
 /container/dist/etc/init.d/pgsql start
 #start dev-server
+chmod +x /container/dist/www/html/npm-run-dev.sh
 /container/dist/etc/init.d/dev-server start
 #start push server
+chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 /container/dist/etc/init.d/push-server start
 # starting gotty
 /container/dist/etc/init.d/gotty start
