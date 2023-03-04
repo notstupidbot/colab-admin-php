@@ -9,7 +9,7 @@ NAME="npm-run-dev.sh"
 PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 LOGFILE="/var/log/$NAME.log"
 CHROOT="/var/run/$NAME/empty"
-
+chmod +x $DAEMON
 test -x "${DAEMON}" || exit 0
 
 . /lib/lsb/init-functions
