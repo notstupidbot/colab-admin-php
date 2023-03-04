@@ -74,24 +74,27 @@ class TtsJob{
 
 	async run(cmdline){
 		// const self = this;
+		let data = {project_id:this.project_id, uuid:this.uuid, success:false, name:'tts'}
+
 		execPromise(cmdline).then(r=>{
 			// UPDATE ON EXIT
 			if(r.stdout){
 				// console.log(r.stdout);
+				data.success = true;
 				console.log(`${cmdline} SUCCESS`);
 				m_jobs.updateTtsJobStatus(this.project_id,1);
-				this.socketManager.emit('log',`tts job success ${this.project_id}`,null,this.uuid,this.project);
+				this.socketManager.emit('log',`tts job success ${this.project_id}`,null,this.uuid,data);
 			}else if(r.stderr){
 				console.log(`${cmdline} FAILS`);
 				m_jobs.updateTtsJobStatus(this.project_id,-1);
-				this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid,this.project);
+				this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid,data);
 
 
 			}
 			console.log(r);
 		}).catch(e=>{
 			m_jobs.updateTtsJobStatus(this.project_id,-1);
-			this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid,this.project);
+			this.socketManager.emit('log',`tts job failed ${this.project_id}`,null,this.uuid,data);
 
 		});
 	}
@@ -100,12 +103,13 @@ class TtsJob{
 
 	}
 
-	async create(socket_id){
+	async create(uuid){
 		const www_dir = '/container/dist/www/html';
 		const job_name = "tts";
 		const cmdline = `bash ${www_dir}/addon/tts-job.sh ${this.project_id} "${this.text}"`;
 		const project_id = this.project_id;
-		const existingJob = await m_jobs.getTtsJob(project_id);
+		let existingJob = await m_jobs.getTtsJob(project_id);
+		let pid = null;
 		let data;
 		if(existingJob){
 			console.log(existingJob);
@@ -120,25 +124,33 @@ class TtsJob{
 			setTimeout(async ()=>{
 				data = await this.checkPid();
 				if(data.counts){
-					console.log(`GOT ${data.items[0].pid}`);
+					pid = data.items[0].pid;
+					console.log(`GOT ${pid}`);
 					console.log(data.items);
+					let params = existingJob.params;
+					params.pid = pid;
+					params = JSON.stringify(params)
+					const row = {params}
+					existingJob = await m_jobs.update(existingJob.id, row)
 				}
 			},2000);
 			
 			return existingJob;
 		}else{
 			const uuid = this.uuid;
-			const params = JSON.stringify({project_id,uuid,socket_id});
 			this.run(cmdline);
 				
 			console.log(`checking pid`);
 			setTimeout(async ()=>{
 				data = await this.checkPid();
 				if(data.counts){
-					console.log(`GOT ${data.items[0].pid}`);
+					pid = data.items[0].pid;
+					console.log(`GOT ${pid}`);
 					console.log(data.items);
 				}
 			},2000);
+			const params = JSON.stringify({project_id,uuid,socket_id,pid});
+
 			return m_jobs.create(job_name,cmdline,params);
 		}
 
@@ -158,11 +170,13 @@ function JobRoute(socketManager, app){
 					const {text,project_id} = req.body;
 					console.log(text,project_id);
 					const ttsJob = new TtsJob(project_id,text,socketManager, uuid);
-					const create_job_status = await ttsJob.create(socket_id);
+					const create_job_status = await ttsJob.create(uuid);
 
-					const job_id = 1;
+					let job_id = -1;
+					try{job_id = create_job_status.id}catch(e){}
+					
 					const create_job_messages = `Job ${job_name} created with id ${job_id}`;
-					const emitedSocketLength = await socketManager.emit('log', create_job_messages, socket_id, uuid);
+					const emitedSocketLength = await socketManager.emit('log', create_job_messages, socket_id, uuid, create_job_status);
 					// emitedSocketLength.then(r=>{console.log(r)})
 					if(emitedSocketLength){
 						return res.status(200).send({create_job_status,status:true,emitedSocketLength, message: create_job_messages});

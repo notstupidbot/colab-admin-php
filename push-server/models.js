@@ -35,9 +35,8 @@ const m_socket = {
 		return null;
 		
 	},
-	getByUuid : async (uuid, connectedOnly)=>{
-		const connected = connectedOnly ? 1 : 0;
-		const text = `SELECT * FROM socket_session WHERE uuid='${uuid}' AND connected=${connected}`;
+	getByUuid : async (uuid)=>{
+		const text = `SELECT * FROM socket_session WHERE uuid='${uuid}'`;
 		try {
 		  const res = await client.query(text);
 		  return res.rows;
@@ -167,6 +166,22 @@ const m_jobs = {
 		// console.log(project_id)
 		try{
 			const res = await client.query(`SELECT * FROM jobs WHERE params->>'project_id' = '${project_id}'`);
+			if(res.rows){
+				return res.rows[0];
+			}
+		}catch(e){
+			console.log(e);
+
+		}
+		return null;
+	},
+	update: async(pk,obj)=>{
+		let query = "UPDATE jobs ";
+		for(let k in obj){
+			query += `SET ${k} = '${obj[k]}' `
+		}
+		try{
+			const res = await client.query(query);
 			if(res.rows){
 				return res.rows[0];
 			}

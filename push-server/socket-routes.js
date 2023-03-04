@@ -3,8 +3,14 @@ const {m_socket,init_db,m_jobs} = require("./models");
 const SocketManager = {
 	instances : {},
 	server : null,
-	login : (uuid, SOCKET_CLIENT_INSTANCE_ID, SOCKET_CLIENT_INSTANCE_IP)=>{
-	    m_socket.create(SOCKET_CLIENT_INSTANCE_ID,SOCKET_CLIENT_INSTANCE_IP,uuid);
+	login : async(uuid, SOCKET_CLIENT_INSTANCE_ID, SOCKET_CLIENT_INSTANCE_IP)=>{
+		const existing_row = await m_socket.getById(SOCKET_CLIENT_INSTANCE_ID);
+		if(existing_row){
+		 console.log(existing_row)
+
+		}else{	
+	    	m_socket.create(SOCKET_CLIENT_INSTANCE_ID,SOCKET_CLIENT_INSTANCE_IP,uuid);
+		}
 	},
 
 	logout : (uuid, SOCKET_CLIENT_INSTANCE_ID)=>{
@@ -35,9 +41,10 @@ const SocketManager = {
 		let emitedSocketLength = 0;
 		if(uuid){
 			const sockectByUuids = await m_socket.getIdsByUuid(uuid, true);
-			
 			for(let i in sockectByUuids){
 				const id = sockectByUuids[i].id;
+			// console.log(SocketManager.instances)
+
 				if(typeof SocketManager.instances[id] == 'object'){
 					console.log(`socket id ${id} emit ${event_name}`, message, data);
 					SocketManager.instances[id].emit(event_name, message, data);

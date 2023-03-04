@@ -5,7 +5,7 @@ WWW_DIR=/container/dist/www/html
 PWD=`pwd`
 cd $TTS_DIR
 # source bin/activate
-OUTPATH=$WWW_DIR/pulic/tts-output
+OUTPATH=$WWW_DIR/public/tts-output
 mkdir -p "$OUTPATH"
 tts --text "$2" \
     --model_path "checkpoint.pth" \

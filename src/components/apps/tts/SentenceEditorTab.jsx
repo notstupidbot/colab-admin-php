@@ -19,7 +19,8 @@ export default class SentenceEditorTab extends React.Component{
 		sentence : null,
 		showToast : false,
 		toastMessage:"",
-		job_status : []
+		job_status : [],
+		toastStatus:true
 	}
 
 	stInputTextRef = null
@@ -63,13 +64,21 @@ export default class SentenceEditorTab extends React.Component{
 			console.log(`${socket.id} connected on SentenceEditorTab`)
 		});
 		this.props.onSocketLog((message, data)=>{
-			const job_status = self.state.job_status;
-			console.log(job_status)
-			job_status.push(message);
-			job_status.push(data)
-			self.setState({job_status})
+			// const job_status = self.state.job_status;
+			// console.log(job_status) 
+			// job_status.push(message);
+			// job_status.push(data)
+			// self.setState({job_status})
 			console.log(`log ${message} arrived in SentenceEditorTab`)
-			console.log(data);
+			
+
+			if(data){
+				console.log(data);
+				if(data.name == 'tts'){
+					self.doToast(message, data.success)
+					self.setState({onProcess:false});
+				}
+			}
 
 		});
 	}
@@ -163,15 +172,36 @@ export default class SentenceEditorTab extends React.Component{
 	}
 	async doSaveRow(evt){
 		await this.model.updateRow();
-		this.setState({showToast:true, toastMessage:"Record Saved"})
+		this.doToast("Record Saved",true);
 	}
 	hideToast(){
 		this.setState({showToast:false})
 	}
+	doToast(toastMessage, toastStatus){
+		this.setState({showToast:true, toastMessage, toastStatus})
+	}
 	async runHandler(evt){
+		this.setState({onProcess:true});
 		const ttfText = this.stInputTtfRef.current.value;
 		const job_res = await this.model.runTtsJob(ttfText);
 		const data = job_res.data;
+		const status = data.status;
+		const message = data.message;
+		const emitedSocketLength = data.emitedSocketLength;
+		if(typeof data.create_job_status == 'object'){
+			const {id,job_name} = data.create_job_status;
+			const job_id = id;
+			const {pid,project_id,uuid} = data.create_job_status.params;
+		}
+
+		const toastMessage = `${message}`;
+		this.doToast(toastMessage,status);
+
+		if(!status){
+			this.setState({onProcess:false});
+
+		}
+
 		console.log(data)
 	}
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
@@ -184,7 +214,7 @@ export default class SentenceEditorTab extends React.Component{
 		<ModalConfirm id="confirmInsertAllTtfText" title="Insert All TTF Text ?" content="This action will replace result on currently saved final TTF Text" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doReplaceAllTttfText(evt)} onCancel={evt=>{}} />
 		<ModalConfirm id="confirmSaveRow" title="Save Sentence ?" content="This action will save current sentence in database" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doSaveRow(evt)} onCancel={evt=>{}} />
 
-		<Toast id="my-toast" message={this.state.toastMessage} onClose={evt=>this.hideToast(evt)} show={this.state.showToast}/>
+		<Toast id="my-toast" message={this.state.toastMessage} onClose={evt=>this.hideToast(evt)} show={this.state.showToast} status={this.state.toastStatus}/>
 
 		{/*----------------------------------------------*/}
 			<div className="container">
