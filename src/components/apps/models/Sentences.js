@@ -1,9 +1,10 @@
 import React from "react"
 import axios from "axios"
 import {makeDelay,terbilang,fixTttsText,timeout,sleep} from "../../../helper";
+import {v4} from "uuid"
 
 const apiEndpoint = `http://localhost`;
-
+const ttsApiEndpoint = `http://localhost:7000`;
 class Sentences{
 	sentence = null
 	content = null
@@ -22,6 +23,7 @@ class Sentences{
 			// console.log(items)
 			this.items = items.map(item=>{
 				item.ref = React.createRef();
+				item.ttf_ref = React.createRef();
 				return item;
 			});
 		}catch(e){
@@ -31,6 +33,7 @@ class Sentences{
 	setItemsRefValue(){
 		this.items.map(item=>{
 			item.ref.current.value = item.text;
+			item.ttf_ref.current.value = item.ttf;
 		});
 	}
 	setSentence(sentence){
@@ -45,16 +48,25 @@ class Sentences{
 		const res = await axios(`${apiEndpoint}/api/tts/convert?text=${encodeURI(text)}`);
 		return res.data;
 	}
-	async updateItem(text, index){
+	async updateItem(text, index, forceTtf){
 		console.log(`updating sentences item ${index}`);
-		const ttfTextList = await this.convertTtfRemote(text);
-
-		const ttfText = [];
-		for(let i in ttfTextList){
-			ttfText.push(ttfTextList[i].ttf)
+		if(this.items[index].ttf == "" || forceTtf){
+			const ttfTextList = await this.convertTtfRemote(text);
+	
+			const ttfText = [];
+			for(let i in ttfTextList){
+				ttfText.push(ttfTextList[i].ttf)
+			}
+			this.items[index].ttf = ttfText.join(" ") 
 		}
-		this.items[index].ttf = ttfText.join(" ") 
 		this.items[index].text = text;
+
+		console.log('A',this.getItems())
+	}
+	async updateItemTtf(ttf, index){
+		console.log(`updating sentences item ${index}`);
+
+		this.items[index].ttf = ttf
 
 		console.log('A',this.getItems())
 	}
@@ -75,12 +87,13 @@ class Sentences{
 			if(commaSentence.length > 1){
 				const lastIndex = commaSentence.length - 1;
 				for(let j in commaSentence){
-					const item = commaSentence[j].replace(/^\s+/,'');
+					const text = commaSentence[j].replace(/^\s+/,'');
 					const type = j == lastIndex ? 'dot':'comma';
-					tmpSentences.push({text:item, type,ttf:'', ref: React.createRef(null)})
+					tmpSentences.push({text:fixTttsText(text), type,ttf:'', ref: React.createRef(null), ttf_ref: React.createRef(null)})
 				}
 			}else{
-				tmpSentences.push({text:commaSentence[0].replace(/^\s+/,''), type:'dot',ttf:'', ref: React.createRef(null)})
+				const text = commaSentence[0].replace(/^\s+/,'');
+				tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'', ref: React.createRef(null), ttf_ref: React.createRef(null)})
 
 			}
 		}
@@ -381,6 +394,21 @@ class Sentence {
 
 		return res;
 	} 
+	runTtsJob(finalTtf){
+		if(!finalTtf){
+			finalTtf = this.getContentTtf(true);
+		}
+		const uuid = localStorage.socketUuid;
+		const url = `${ttsApiEndpoint}/job?uuid=${uuid}&job_name=tts`;
+
+		const params = new URLSearchParams({  });
+		params.append('project_id', this.pk);
+		params.append('text',finalTtf);
+
+	
+
+		return axios.post(url, params);
+	}
 }
 
 

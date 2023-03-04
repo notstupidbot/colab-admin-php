@@ -101,7 +101,7 @@ class TtsJob{
 	}
 
 	async create(socket_id){
-		const www_dir = '/var/www/html';
+		const www_dir = '/container/dist/www/html';
 		const job_name = "tts";
 		const cmdline = `bash ${www_dir}/addon/tts-job.sh ${this.project_id} "${this.text}"`;
 		const project_id = this.project_id;
@@ -119,9 +119,10 @@ class TtsJob{
 			}
 			setTimeout(async ()=>{
 				data = await this.checkPid();
-
-				console.log(`GOT ${data.items[0].pid}`);
-				console.log(data.items);
+				if(data.counts){
+					console.log(`GOT ${data.items[0].pid}`);
+					console.log(data.items);
+				}
 			},2000);
 			
 			return existingJob;
@@ -133,9 +134,10 @@ class TtsJob{
 			console.log(`checking pid`);
 			setTimeout(async ()=>{
 				data = await this.checkPid();
-
-				console.log(`GOT ${data.items[0].pid}`);
-				console.log(data.items);
+				if(data.counts){
+					console.log(`GOT ${data.items[0].pid}`);
+					console.log(data.items);
+				}
 			},2000);
 			return m_jobs.create(job_name,cmdline,params);
 		}

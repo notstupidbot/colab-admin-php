@@ -82,7 +82,7 @@ function App() {
 
             socket.on("log", (message, data)=>{
                 onSocketLogHandler(message, data)
-                console.log(`server log with message ${message}`)
+               // console.log(`server log with message ${message}`)
             });
             socket.emit("login", uuid);
 

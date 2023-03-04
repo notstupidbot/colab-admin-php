@@ -66,8 +66,17 @@ export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
 	}
 
 	useEffect(()=>{
-		// editorTabRef.current.reloadData();
-	},[activeProject])
+		console.log(`${activeTab}`)
+		if(activeTab == 'sentence'){
+			try{
+			sentenceTabRef.current.updateList();
+
+			}catch(e){
+
+			}
+		}
+		
+	},[activeTab])
 
 	useEffect(()=>{
 		// console.log(activeSentence);

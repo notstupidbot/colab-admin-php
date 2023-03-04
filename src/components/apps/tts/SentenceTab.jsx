@@ -13,12 +13,13 @@ export default class SentenceTab extends React.Component{
 		
 	}
 	async componentDidMount(){
-		await this.updateList()
+		// await this.updateList()
 	}
 	async updateList(){
 		const res = await axios(`http://localhost/api/tts/sentence`);
 		const sentenceList = res.data;
 		this.setState({sentenceList})
+		return sentenceList;
 	}
 	render(){
 return(<>

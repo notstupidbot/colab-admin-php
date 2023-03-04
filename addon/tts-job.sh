@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-
-cd /content/tts-venv
+export PATH=/container/dist/sbin:/container/dist/bin:$PATH
+TTS_DIR=/container/dist/tts-indonesia
+WWW_DIR=/container/dist/www/html
+PWD=`pwd`
+cd $TTS_DIR
 # source bin/activate
-OUTPATH=/var/www/html/public/tts-output
+OUTPATH=$WWW_DIR/pulic/tts-output
 mkdir -p "$OUTPATH"
 tts --text "$2" \
     --model_path "checkpoint.pth" \
