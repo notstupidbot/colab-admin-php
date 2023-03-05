@@ -176,8 +176,7 @@ class Restore extends MX_Controller {
                 'constraint' => '50',
 	        ),
 	        'cmdline' => array(
-                'type' => 'VARCHAR',
-                'constraint' => '225',
+                'type' => 'TEXT',
 	        ),
 	        'params' => array(
                 'type' => 'JSON',

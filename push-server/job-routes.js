@@ -149,7 +149,7 @@ class TtsJob{
 					console.log(data.items);
 				}
 			},2000);
-			const params = JSON.stringify({project_id,uuid,socket_id,pid});
+			const params = JSON.stringify({project_id,uuid,pid});
 
 			return m_jobs.create(job_name,cmdline,params);
 		}
@@ -173,11 +173,10 @@ function JobRoute(socketManager, app){
 					const create_job_status = await ttsJob.create(uuid);
 
 					let job_id = -1;
-					try{job_id = create_job_status.id}catch(e){}
-					
+					try{job_id = create_job_status.id;}catch(e){}
+					console.log(create_job_status)
 					const create_job_messages = `Job ${job_name} created with id ${job_id}`;
-					const emitedSocketLength = await socketManager.emit('log', create_job_messages, socket_id, uuid, create_job_status);
-					// emitedSocketLength.then(r=>{console.log(r)})
+					const emitedSocketLength = await socketManager.emit('log', create_job_messages, socket_id, uuid, {job_id,uuid});
 					if(emitedSocketLength){
 						return res.status(200).send({create_job_status,status:true,emitedSocketLength, message: create_job_messages});
 					}else{

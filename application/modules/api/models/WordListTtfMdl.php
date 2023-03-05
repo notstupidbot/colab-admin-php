@@ -12,7 +12,10 @@ class WordListTtfMdl extends BaseMdl{
 	function create($text, $content){
 		$text = strtolower($text);
         $word = $this->m_word_list->getByWord($text);
-
+        $check_exist_by_content = $this->db->where('content',$content)->get($this->table)->row_array();
+        if($check_exist_by_content){
+        	return $check_exist_by_content;
+        }
 		$row = ["id"=>gen_uuid(),"content" => $content, "path" => "", "word_id" => $word['id']];
         $this->db->insert($this->table, $row);
         return $row;
@@ -27,6 +30,7 @@ class WordListTtfMdl extends BaseMdl{
 		}
 		return $this->db->where("word_id", $word["id"])->from($this->table)->get()->row_array();
 	}
+
 	function convert($text){
 		$text = strtolower($text);
 		$word_ttf = $this->getByWord($text);

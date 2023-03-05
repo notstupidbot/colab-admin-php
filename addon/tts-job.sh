@@ -10,5 +10,5 @@ mkdir -p "$OUTPATH"
 tts --text "$2" \
     --model_path "checkpoint.pth" \
     --config_path "config.json" \
-    --speaker_idx wibowo \
+    --speaker_idx "SU-03712" \
     --out_path "$OUTPATH/$1.wav"

@@ -20,14 +20,15 @@ export default class SentenceEditorTab extends React.Component{
 		showToast : false,
 		toastMessage:"",
 		job_status : [],
-		toastStatus:true
+		toastStatus:true,
+		audioOutput:""
 	}
 
 	stInputTextRef = null
 	stInputTtfRef = null
 	runBtnRef = null
 	stInputNameRef = null
-
+	audioRef = null
 	model = null; 
 
 	inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
@@ -40,6 +41,7 @@ export default class SentenceEditorTab extends React.Component{
 		this.stInputTtfRef = React.createRef(null)
 		this.runBtnRef = React.createRef(null)
 		this.stInputTextRef = React.createRef(null)
+		this.audioRef = React.createRef(null)
 	}
  	componentDidMount(){
 
@@ -76,7 +78,14 @@ export default class SentenceEditorTab extends React.Component{
 				console.log(data);
 				if(data.name == 'tts'){
 					self.doToast(message, data.success)
-					self.setState({onProcess:false});
+					self.setState({onProcess:false,audioOutput:`http://localhost/public/tts-output/${data.project_id}.wav?uuid=${v4()}`},()=>{
+							self.audioRef.current.load();
+
+						setTimeout(()=>{
+							self.audioRef.current.play();
+						},250)
+						
+					});
 				}
 			}
 
@@ -90,6 +99,14 @@ export default class SentenceEditorTab extends React.Component{
 			return;
 		}
 		console.log(row);
+		const self = this;
+		this.setState({audioOutput:`http://localhost/public/tts-output/${row.id}.wav?uuid=${v4()}`},()=>{
+			self.audioRef.current.load();
+
+						setTimeout(()=>{
+							self.audioRef.current.play();
+						},250)
+		})
 		this.model = Sentence.fromRow(row);
 		console.log(this.model);
 		
@@ -204,6 +221,9 @@ export default class SentenceEditorTab extends React.Component{
 
 		console.log(data)
 	}
+	chContentTtfHandler(evt){
+		console.log(evt.target.value)
+	}
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
 	loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
 	render (){
@@ -259,11 +279,13 @@ export default class SentenceEditorTab extends React.Component{
 				})
 			}
 			<div>
-				<textarea  ref={this.stInputTtfRef} onChange={evt=>chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 bg-lime-200" rows="3" placeholder="Sentence ttf text"></textarea>	
+				<textarea  ref={this.stInputTtfRef} onChange={evt=>this.chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 bg-lime-200" rows="3" placeholder="Sentence ttf text"></textarea>	
 			</div>
 			<div className="columns-2 my-3">
 				<div>
-				<div className="bg-gray-50 border border-gray-200 text-sm text-gray-600 rounded-md p-4" role="alert">{JSON.stringify(this.state.job_status)}</div>
+				<audio controls ref={this.audioRef} className="-mt-2 -ml-3">
+          <source src={this.state.audioOutput} />
+        </audio>
 				</div>
 
 				<div className="text-right">
