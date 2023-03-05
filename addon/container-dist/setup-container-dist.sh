@@ -78,8 +78,12 @@ chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 # LINK FILES FROM Google Drive
 apt install squashfuse
 mkdir -p /container/site-packages
-cp /content/gdrive/site-packages.squashfs  cp /container/site-packages.squashfs
+echo "Copyng /content/gdrive/site-packages.squashfs"
+cp /content/gdrive/site-packages.squashfs  /container/site-packages.squashfs
+echo "Mounting container/site-packages.squashfs"
 /usr/bin/squashfuse /container/site-packages.squashfs  /container/site-packages
+echo "Running tts"
+tts
 #$SRC_DIR=/content/gdrive/container
 #$DST_DIR=/container/dist
 
