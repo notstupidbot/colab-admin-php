@@ -76,7 +76,10 @@ chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 
 
 # LINK FILES FROM Google Drive
-
+apt install squashfuse
+mkdir -p /container/site-packages
+cp /content/gdrive/site-packages.squashfs  cp /container/site-packages.squashfs
+/usr/bin/squashfuse /container/site-packages.squashfs  /container/site-packages
 #$SRC_DIR=/content/gdrive/container
 #$DST_DIR=/container/dist
 
