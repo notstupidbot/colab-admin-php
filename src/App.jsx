@@ -10,6 +10,7 @@ import { useBetween } from "use-between";
 import useSocketClient from "./shared/useSocketClient";
 import useSocketState from "./shared/useSocketState";
 // import useServerCfgState from "./shared/useServerCfgState";
+import app_config from "./app.config"
 
 // const useSharedServerCfgState = () => useBetween(useServerCfgState);
 const useSharedSocketState = () => useBetween(useSocketState);
@@ -54,7 +55,7 @@ function App() {
     socketConnectHandlerList.push(callback);
   }
   const createSocket = ()=>{
-        const url = 'ws://localhost:7000';
+        const url = `${app_config.getPushEndpoint()}`;
         if(!url){
             console.log("skip initSocket: url empty")
         }

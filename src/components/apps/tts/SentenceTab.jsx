@@ -1,5 +1,7 @@
 import React from "react"
 import axios from "axios"
+import app_config from "../../../app.config"
+
 export default class SentenceTab extends React.Component{
 	state = {
 		sentenceList : []
@@ -16,7 +18,7 @@ export default class SentenceTab extends React.Component{
 		// await this.updateList()
 	}
 	async updateList(){
-		const res = await axios(`http://localhost/api/tts/sentence`);
+		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/sentence`);
 		const sentenceList = res.data;
 		this.setState({sentenceList})
 		return sentenceList;

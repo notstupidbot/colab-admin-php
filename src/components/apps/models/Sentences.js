@@ -2,9 +2,10 @@ import React from "react"
 import axios from "axios"
 import {makeDelay,terbilang,fixTttsText,timeout,sleep} from "../../../helper";
 import {v4} from "uuid"
-
-const apiEndpoint = `http://localhost`;
-const ttsApiEndpoint = `http://localhost:7000`;
+import app_config from "../../../app.config"
+console.log(app_config)
+const apiEndpoint = app_config.getApiEndpoint();
+const ttsApiEndpoint = app_config.getPushEndpoint();
 class Sentences{
 	sentence = null
 	content = null

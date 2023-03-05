@@ -15,7 +15,7 @@ echo "export PATH=/container/dist/bin:/container/dist/sbin:$PATH" >> /root/.bash
 echo "export DIST_DIR=/container/dist" >> /root/.bashrc
 echo "export WWW_DIR=/container/dist/www/html" >> /root/.bashrc
 echo "export WWW_PUSH_DIR=/container/dist/www/html/push-server" >> /root/.bashrc
-echo "export ETC_DIR=/container/dist/www/html/push-server" >> /root/.bashrc
+echo "export ETC_DIR=/container/dist/etc" >> /root/.bashrc
 echo "export INITD_DIR=/container/dist/etc/init.d" >> /root/.bashrc
 echo "export GDRIVE=/content/gdrive" >> /root/.bashrc
 
@@ -73,3 +73,30 @@ chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 #starting nginx
 /container/dist/etc/init.d/nginx start
 #./pg_ctl -D /container/dist/pgsql_data/10/main -l logfile start
+
+
+# LINK FILES FROM Google Drive
+
+#$SRC_DIR=/content/gdrive/container
+#$DST_DIR=/container/dist
+
+# link tts-dir
+
+#ln -ns $SRC_DIR/tts-indonesia  $DST_DIR/tts-indonesia 
+
+# link python site-packages
+# site-packages_nvidia.7z
+# 1SawmQTrvycWlyX_ZcvMXSYeSRcaetSAI
+# wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1SawmQTrvycWlyX_ZcvMXSYeSRcaetSAI' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1SawmQTrvycWlyX_ZcvMXSYeSRcaetSAI" -O dist.7z && rm -rf /tmp/cookies.txt
+# 
+# site-packages_torch.7z
+# 1WQyY_kOZs4w8sk-gUr_9XpC-xb_rKQPp
+# wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1WQyY_kOZs4w8sk-gUr_9XpC-xb_rKQPp' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1WQyY_kOZs4w8sk-gUr_9XpC-xb_rKQPp" -O dist.7z && rm -rf /tmp/cookies.txt
+
+# update using squashfuse-0.1.105/
+# or using archivemount
+#ln -ns $SRC_DIR/site-packages $DST_DIR/lib/python3.9/site-packages
+# ln -ns $SRC_DIR/nvidia $DST_DIR/lib/python3.9/site-packages/nvidia
+# ln -ns $SRC_DIR/torch $DST_DIR/lib/python3.9/site-packages/torch
+
+

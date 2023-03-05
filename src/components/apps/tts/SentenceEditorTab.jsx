@@ -6,6 +6,7 @@ import {Sentence, Sentences} from "../models/Sentences";
 import ModalConfirm from "./ModalConfirm"
 import Toast from "./Toast"
 let lastText = localStorage.lastText || "";
+import app_config from "../../../app.config"
 
 var delay = makeDelay(1000);
 let dontRunTwice = true;
@@ -78,7 +79,7 @@ export default class SentenceEditorTab extends React.Component{
 				console.log(data);
 				if(data.name == 'tts'){
 					self.doToast(message, data.success)
-					self.setState({onProcess:false,audioOutput:`http://localhost/public/tts-output/${data.project_id}.wav?uuid=${v4()}`},()=>{
+					self.setState({onProcess:false,audioOutput:`${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}.wav?uuid=${v4()}`},()=>{
 							self.audioRef.current.load();
 
 						setTimeout(()=>{
@@ -100,7 +101,7 @@ export default class SentenceEditorTab extends React.Component{
 		}
 		console.log(row);
 		const self = this;
-		this.setState({audioOutput:`http://localhost/public/tts-output/${row.id}.wav?uuid=${v4()}`},()=>{
+		this.setState({audioOutput:`${app_config.getApiEndpoint()}/public/tts-output/${row.id}.wav?uuid=${v4()}`},()=>{
 			self.audioRef.current.load();
 
 						setTimeout(()=>{
