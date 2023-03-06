@@ -77,33 +77,14 @@ chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 
 # LINK FILES FROM Google Drive
 apt install squashfuse
-mkdir -p /container/site-packages
-echo "Copyng /content/gdrive/site-packages.squashfs"
-cp /content/gdrive/site-packages.squashfs  /container/site-packages.squashfs
+# 1OdU3_-aubYSXvL8wMF50IiL3oTQ6x02y
+cd /container
+echo "Downloading site-packages.squashfs"
+
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1OdU3_-aubYSXvL8wMF50IiL3oTQ6x02y' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1OdU3_-aubYSXvL8wMF50IiL3oTQ6x02y" -O site-packages.squashfs && rm -rf /tmp/cookies.txt
+
+
 echo "Mounting container/site-packages.squashfs"
 /usr/bin/squashfuse /container/site-packages.squashfs  /container/site-packages
 echo "Running tts"
 tts
-#$SRC_DIR=/content/gdrive/container
-#$DST_DIR=/container/dist
-
-# link tts-dir
-
-#ln -ns $SRC_DIR/tts-indonesia  $DST_DIR/tts-indonesia 
-
-# link python site-packages
-# site-packages_nvidia.7z
-# 1SawmQTrvycWlyX_ZcvMXSYeSRcaetSAI
-# wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1SawmQTrvycWlyX_ZcvMXSYeSRcaetSAI' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1SawmQTrvycWlyX_ZcvMXSYeSRcaetSAI" -O dist.7z && rm -rf /tmp/cookies.txt
-# 
-# site-packages_torch.7z
-# 1WQyY_kOZs4w8sk-gUr_9XpC-xb_rKQPp
-# wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1WQyY_kOZs4w8sk-gUr_9XpC-xb_rKQPp' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1WQyY_kOZs4w8sk-gUr_9XpC-xb_rKQPp" -O dist.7z && rm -rf /tmp/cookies.txt
-
-# update using squashfuse-0.1.105/
-# or using archivemount
-#ln -ns $SRC_DIR/site-packages $DST_DIR/lib/python3.9/site-packages
-# ln -ns $SRC_DIR/nvidia $DST_DIR/lib/python3.9/site-packages/nvidia
-# ln -ns $SRC_DIR/torch $DST_DIR/lib/python3.9/site-packages/torch
-
-
