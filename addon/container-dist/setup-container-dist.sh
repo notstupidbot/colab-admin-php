@@ -76,7 +76,7 @@ chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 
 
 # LINK FILES FROM Google Drive
-apt install squashfuse
+# apt install squashfuse
 # 1OdU3_-aubYSXvL8wMF50IiL3oTQ6x02y
 cd /container
 echo "Downloading site-packages.squashfs"
@@ -86,6 +86,6 @@ wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download
 
 echo "Mounting container/site-packages.squashfs"
 mkdir -p /container/site-packages
-/usr/bin/squashfuse /container/site-packages.squashfs  /container/site-packages
+squashfuse /container/site-packages.squashfs  /container/site-packages
 echo "Running tts"
 tts
