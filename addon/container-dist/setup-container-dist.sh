@@ -85,6 +85,7 @@ wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download
 
 
 echo "Mounting container/site-packages.squashfs"
+mkdir -p /container/site-packages
 /usr/bin/squashfuse /container/site-packages.squashfs  /container/site-packages
 echo "Running tts"
 tts
