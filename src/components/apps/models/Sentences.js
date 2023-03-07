@@ -25,17 +25,32 @@ class Sentences{
 			this.items = items.map(item=>{
 				item.ref = React.createRef();
 				item.ttf_ref = React.createRef();
+				item.audio_ref = React.createRef();
 				item.loading = false;
+				item.loading_ttf = false;
+				item.audio_source = "";
 				return item;
 			});
 		}catch(e){
 			// console.log(e);
 		}
 	}
-	setItemsRefValue(){
+	setItemsRefValue(what){
+		what = what || 'all';
 		this.items.map(item=>{
-			item.ref.current.value = item.text;
-			item.ttf_ref.current.value = item.ttf;
+			if(what == 'all'){
+				item.ref.current.value = item.text;
+				item.ttf_ref.current.value = item.ttf;
+			}
+			if(what == 'text'){
+				item.ref.current.value = item.text;
+			}
+			if(what == 'ttf'){
+				item.ttf_ref.current.value = item.ttf;
+			}
+			// if(what == 'audio_source'){
+			// 	item.audio_source = item.ttf;
+			// }
 		});
 	}
 	setSentence(sentence){
@@ -107,12 +122,12 @@ class Sentences{
 					const text = commaSentence[j].replace(/^\s+/,'');
 					const type = j == lastIndex ? 'dot':'comma';
 					if(text.length)
-						tmpSentences.push({text:fixTttsText(text), type,ttf:'',loading:false, ref: React.createRef(null), ttf_ref: React.createRef(null)})
+						tmpSentences.push({text:fixTttsText(text), type,ttf:'',loading:false,loading_ttf:false,audio_source:"", ref: React.createRef(null),audio_ref: React.createRef(null), ttf_ref: React.createRef(null)})
 				}
 			}else{
 				const text = commaSentence[0].replace(/^\s+/,'');
 				if(text.length)
-				tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'',loading:false, ref: React.createRef(null), ttf_ref: React.createRef(null)})
+				tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'',loading:false,loading_ttf:false,audio_source:"", ref: React.createRef(null),audio_ref: React.createRef(null), ttf_ref: React.createRef(null)})
 
 			}
 		}
@@ -121,180 +136,6 @@ class Sentences{
 		return this;
 	}
 
-	rebuild(){
-
-	}
-
-	 
-	/*-------------------------------------------*/
-
-	/*rebuildSentences(sentences){
-		for(let i in sentences){
-			sentences[i].ref = React.createRef(null);
-		}
-	}*/
-	/*async onStateChanges(key){
-		if(key === 'sentences'){
-			if(this.props.activeTab != 'sentence-editor'){
-				console.log('SKIP')
-				return;
-			}
-			delay(async ()=>{
-				console.log("rebuilding ttf");
-				for(let i = 0 ;i < this.state.sentences.length ;i++){
-					if(this.props.activeTab != 'sentence-editor'){
-						console.log('tab changed SKIP');
-						break;
-					}
-					const item = this.state.sentences[i];
-					const text = item.text.trim();
-					if(text){
-						console.log(`Processing ${item.text}`);
-						await this.updateRemoteItem(item.text, i);
-					}
-					
-				}
-			})
-		}
-	}
-	*/
-	// loadSample(){
-	// 	const text= "Kim Tae-ri (24 April 1990) adalah aktris asal Korea Selatan. Dia terkenal karena membintangi film The Hen maiden (2016), Litel Fores (2018), Spes Swipers (2020) dan drama sejarah Mister Sunshine (2018). Baru-baru ini, Kim mendapatkan pengakuan lebih lanjut untuk peran utamanya dalam drama percintaan remaja di Twenti Faiv Twenti wan (2022), ia memenangkan kategori Penghargaan Aktris Terbaik pada  Baeksang Arts Awards ke 58";
-	// }
-	
-	/*
-	fixEmptySentences(){
-		console.log(`sentences is empty`)
-		const text = this.props.activeSentence.text;
-		this.updateSentences(text,async()=>{
-			await this.updateRemoteSentence();
-			await this.onStateChanges('sentences');	
-		});
-	}
-	*/
-	/*
-	async loadSentences(){
-		for (let i in this.state.sentences){
-			const item = this.state.sentences[i];
-			
-			this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
-		}	
-		// await this.onStateChanges('sentences');	
-	}*/
-	/*
-	loadRow(){
-		console.log(`STEP 0`);
-		const sentence = Sentence.fromRow(this.props.activeSentence);
-		let sentences =[]; 
-		console.log(`sentence is `,sentence);
-
-		return;
-		try{
-			sentences = JSON.parse(sentence.sentences); 
-			this.rebuildSentences(sentences); 
-			console.log(sentences)
-		}catch(e){
-			console.log(e)
-		}
-		console.log(`STEP 01`);
-		console.log(`sentences is `,sentences);
-
-		if(typeof sentences == 'object'){
-			if(typeof sentences.length != 'undefined'){
-				this.setState({sentences},async()=>{
-						console.log(`STEP 01a`);
-						await this.loadSentences();
-				})
-			}else{
-				console.log(`STEP 01b`);
-				this.setState({sentences:[]},()=>this.fixEmptySentences())
-			}
-		}else{
-			console.log(`STEP 01c`);
-			this.setState({sentences:[]},()=>this.fixEmptySentences())
-		}
-
-		// this.setState({sentence},()=>this.fixEmptySentences());
-
-		this.stInputNameRef.current.value = sentence.name;
-		this.stInputTextRef.current.value = sentence.text;
-		this.stInputTtfRef.current.value = sentence.ttf_text;
-
-		// console.log(this.props.activeSentence)
-	}
-
-	*/
-	/*
-	updateSentences(text, callback){
-		const newSentences = this.splitSentences(text);
-
-		this.setState({sentences:newSentences},async()=>{
-				for (let i in this.state.sentences){
-					const item = this.state.sentences[i];
-
-					// console.log(item.ref.current)
-					
-					this.state.sentences[i].ref.current.value = fixTttsText(this.state.sentences[i].text);
-				}	
-				if(typeof callback=='function'){
-					callback();
-				}	
-		})
-	}
-	*/
-	/*
-	reloadData(){
-		// console.log(this.props.activeProject)
-		// console.log(this.props.activeTab)
-		// console.log(this.props.socketConnected)
-		// console.log(this.props.socketClient)
-
-		const activeProject = this.props.activeProject;
-		if(activeProject){
-			console.log(activeProject);
-
-			const text = activeProject.text;
-			// const sentences = text.split('.');
-
-			this.textInputRef.current.value = text;
-
-			this.updateSentences(text)
-		}
-		
-	}
-	*/
-	/*
-	updateTtfText(){
-		delay(()=>{
-			const sentences = this.state.sentences;
-			const ttfText =[];
-			for(let i in sentences){
-				const item = sentences[i];
-				if(item.text){
-					if(item.ttf){
-						ttfText.push(item.ttf + (item.type=='dot'?'.':','));
-					}
-				}
-			}
-			this.stInputTtfRef.current.value = ttfText.join(" ");
-		})
-	}
-	*/
-	/*
-	async updateRemoteItem(text, index){
-		const sentences = this.state.sentences;
-		const output_text = await this.convertTtfRemote(text);
-		console.log(output_text);
-		const ttfText = [];
-		for(let i in output_text){
-			ttfText.push(output_text[i].ttf)
-		}
-		sentences[index].ttf = ttfText.join(" ") 
-		this.setState({sentences});
-		this.updateTtfText();
-
-	}
-	*/
 }
 
 class Sentence {
@@ -381,46 +222,62 @@ class Sentence {
 
 	getContentTtf(latest){
 		if(!latest)
-			return this.contentTtf.replace(/\s+/g,' ').replace(/^\s+/,'').replace(/\s.$/,'');
+			return this.contentTtf.replace(/\s+/g,' ').replace(/^\s+/g,'').replace(/\s.$/g,'.');
 		// console.log('B',this.getSentences().getItems())
 
 		const contentTtf = this.getSentences().getItems().map(item =>  {
-			const type = item.type == 'comma' ? ',' : '.'
-			return item.ttf ? `${item.ttf} ${type}` : ''
+			const type = item.type == 'comma' ? ',' : "."
+			item.ttf = item.ttf.replace(/\s+/g,' ').replace(/^\s+/,'')
+			return item.ttf ? `${item.ttf}${type}` : ''
 
 		});
 		console.log(contentTtf)
-		this.contentTtf = contentTtf.join(' ').replace(/\s+/g,' ').replace(/^\s+/,'').replace(/\s.$/,'')
+		this.contentTtf = contentTtf.join("\n");
 		return this.contentTtf;
 	}
 
-	async updateRow(){
+	async updateRow(dontRun){
 		const data = new FormData();
 		const {id,name,text,sentences,ttf_text} = this.toRow();
 
-		console.log(sentences)
+		// console.log(sentences)
 
 		data.append('name', name);
 		data.append('text', text);
 		data.append('sentences', JSON.stringify(sentences));
 		data.append('ttf_text', ttf_text);
 
-		const res = axios({
-			method: "post",
-			url: `${apiEndpoint}/api/tts/sentence?id=${id}`,
-			data: data,
-			headers: { "Content-Type": "multipart/form-data" },
-		});
+		if(dontRun){
+			console.log("A");
+			this.getSentences().setItemsRefValue('ttf');
+			return FormData;
+		}else{
+			console.log("B")
+			const res = axios({
+				method: "post",
+				url: `${apiEndpoint}/api/tts/sentence?id=${id}`,
+				data: data,
+				headers: { "Content-Type": "multipart/form-data" },
+			});
 
-		return res;
+			return res;
+		}
+		
 	} 
-	runTtsJob(finalTtf){
+	runTtsJob(finalTtf, chunkMode, index){
 		if(!finalTtf){
 			finalTtf = this.getContentTtf(true);
 		}
 		const uuid = localStorage.socketUuid;
-		const url = `${ttsApiEndpoint}/job?uuid=${uuid}&job_name=tts`;
+		let url = `${ttsApiEndpoint}/job?uuid=${uuid}&job_name=tts`;
 
+		chunkMode = chunkMode || false;
+		index = index || 0;
+
+		if(chunkMode){
+			url += `&chunkMode=true&index=${index}`	
+		}
+			
 		const params = new URLSearchParams({  });
 		params.append('project_id', this.pk);
 		params.append('text',finalTtf);

@@ -7,12 +7,8 @@ import ModalConfirm from "./ModalConfirm"
 import Toast from "./Toast"
 let lastText = localStorage.lastText || "";
 import app_config from "../../../app.config"
-import CodeMirror from '@uiw/react-codemirror';
-import {sublime} from "@uiw/codemirror-theme-sublime";
-import { okaidia } from '@uiw/codemirror-theme-okaidia';
-import { javascript } from '@codemirror/lang-javascript';
-import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
-const cm_theme_setting = sublime
+import "./auto-grow-textarea.css"
+
 var delay = makeDelay(1000);
 let dontRunTwice = true;
 export default class SentenceEditorTab extends React.Component{
@@ -58,8 +54,29 @@ export default class SentenceEditorTab extends React.Component{
 				dontRunTwice=false;
 		}
 
+		
+		this.loadGrowWrap();
+
 		this.hideSideBar()
 		
+	}
+	loadGrowWrap(){
+
+		const growers = document.querySelectorAll(".grow-wrap");
+		// console.log(growers)
+		growers.forEach((grower) => {
+		  const textarea = grower.querySelector("textarea");
+		  textarea.addEventListener("input", () => {
+		    grower.dataset.replicatedValue = textarea.value;
+		  });
+		});
+
+		setTimeout(()=>{
+			$('.grow-wrap textarea').each((i,el)=>{
+				// console.log(i,el)
+				el.dispatchEvent(new Event("input"))
+			});
+		},1000)
 	}
 	hideSideBar(){
 		try{
@@ -106,6 +123,7 @@ export default class SentenceEditorTab extends React.Component{
 		console.log(`STEP 0`);
 		const row = this.props.activeSentence;
 
+		
 		if(!row){
 			return;
 		}
@@ -133,12 +151,20 @@ export default class SentenceEditorTab extends React.Component{
 		this.stInputTtfRef.current.value = this.model.getContentTtf(); 
 
 
-		this.setState({cm_text: this.model.getContent(), ttfText: this.model.getContentTtf()})
+		this.setState({cm_text: this.model.getContent(), ttfText: this.model.getContentTtf()},()=>{
+			setTimeout(()=>{
+					this.loadGrowWrap()
+			},1000)
+		})
 	}
 
 	loadSentencesFormData(){
 		const sentences = this.model.getSentences().getItems();
-		this.setState({sentences},o=>this.model.getSentences().setItemsRefValue())
+		this.setState({sentences},o=>{this.model.getSentences().setItemsRefValue()
+			setTimeout(()=>{
+					this.loadGrowWrap()
+			},1000)
+		})
 	} 
 
 	chContentHandler(evt){
@@ -280,7 +306,14 @@ export default class SentenceEditorTab extends React.Component{
 
 		const sentences = this.model.getSentences().buildItems(content).getItems();
 		console.log(sentences);
-		this.setState({sentences},o=>this.model.getSentences().setItemsRefValue())
+		this.setState({sentences},o=>{
+			this.model.getSentences().setItemsRefValue()
+
+			setTimeout(()=>{
+					this.loadGrowWrap()
+			},1000)
+			
+		})
 	}
 	async convertSentenceItem(evt, index){
 		const node = this.state.sentences[index].ref.current;
@@ -298,15 +331,50 @@ export default class SentenceEditorTab extends React.Component{
 		for(let index in this.state.sentences){
 			const node = this.state.sentences[index].ref.current;
 			const text = node.value;
-			await this.model.getSentences().updateItem(text, index);
-		  await this.model.updateRow();
-		  this.loadSentencesFormData()
+			await this.model.getSentences().updateItem(text, index, true);
+		  await this.model.updateRow(true);
+		  // this.loadSentencesFormData()
 		  const ttfText = this.model.getContentTtf(true);
 		 	this.stInputTtfRef.current.value = ttfText;
 		 	this.setState({ttfText})	
 		}
 	}
+	async playSentenceItem(evt,index){
+		const sentences = this.state.sentences;
+		const item = sentences[index];
+		const audioRef = item.audio_ref;
+		const ttf = item.ttf;
 
+		/*
+	this.setState({onProcess:true});
+		const ttfText = this.stInputTtfRef.current.value;
+		const job_res = await this.model.runTtsJob(ttfText);
+		const data = job_res.data;
+		const status = data.status;
+		const message = data.message;
+		const emitedSocketLength = data.emitedSocketLength;
+		if(typeof data.job == 'object'){
+			const {id,job_name} = data.job;
+			const job_id = id;
+			const {pid,project_id,uuid} = data.job.params;
+		}
+
+		const toastMessage = `${message}`;
+		this.doToast(toastMessage,status);
+
+		if(!status){
+			this.setState({onProcess:false});
+
+		}
+
+		console.log(data)
+		*/
+		const job_res = await this.model.runTtsJob(ttf, true, index);
+		sentences[index].loading_ttf = true;
+		this.setState({sentences})		
+		console.log(ttf)
+
+	}
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
 	loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
 	render (){
@@ -329,18 +397,19 @@ export default class SentenceEditorTab extends React.Component{
 			<div className="relative my-3">
 			<div className="absolute z-10 right-1">
 			<div className="inline-flex shadow-sm">
-			  <button type="button" onClick={evt=>this.extractContentHandler(evt)} className="py-1 px-1 mx-2 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
-			    <i className="bi bi-list-ol"></i>
-			  </button>
-			  <button type="button" onClick={evt=>this.queueTaskSentenceItemHandler(evt)} className="py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+			  <button title="Extract Lines" type="button" onClick={evt=>this.extractContentHandler(evt)} className="py-1 px-1 mx-2 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
 			    <i className="bi bi-list-check"></i>
+			  </button>
+			  <button title="Translate All" type="button" onClick={evt=>this.queueTaskSentenceItemHandler(evt)} className="py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+			    <i className="bi bi-translate"></i>
 			  </button>
 
 			</div>
 				
 			</div>
-			<CodeMirror value={this.state.cm_text} theme={cm_theme_setting} height="200px" extensions={[markdown()]} onChange={(val,b,c)=>this.chCmText(val,b,c)} />
-				<textarea style={{display:'none'}}  ref={this.stInputTextRef} onChange={evt=>this.chContentHandler(evt)} className={this.state.inputStatus == 0 ? this.inputDefaultCls : (this.state.inputStatus==1?this.inputOkCls : this.inputErrorCls)} rows="3" placeholder="Sentence text"></textarea>	
+			<div class="grow-wrap">
+			<textarea  ref={this.stInputTextRef} onChange={evt=>this.chContentHandler(evt)} className={this.state.inputStatus == 0 ? this.inputDefaultCls : (this.state.inputStatus==1?this.inputOkCls : this.inputErrorCls)} placeholder="Sentence text"></textarea>	
+			</div>
 			
 			{this.state.inputStatus==2?(<div className="absolute inset-y-0 right-0 flex items-center pointer-events-none pr-3">
       
@@ -358,7 +427,7 @@ export default class SentenceEditorTab extends React.Component{
 
 			{
 				this.state.sentences.map((sentence,index)=>{
-					let cls = "h-12 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
+					let cls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 					
 					cls += sentence.type == 'dot' ? " " : " bg-gray-100"
 					
@@ -367,37 +436,53 @@ export default class SentenceEditorTab extends React.Component{
 						<div className={"sentence-text relative"}>
 							<div className="absolute z-10 right-1">
 									<div className="inline-flex shadow-sm">
-									  <button disabled={sentence.loading} type="button" onClick={evt=>this.convertSentenceItem(evt,index)} className="mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+									  <button title="Translate this line" disabled={sentence.loading} type="button" onClick={evt=>this.convertSentenceItem(evt,index)} className="mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
 									    {sentence.loading?(
 				  	<span className={this.loadingCls} role="status" aria-label="loading">
 				    	<span className="sr-only">Loading...</span>
-				  	</span>):(<i className="bi bi-arrow-bar-right"></i>)}
+				  	</span>):(<i className="bi bi-translate"></i>)}
 									  </button>
 										</div>
 								</div>
-							<CodeMirror value={this.state.sentences[index].text} theme={cm_theme_setting} height="40px" extensions={[markdown()]} onChange={(val)=>this.chCmSentenceItemText(val,index)} />
-
-							<textarea style={{display:'none'}} ref={this.state.sentences[index].ref} onChange={evt=>this.chSentencesItemHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
+							<div class="grow-wrap">
+							<textarea ref={this.state.sentences[index].ref} onChange={evt=>this.chSentencesItemHandler(evt,index)} className={cls}  placeholder="This is a textarea placeholder"></textarea></div>	
 						</div>
 						<div className={"sentence-ttf relative"}>
-							<CodeMirror value={this.state.sentences[index].ttf} theme={cm_theme_setting} height="40px" extensions={[markdown()]} onChange={(val)=>this.chCmSentenceItemTtf(val,index)} />
+						<div className="absolute z-10 right-1">
+									<div className="inline-flex shadow-sm">
+									  <button title="Translate this line" disabled={sentence.loading_ttf} type="button" onClick={evt=>this.playSentenceItem(evt,index)} className="mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+									    {sentence.loading_ttf?(
+				  	<span className={this.loadingCls} role="status" aria-label="loading">
+				    	<span className="sr-only">Loading...</span>
+				  	</span>):(<i className="bi bi-soundwave"></i>)}
+									  </button>
+									  <div className="audio-container w-7 h-8  overflow-hidden mt-1 py-1 px-1 gap-2 -ml-px  first:ml-0  border">
+											<audio controls ref={this.state.sentences[index].audio_ref} style={{width:100,marginLeft:-17,marginTop:-16}}className="">
+							          <source src={this.state.sentences[index].audio_source} />
+							        </audio>
+										</div>
+										</div>
+								</div>
+							<div class="grow-wrap">
+							<textarea  ref={this.state.sentences[index].ttf_ref} onChange={evt=>this.chSentencesTtfItemHandler(evt,index)} className={cls}  placeholder="This is a textarea placeholder"></textarea>	
+							</div>
 							
-							<textarea style={{display:'none'}}  ref={this.state.sentences[index].ttf_ref} onChange={evt=>this.chSentencesTtfItemHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
 						</div>
 						</div>
 					)
 				})
 			}
 			<div>
-				<CodeMirror value={this.state.ttfText} theme={cm_theme_setting} height="200px" extensions={[markdown()]} onChange={(val)=>this.chCmContentTtf(val)} />
+			<div class="grow-wrap">
+				<textarea ref={this.stInputTtfRef} onChange={evt=>this.chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" rows="3" placeholder="Sentence ttf text"></textarea>	
 
-				<textarea style={{display:'none'}} ref={this.stInputTtfRef} onChange={evt=>this.chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 bg-lime-200" rows="3" placeholder="Sentence ttf text"></textarea>	
+				</div>
 			</div>
 			<div className="columns-2 my-3">
-				<div>
-				<audio controls ref={this.audioRef} className="-mt-2 -ml-3">
-          <source src={this.state.audioOutput} />
-        </audio>
+				<div className="audio-container">
+					<audio controls ref={this.audioRef} className="-mt-2 -ml-3">
+	          <source src={this.state.audioOutput} />
+	        </audio>
 				</div>
 
 				<div className="text-right">
