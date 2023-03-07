@@ -7,7 +7,12 @@ import ModalConfirm from "./ModalConfirm"
 import Toast from "./Toast"
 let lastText = localStorage.lastText || "";
 import app_config from "../../../app.config"
-
+import CodeMirror from '@uiw/react-codemirror';
+import {sublime} from "@uiw/codemirror-theme-sublime";
+import { okaidia } from '@uiw/codemirror-theme-okaidia';
+import { javascript } from '@codemirror/lang-javascript';
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
+const cm_theme_setting = sublime
 var delay = makeDelay(1000);
 let dontRunTwice = true;
 export default class SentenceEditorTab extends React.Component{
@@ -22,7 +27,9 @@ export default class SentenceEditorTab extends React.Component{
 		toastMessage:"",
 		job_status : [],
 		toastStatus:true,
-		audioOutput:""
+		audioOutput:"",
+
+		cm_text : ""
 	}
 
 	stInputTextRef = null
@@ -77,16 +84,19 @@ export default class SentenceEditorTab extends React.Component{
 
 			if(data){
 				console.log(data);
-				if(data.name == 'tts'){
-					self.doToast(message, data.success)
-					self.setState({onProcess:false,audioOutput:`${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}.wav?uuid=${v4()}`},()=>{
-							self.audioRef.current.load();
+				if(data.job_name == 'tts'){
+					if(data.at == 'run_process'){
+						self.doToast(message, data.success)
+						self.setState({onProcess:false,audioOutput:`${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}.wav?uuid=${v4()}`},()=>{
+								self.audioRef.current.load();
 
-						setTimeout(()=>{
-							self.audioRef.current.play();
-						},250)
-						
-					});
+							setTimeout(()=>{
+								self.audioRef.current.play();
+							},250)
+							
+						});
+					}
+					
 				}
 			}
 
@@ -105,7 +115,7 @@ export default class SentenceEditorTab extends React.Component{
 			self.audioRef.current.load();
 
 						setTimeout(()=>{
-							self.audioRef.current.play();
+							// self.audioRef.current.play();
 						},250)
 		})
 		this.model = Sentence.fromRow(row);
@@ -121,6 +131,9 @@ export default class SentenceEditorTab extends React.Component{
 		this.stInputNameRef.current.value = this.model.getTitle();
 		this.stInputTextRef.current.value = this.model.getContent();
 		this.stInputTtfRef.current.value = this.model.getContentTtf(); 
+
+
+		this.setState({cm_text: this.model.getContent(), ttfText: this.model.getContentTtf()})
 	}
 
 	loadSentencesFormData(){
@@ -154,15 +167,19 @@ export default class SentenceEditorTab extends React.Component{
 	
 	chSentencesItemHandler(evt, index){
 		const text = evt.target.value;
+		console.log(text)
+		/*
 		delay(async()=>{
 			await this.model.getSentences().updateItem(text, index);
-			await this.model.updateRow();
-			this.loadSentencesFormData()
+		  await this.model.updateRow();
+		  this.loadSentencesFormData()
 			if(!this.stInputTtfRef.current.value){
 		  	console.log(`this.stInputTtfRef.current.value is empty`);
 		  	this.stInputTtfRef.current.value = this.model.getContentTtf(true);
 		  }
+			
 		});
+		*/
 	}
 	chSentencesTtfItemHandler(evt, index){
 		const ttf = evt.target.value;
@@ -187,8 +204,10 @@ export default class SentenceEditorTab extends React.Component{
 		const ttfText = this.model.getContentTtf(true);
 		console.log(ttfText)
 		this.stInputTtfRef.current.value = ttfText;
+		this.setState({ttfText});
 	}
 	async doSaveRow(evt){
+		this.model.setContent(this.stInputTextRef.current.value)
 		await this.model.updateRow();
 		this.doToast("Record Saved",true);
 	}
@@ -206,10 +225,10 @@ export default class SentenceEditorTab extends React.Component{
 		const status = data.status;
 		const message = data.message;
 		const emitedSocketLength = data.emitedSocketLength;
-		if(typeof data.create_job_status == 'object'){
-			const {id,job_name} = data.create_job_status;
+		if(typeof data.job == 'object'){
+			const {id,job_name} = data.job;
 			const job_id = id;
-			const {pid,project_id,uuid} = data.create_job_status.params;
+			const {pid,project_id,uuid} = data.job.params;
 		}
 
 		const toastMessage = `${message}`;
@@ -225,6 +244,69 @@ export default class SentenceEditorTab extends React.Component{
 	chContentTtfHandler(evt){
 		console.log(evt.target.value)
 	}
+	chCmContentTtf(value){
+		console.log(value);
+		this.stInputTtfRef.current.value = value;
+	}
+	chCmText(value,b,c){
+		console.log(value,b,c)
+		this.stInputTextRef.current.value = value;
+		// $(this.stInputTextRef.current).change();
+		const content = value;
+		if(!content){
+			return;
+		}
+		
+		delay(async(e)=>{
+		  this.model.setContent(content);
+		  await this.model.updateRow();
+
+
+		})
+	}
+	chCmSentenceItemText(value, index){
+		console.log(value)
+		const node = this.state.sentences[index].ref.current;
+		node.value = value;
+	}
+	async chCmSentenceItemTtf(value, index){
+		console.log(value)
+		const node = this.state.sentences[index].ttf_ref.current;
+		node.value = value;
+	}
+	extractContentHandler(evt){
+		const content = this.stInputTextRef.current.value;
+		console.log(content)
+
+		const sentences = this.model.getSentences().buildItems(content).getItems();
+		console.log(sentences);
+		this.setState({sentences},o=>this.model.getSentences().setItemsRefValue())
+	}
+	async convertSentenceItem(evt, index){
+		const node = this.state.sentences[index].ref.current;
+		const text = node.value;
+		delay(async()=>{
+			await this.model.getSentences().updateItem(text, index, true);
+		  await this.model.updateRow();
+		  this.loadSentencesFormData()
+			const ttfText = this.model.getContentTtf(true);
+		 	this.stInputTtfRef.current.value = ttfText;
+		 	this.setState({ttfText})	
+		});
+	}
+	async queueTaskSentenceItemHandler(evt){
+		for(let index in this.state.sentences){
+			const node = this.state.sentences[index].ref.current;
+			const text = node.value;
+			await this.model.getSentences().updateItem(text, index);
+		  await this.model.updateRow();
+		  this.loadSentencesFormData()
+		  const ttfText = this.model.getContentTtf(true);
+		 	this.stInputTtfRef.current.value = ttfText;
+		 	this.setState({ttfText})	
+		}
+	}
+
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
 	loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
 	render (){
@@ -245,7 +327,20 @@ export default class SentenceEditorTab extends React.Component{
 				  <p className="text-sm text-gray-500 mt-2" id="hs-inline-input-helper-text">{/*We'll never share your details.*/}</p>
 				</div>
 			<div className="relative my-3">
-				<textarea  ref={this.stInputTextRef} onChange={evt=>this.chContentHandler(evt)} className={this.state.inputStatus == 0 ? this.inputDefaultCls : (this.state.inputStatus==1?this.inputOkCls : this.inputErrorCls)} rows="3" placeholder="Sentence text"></textarea>	
+			<div className="absolute z-10 right-1">
+			<div className="inline-flex shadow-sm">
+			  <button type="button" onClick={evt=>this.extractContentHandler(evt)} className="py-1 px-1 mx-2 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+			    <i className="bi bi-list-ol"></i>
+			  </button>
+			  <button type="button" onClick={evt=>this.queueTaskSentenceItemHandler(evt)} className="py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+			    <i className="bi bi-list-check"></i>
+			  </button>
+
+			</div>
+				
+			</div>
+			<CodeMirror value={this.state.cm_text} theme={cm_theme_setting} height="200px" extensions={[markdown()]} onChange={(val,b,c)=>this.chCmText(val,b,c)} />
+				<textarea style={{display:'none'}}  ref={this.stInputTextRef} onChange={evt=>this.chContentHandler(evt)} className={this.state.inputStatus == 0 ? this.inputDefaultCls : (this.state.inputStatus==1?this.inputOkCls : this.inputErrorCls)} rows="3" placeholder="Sentence text"></textarea>	
 			
 			{this.state.inputStatus==2?(<div className="absolute inset-y-0 right-0 flex items-center pointer-events-none pr-3">
       
@@ -269,18 +364,34 @@ export default class SentenceEditorTab extends React.Component{
 					
 					return(
 						<div className="columns-2 my-1"  key={index}>
-						<div className={"sentence-text"}>
-							<textarea  ref={this.state.sentences[index].ref} onChange={evt=>this.chSentencesItemHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
+						<div className={"sentence-text relative"}>
+							<div className="absolute z-10 right-1">
+									<div className="inline-flex shadow-sm">
+									  <button disabled={sentence.loading} type="button" onClick={evt=>this.convertSentenceItem(evt,index)} className="mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+									    {sentence.loading?(
+				  	<span className={this.loadingCls} role="status" aria-label="loading">
+				    	<span className="sr-only">Loading...</span>
+				  	</span>):(<i className="bi bi-arrow-bar-right"></i>)}
+									  </button>
+										</div>
+								</div>
+							<CodeMirror value={this.state.sentences[index].text} theme={cm_theme_setting} height="40px" extensions={[markdown()]} onChange={(val)=>this.chCmSentenceItemText(val,index)} />
+
+							<textarea style={{display:'none'}} ref={this.state.sentences[index].ref} onChange={evt=>this.chSentencesItemHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
 						</div>
-						<div className={"sentence-ttf"}>
-							<textarea  ref={this.state.sentences[index].ttf_ref} onChange={evt=>this.chSentencesTtfItemHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
+						<div className={"sentence-ttf relative"}>
+							<CodeMirror value={this.state.sentences[index].ttf} theme={cm_theme_setting} height="40px" extensions={[markdown()]} onChange={(val)=>this.chCmSentenceItemTtf(val,index)} />
+							
+							<textarea style={{display:'none'}}  ref={this.state.sentences[index].ttf_ref} onChange={evt=>this.chSentencesTtfItemHandler(evt,index)} className={cls} rows="3" placeholder="This is a textarea placeholder"></textarea>	
 						</div>
 						</div>
 					)
 				})
 			}
 			<div>
-				<textarea  ref={this.stInputTtfRef} onChange={evt=>this.chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 bg-lime-200" rows="3" placeholder="Sentence ttf text"></textarea>	
+				<CodeMirror value={this.state.ttfText} theme={cm_theme_setting} height="200px" extensions={[markdown()]} onChange={(val)=>this.chCmContentTtf(val)} />
+
+				<textarea style={{display:'none'}} ref={this.stInputTtfRef} onChange={evt=>this.chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 bg-lime-200" rows="3" placeholder="Sentence ttf text"></textarea>	
 			</div>
 			<div className="columns-2 my-3">
 				<div>

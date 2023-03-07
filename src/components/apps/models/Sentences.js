@@ -25,6 +25,7 @@ class Sentences{
 			this.items = items.map(item=>{
 				item.ref = React.createRef();
 				item.ttf_ref = React.createRef();
+				item.loading = false;
 				return item;
 			});
 		}catch(e){
@@ -52,7 +53,19 @@ class Sentences{
 	async updateItem(text, index, forceTtf){
 		console.log(`updating sentences item ${index}`);
 		if(this.items[index].ttf == "" || forceTtf){
+
+			let sentences = this.sentence.editor.state.sentences; 
+			let loading = sentences[index].loading;
+			sentences[index].loading = true;
+			this.sentence.editor.setState({sentences});
+			console.log(`Try to set state loading the value is ${this.sentence.editor.state.sentences[index].loading}`)
+
 			const ttfTextList = await this.convertTtfRemote(text);
+
+			sentences[index].loading = false;
+			this.sentence.editor.setState({sentences});
+			console.log(`Try to set state loading the value is ${this.sentence.editor.state.sentences[index].loading}`)
+
 	
 			const ttfText = [];
 			for(let i in ttfTextList){
@@ -72,9 +85,12 @@ class Sentences{
 		console.log('A',this.getItems())
 	}
 	
-	buildItems(){
+	buildItems(newContent){
 		console.log('HERE')
-		const content = this.content;
+		let content = this.content;
+		if(newContent){
+			content = newContent
+		}
 		console.log(content)
 
 		const textList = content.split('.');
@@ -90,16 +106,19 @@ class Sentences{
 				for(let j in commaSentence){
 					const text = commaSentence[j].replace(/^\s+/,'');
 					const type = j == lastIndex ? 'dot':'comma';
-					tmpSentences.push({text:fixTttsText(text), type,ttf:'', ref: React.createRef(null), ttf_ref: React.createRef(null)})
+					if(text.length)
+						tmpSentences.push({text:fixTttsText(text), type,ttf:'',loading:false, ref: React.createRef(null), ttf_ref: React.createRef(null)})
 				}
 			}else{
 				const text = commaSentence[0].replace(/^\s+/,'');
-				tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'', ref: React.createRef(null), ttf_ref: React.createRef(null)})
+				if(text.length)
+				tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'',loading:false, ref: React.createRef(null), ttf_ref: React.createRef(null)})
 
 			}
 		}
 		console.log(tmpSentences)
 		this.items = tmpSentences;
+		return this;
 	}
 
 	rebuild(){
@@ -304,7 +323,7 @@ class Sentence {
 		sentence.setContent(row.text);
 		sentence.setContentTtf(row.ttf_text);
 		sentence.setTitle(row.name);
-
+		sentences.setSentence(sentence);
 		return sentence;
 	}
 

@@ -50,6 +50,9 @@ class Restore extends MX_Controller {
                 'type' => 'VARCHAR',
                 'constraint' => '225',
 	        ),
+	        'create_date' => [
+	        	'type' => 'DATETIME'
+	        ]
 		);
 		
 		$table = 'tts_sentence';
@@ -82,6 +85,9 @@ class Restore extends MX_Controller {
                 'type' => 'VARCHAR',
                 'constraint' => '225',
 	        ),
+	        'create_date' => [
+	        	'type' => 'DATETIME'
+	        ]
 		);
 		
 		$table = 'tts_project';
@@ -100,6 +106,9 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
+	        'create_date' => [
+	        	'type' => 'DATETIME'
+	        ]
 		);
 		
 		$table = 'word_list';
@@ -126,6 +135,9 @@ class Restore extends MX_Controller {
                 'type' => 'VARCHAR',
                 'constraint' => '225',
 	        ),
+	        'create_date' => [
+	        	'type' => 'DATETIME'
+	        ]
 		);
 		$table = 'word_list_ttf';
 		init_db_table($fields, $table);
@@ -159,6 +171,9 @@ class Restore extends MX_Controller {
                 'type' => 'INT',
                 'constraint' => '1',
 	        ),
+	        'create_date' => [
+	        	'type' => 'DATETIME'
+	        ]
 		);
 		$table = 'socket_session';
 		init_db_table($fields, $table);
@@ -185,6 +200,9 @@ class Restore extends MX_Controller {
                 'type' => 'INT',
                 'constraint' => '1',
 	        ),
+	        'create_date' => [
+	        	'type' => 'DATETIME'
+	        ]
 		);
 		$table = "jobs";
 

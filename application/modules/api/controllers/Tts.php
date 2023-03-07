@@ -56,16 +56,28 @@ class Tts extends REST_Controller {
     }
     function sentence_get() {
         
-        $id = $this->get("id");
-       
+        $id = $this->input->get("id");
+        $page = $this->input->get("page");
+        $limit = $this->input->get("limit");
+        $order_by = $this->input->get("order_by");
+        $order_dir = $this->input->get("order_dir");
 
+        if(empty($page))
+            $page =1;
+        if(empty($limit))
+            $limit =10;
+        if(empty($order_by)){
+            $order_by = "create_date";
+        }
+        if(empty($order_dir)){
+            $order_dir = "asc";
+        }
         if($id){
             $sentence = $this->m_sentence->getById($id);
             $this->response($project, 200);
         }else{
-            $page = $this->get("page"); 
-            $limit = 10;
-            $sentences = $this->m_sentence->getAll($limit);
+           
+            $sentences = $this->m_sentence->getAllPaged($page,$limit, $order_by, $order_dir);
             $this->response($sentences, 200);
         }
  
@@ -73,23 +85,27 @@ class Tts extends REST_Controller {
     function sentence_post() {
         
         $id = $this->input->get("id");
-        // echo 'Hello'.$id;
+        $name = $this->input->post('name');
+        $text = $this->input->post('text');
+        $ttf_text = $this->input->post('ttf_text');
+        $sentences = $this->input->post('sentences');
+        
+        
+
         if($id){
             $sentence = $this->m_sentence->getById($id);
-            $name = $this->input->post('name');
-            $text = $this->input->post('text');
-            $ttf_text = $this->input->post('ttf_text');
-            $sentences = $this->input->post('sentences');
-
             $sentence = [
                 'name' => $name,
                 'text' => $text,
                 'ttf_text' => $ttf_text,
-                'sentences' => $sentences
+                'sentences' => $sentences,
+                'last_updated' => date('Y-m-d H:i:s'),
+
             ];
-
             $this->m_sentence->update($id, $sentence);
-
+            $this->response($sentence, 200);
+        }else{
+            $sentence = $this->m_sentence->create($name, $text, $ttf_text, $sentences, '-');
             $this->response($sentence, 200);
         }
  

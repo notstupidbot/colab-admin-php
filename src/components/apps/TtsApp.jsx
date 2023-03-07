@@ -13,7 +13,7 @@ const useSharedActiveProjectState = () => useBetween(useActiveProjectState)
 
 let dontRunTwice=true;
 let lastActiveTab = localStorage.activeTab || 'project';
-
+console.log(lastActiveTab)
 import ProjectTab from "./tts/ProjectTab";
 import SentenceTab from "./tts/SentenceTab";
 import EditorTab from "./tts/EditorTab";
@@ -67,6 +67,7 @@ export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
 
 	useEffect(()=>{
 		console.log(`${activeTab}`)
+		localStorage.activeTab = activeTab;
 		if(activeTab == 'sentence'){
 			try{
 			sentenceTabRef.current.updateList();

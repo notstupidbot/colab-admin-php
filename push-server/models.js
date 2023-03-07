@@ -191,10 +191,23 @@ const m_jobs = {
 		}
 		return null;
 	},
-	updateTtsJobStatus: async(project_id,status)=>{
-		console.log(`UPDATING STATUS ${project_id} ${status}`)
+	updateTtsJobParams : async(id, params)=>{
+		// console.log(`Updating job pid job_id ${id} ${params}`)
 		try{
-			const res = await client.query(`UPDATE jobs SET status='${status}' WHERE params->>'project_id' = '${project_id}'`);
+			const res = await client.query(`UPDATE jobs SET params='${params}' WHERE id = '${id}'`);
+			if(res.rows){
+				return res.rows[0];
+			}
+		}catch(e){
+			console.log(e);
+
+		}
+		return null;
+	},
+	updateTtsJobStatus: async(id,status)=>{
+		console.log(`Updating job status job_id ${id} ${status}`)
+		try{
+			const res = await client.query(`UPDATE jobs SET status='${status}' WHERE id = '${id}'`);
 			if(res.rows){
 				return res.rows[0];
 			}
