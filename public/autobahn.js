@@ -201,9 +201,9 @@ ab.log = function (o) {
    }
 };
 
-ab._debugrpc = false;
-ab._debugpubsub = false;
-ab._debugws = false;
+ab._debugrpc = true;
+ab._debugpubsub = true;
+ab._debugws = true;
 
 ab.debug = function (debugWamp, debugWs) {
    if ("console" in window) {
@@ -822,5 +822,3 @@ ab.Session.prototype.publish = function () {
 
    self._send(msg);
 };
-
-export default ab;

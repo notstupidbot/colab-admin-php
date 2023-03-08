@@ -20,13 +20,14 @@ case "${1}" in
   start)
     log_daemon_msg "Starting Dev Server Port 7001" "${NAME}"
 
+    ${0} stop
    
 
     start-stop-daemon --start --background -m --oknodo --pidfile /var/run/php-zmq.pid --exec ${DAEMON}
     n=0
     while [ ${n} -le 5 ]
     do 
-      _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/php-zmq.sh/{print $2}'`
+      _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/push-server.php/{print $2}'`
       if [ ! -z "$_PID" ]
       then
         break
@@ -47,7 +48,7 @@ case "${1}" in
     ;;
 
   stop)
-    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/php-zmq.sh/{print $2}'`
+    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/push-server.php/{print $2}'`
 
     if [ -z "$_PID" ]
     then
@@ -67,7 +68,7 @@ case "${1}" in
 
   status)
     
-    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/php-zmq.sh/{print $2}'`
+    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/push-server.php/{print $2}'`
     if [ -z "$_PID" ]
     then
       log_daemon_msg "${NAME} is not Running"

@@ -11,7 +11,6 @@ import useSocketClient from "./shared/useSocketClient";
 import useSocketState from "./shared/useSocketState";
 // import useServerCfgState from "./shared/useServerCfgState";
 import app_config from "./app.config"
-import ab from "./autobahn"
 // const useSharedServerCfgState = () => useBetween(useServerCfgState);
 const useSharedSocketState = () => useBetween(useSocketState);
 const useSharedSocketClient = () => useBetween(useSocketClient)
@@ -19,38 +18,43 @@ const useSharedSocketClient = () => useBetween(useSocketClient)
 let socketUuid = localStorage.socketUuid || uuidv4();
 localStorage.socketUuid = socketUuid;
 let dontRunTwice = true
+
 let Ws = {
-            conn: 0,
-            instance:false,
-            autoReconnectInterval : 5*1000,
-            init:function() {
-                Ws.conn = new ab.Session('ws://localhost:7001',
-                    ()=>{
-                        console.log('autobahn connected')
-                        Ws.conn.subscribe('onUpdateDal',(cat,item)=>{
-                            appMonitorVm.setData(item.data);
-                            console.log(cat)
-                            console.log(item.data)
+    conn: 0,
+    instance:false,
+    autoReconnectInterval : 5*1000,
+    init:function() {
+            console.log('here')
+            Ws.conn = new ab.Session(app_config.getZmqEndpoint(),
+                ()=>{
+                    Ws.conn.subscribe('onUpdateDal',(cat,item)=>{
+                        // appMonitorVm.setData(item.data);
+                        console.log(cat)
+                        console.log(item.data)
 
-                        });
-                    },
-                    ()=>{
-                        console.warn('koneksi WecbSocket ditutup');
-                        Ws.reconnect();
-                    },
-                    {'skipSubprotocolCheck': true}
-                ); 
-            },
-            reconnect : function( ){
-                console.log('Ws: retry in '+Ws.autoReconnectInterval+'ms' );
-                var self = Ws;
-                setTimeout(function(){
-                    console.log("Ws: reconnecting...");
-                    self.init();
-                },Ws.autoReconnectInterval);
-            }
+                    });
+                },
+                ()=>{
+                    console.log('koneksi WecbSocket ditutup');
+                    Ws.reconnect();
+                },
+                {'skipSubprotocolCheck': true}
+            );
+        
+         
+    },
+    reconnect : function( ){
+        console.log('Ws: retry in '+Ws.autoReconnectInterval+'ms' );
+        var self = Ws;
+        setTimeout(function(){
+            console.log("Ws: reconnecting...");
+            self.init();
+        },Ws.autoReconnectInterval);
+    }
 
-        }
+}
+Ws.init();
+
 function App() {
   const [count, setCount] = useState(0)
   const {socketConnected,setSocketConnected} = useSharedSocketState();
@@ -142,19 +146,13 @@ function App() {
         if(dontRunTwice){
             createSocket();
             reconnectSocket();
-            initAB()
             dontRunTwice=false
         }
+            
+
     }, []);
 
-    const initAB = ()=>{
-        //**************************************************//
-
-        
-        Ws.init();
-        //**************************************************//
-
-    }
+  
   return (
 <>
 
