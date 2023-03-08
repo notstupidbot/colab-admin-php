@@ -21,6 +21,7 @@ class Restore extends MX_Controller {
 		$this->jobs();
 		$this->user();
 		$this->group();
+		$this->preferences();
 
 
 		$this->load_db_dump();

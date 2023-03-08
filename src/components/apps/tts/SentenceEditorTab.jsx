@@ -8,6 +8,7 @@ import Toast from "./Toast"
 let lastText = localStorage.lastText || "";
 import app_config from "../../../app.config"
 import "./auto-grow-textarea.css"
+import JobChecker from "./JobChecker";
 
 var delay = makeDelay(1000);
 let dontRunTwice = true;
@@ -375,7 +376,7 @@ export default class SentenceEditorTab extends React.Component{
 		const socketConnected = this.props.socketConnected; 
 	return(<>
 		{/*--------------------MODAL/Toast--------------------------*/}
- 
+ 		<JobChecker/>
 		<ModalConfirm id="confirmInsertAllTtfText" title="Insert All TTF Text ?" content="This action will replace result on currently saved final TTF Text" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doReplaceAllTttfText(evt)} onCancel={evt=>{}} />
 		<ModalConfirm id="confirmSaveRow" title="Save Sentence ?" content="This action will save current sentence in database" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doSaveRow(evt)} onCancel={evt=>{}} />
 
