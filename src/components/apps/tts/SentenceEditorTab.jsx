@@ -168,6 +168,9 @@ export default class SentenceEditorTab extends React.Component{
 				loadedFromPreference =false;
 			}
 		}
+		if(!row){
+			return
+		}
 
 		console.log(row);
 		const self = this;

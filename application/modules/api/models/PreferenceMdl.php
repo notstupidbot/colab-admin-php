@@ -12,6 +12,9 @@ class PreferenceMdl extends BaseMdl{
 
 	function getByKey($key){
 		$row = $this->db->where("key='$key'")->get($this->table)->row_array();
+		if(empty($row)){
+			return null;
+		}
 		$row['val'] = json_decode($row['val']);
 		return $row;
 	}
