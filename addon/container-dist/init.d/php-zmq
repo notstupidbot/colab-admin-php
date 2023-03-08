@@ -1,0 +1,85 @@
+#!/bin/sh
+
+
+
+set -e
+
+DAEMON="/container/dist/www/html/addon/php-zmq.sh"
+NAME="php-zmq.sh"
+PATH="/container/dist/sbin:/container/dist/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+LOGFILE="/var/log/$NAME.log"
+CHROOT="/var/run/$NAME/empty"
+chmod +x $DAEMON
+test -x "${DAEMON}" || exit 0
+
+. /lib/lsb/init-functions
+
+ 
+
+case "${1}" in
+  start)
+    log_daemon_msg "Starting Dev Server Port 7001" "${NAME}"
+
+   
+
+    start-stop-daemon --start --background -m --oknodo --pidfile /var/run/php-zmq.pid --exec ${DAEMON}
+    n=0
+    while [ ${n} -le 5 ]
+    do 
+      _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/php-zmq.sh/{print $2}'`
+      if [ ! -z "$_PID" ]
+      then
+        break
+      fi
+      sleep 1
+      n=$(( $n + 1 ))
+    done
+
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} failed - probably invalid config."
+      # exit 1
+    else
+      log_daemon_msg "${NAME} Running with PID $_PID"
+    fi
+
+    log_end_msg 0
+    ;;
+
+  stop)
+    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/php-zmq.sh/{print $2}'`
+
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} is not Running"
+      # exit 1
+    else
+      log_daemon_msg "Stopping Dev Server Port 7001" "${NAME}"
+      kill "$_PID"
+    fi
+    ;;
+
+  restart)
+    ${0} stop
+    ${0} start
+    ;;
+ 
+
+  status)
+    
+    _PID=`ps -ef | awk '/\/container\/dist\/www\/html\/addon\/php-zmq.sh/{print $2}'`
+    if [ -z "$_PID" ]
+    then
+      log_daemon_msg "${NAME} is not Running"
+      # exit 1
+    else
+      log_daemon_msg "${NAME} Running with PID $_PID"
+    fi
+ 
+    ;;
+
+  *)
+    echo "Usage: ${0} {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
