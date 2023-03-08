@@ -12,7 +12,7 @@ export default class JobChecker extends React.Component{
 	{
 	this.state.job_list.map((job,index)=>{
 		return(
-			<div style={{zIndex:15}} className="fixed  top-0 left-0 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700" role="alert">
+			<div key={index} style={{zIndex:15}} className="fixed  top-0 left-0 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700" role="alert">
 			  <div className="flex p-4">
 			    <div className="flex-shrink-0">
 			      <svg className="h-5 w-5 text-gray-600 mt-1 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

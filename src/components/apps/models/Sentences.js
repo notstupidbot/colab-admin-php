@@ -16,7 +16,7 @@ class Sentences{
 		this.sentences_sr = sentences_sr;
 
 		try{
-			this.items = JSON.parse(sentences_sr);
+			this.items = typeof sentences_sr=='string'?JSON.parse(sentences_sr):sentences_sr;
 			if(items.length == 0){
 				// console.log('Here')
 				this.buildItems();

@@ -17,7 +17,7 @@ echo "export WWW_PUSH_DIR=/container/dist/www/html/push-server" >> /root/.bashrc
 echo "export ETC_DIR=/container/dist/etc" >> /root/.bashrc
 echo "export INITD_DIR=/container/dist/etc/init.d" >> /root/.bashrc
 echo "export GDRIVE=/content/gdrive" >> /root/.bashrc
-echo "export LD_LIBRARY_PATH=/container/dist/lib/x86_64-linux-gnu"
+echo "export LD_LIBRARY_PATH=/container/dist/lib:/container/dist/lib/x86_64-linux-gnu"
 # umount /content/gdrive
 # Restore rclone config
 cd /content

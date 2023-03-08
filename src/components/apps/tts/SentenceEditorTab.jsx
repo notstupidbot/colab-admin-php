@@ -52,6 +52,7 @@ export default class SentenceEditorTab extends React.Component{
 
 		if(dontRunTwice){
 				this.loadSocketCallback();
+				this.loadRow();
 				dontRunTwice=false;
 		}
 
@@ -134,14 +135,40 @@ export default class SentenceEditorTab extends React.Component{
 
 		});
 	}
-	loadRow(){
-		console.log(`STEP 0`);
-		const row = this.props.activeSentence;
 
+	async savePreference(){
+		const url = `${app_config.getApiEndpoint()}/api/tts/preference?key=SentenceEditorTab`;
+		const data = new FormData();
+		data.append('val', JSON.stringify(this.model.toRow()));
+
+		const res = axios({
+			method: "post",
+			url,
+			data: data,
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+		return res.data;
+	}
+	async loadPreference(){
+		const url = `${app_config.getApiEndpoint()}/api/tts/preference?key=SentenceEditorTab`;
+		const pref = await axios(url);
+		return pref;
+	}
+	async loadRow(){
+		console.log(`STEP 0`);
+		let row = this.props.activeSentence;
+		let loadedFromPreference = false;
 		
 		if(!row){
-			return;
+			const pref = await this.loadPreference();
+			try{
+				loadedFromPreference = true;
+				row = pref.data.val;				
+			}catch(e){
+				loadedFromPreference =false;
+			}
 		}
+
 		console.log(row);
 		const self = this;
 		this.setState({audioOutput:`${app_config.getApiEndpoint()}/public/tts-output/${row.id}.wav?uuid=${v4()}`},()=>{
@@ -152,7 +179,11 @@ export default class SentenceEditorTab extends React.Component{
 						},250)
 		})
 		this.model = Sentence.fromRow(row);
-		console.log(this.model);
+		// console.log(this.model);
+		if(!loadedFromPreference){
+			this.savePreference();
+		}
+
 		
 		this.model.setEditor(this);
 		this.loadFormData();
@@ -402,7 +433,7 @@ export default class SentenceEditorTab extends React.Component{
 			</div>
 				
 			</div>
-			<div class="grow-wrap">
+			<div className="grow-wrap">
 			<textarea  ref={this.stInputTextRef} onChange={evt=>this.chContentHandler(evt)} className={this.state.inputStatus == 0 ? this.inputDefaultCls : (this.state.inputStatus==1?this.inputOkCls : this.inputErrorCls)} placeholder="Sentence text"></textarea>	
 			</div>
 			
@@ -439,7 +470,7 @@ export default class SentenceEditorTab extends React.Component{
 									  </button>
 										</div>
 								</div>
-							<div class="grow-wrap">
+							<div className="grow-wrap">
 							<textarea ref={this.state.sentences[index].ref} onChange={evt=>this.chSentencesItemHandler(evt,index)} className={cls}  placeholder="This is a textarea placeholder"></textarea></div>	
 						</div>
 						<div className={"sentence-ttf relative"}>
@@ -458,7 +489,7 @@ export default class SentenceEditorTab extends React.Component{
 										</div>
 										</div>
 								</div>
-							<div class="grow-wrap">
+							<div className="grow-wrap">
 							<textarea  ref={this.state.sentences[index].ttf_ref} onChange={evt=>this.chSentencesTtfItemHandler(evt,index)} className={cls}  placeholder="This is a textarea placeholder"></textarea>	
 							</div>
 							
@@ -468,7 +499,7 @@ export default class SentenceEditorTab extends React.Component{
 				})
 			}
 			<div>
-			<div class="grow-wrap">
+			<div className="grow-wrap">
 				<textarea ref={this.stInputTtfRef} onChange={evt=>this.chContentTtfHandler(evt)} className="my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" rows="3" placeholder="Sentence ttf text"></textarea>	
 
 				</div>

@@ -11,7 +11,7 @@ const {m_jobs} = require("./models")
     return fn(...args);
 }
 
-const preferences{
+const preferences = {
 	tts_job : {
 		check_pid_try_count : 1
 	}
