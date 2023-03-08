@@ -16,7 +16,7 @@ $pull->on('message',[$pusher, 'onRealtimeUpdate']);
 // $pull->on('message',[$pusher2, 'onUpdateDal']);
 
 // setup WebSocket server buat klien yang ingin update realtime
-// Bind ke ip 0.0.0.0 aksudnya remote juga bisa konek
+// Bind ke ip 0.0.0.0 maksudnya all ip remote agar bisa konek
 $webSock = new React\Socket\Server('0.0.0.0:7001',$loop); 
 $webServer = new Ratchet\Server\IoServer(
 	new Ratchet\Http\HttpServer(

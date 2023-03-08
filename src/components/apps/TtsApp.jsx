@@ -93,6 +93,8 @@ export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
 			dontRunTwice = false
 		}
 	});
+
+	
 return(<>
 
 {/*<h2>TTS Indonesia</h2>*/}

@@ -176,13 +176,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.19.0"
 
-"@babel/runtime@^7.18.6":
-  version "7.21.0"
-  resolved "http://localhost:4873/@babel/runtime/-/runtime-7.21.0.tgz"
-  integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
-  dependencies:
-    regenerator-runtime "^0.13.11"
-
 "@babel/template@^7.20.7":
   version "7.20.7"
   resolved "http://localhost:4873/@babel/template/-/template-7.20.7.tgz"
@@ -216,130 +209,6 @@
     "@babel/helper-string-parser" "^7.19.4"
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
-
-"@codemirror/autocomplete@^6.0.0":
-  version "6.4.2"
-  resolved "http://localhost:4873/@codemirror/autocomplete/-/autocomplete-6.4.2.tgz"
-  integrity sha512-8WE2xp+D0MpWEv5lZ6zPW1/tf4AGb358T5GWYiKEuCP8MvFfT3tH2mIF9Y2yr2e3KbHuSvsVhosiEyqCpiJhZQ==
-  dependencies:
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.6.0"
-    "@lezer/common" "^1.0.0"
-
-"@codemirror/commands@^6.0.0", "@codemirror/commands@^6.1.0":
-  version "6.2.1"
-  resolved "http://localhost:4873/@codemirror/commands/-/commands-6.2.1.tgz"
-  integrity sha512-FFiNKGuHA5O8uC6IJE5apI5rT9gyjlw4whqy4vlcX0wE/myxL6P1s0upwDhY4HtMWLOwzwsp0ap3bjdQhvfDOA==
-  dependencies:
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/state" "^6.2.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
-
-"@codemirror/lang-css@^6.0.0":
-  version "6.0.2"
-  resolved "http://localhost:4873/@codemirror/lang-css/-/lang-css-6.0.2.tgz"
-  integrity sha512-4V4zmUOl2Glx0GWw0HiO1oGD4zvMlIQ3zx5hXOE6ipCjhohig2bhWRAasrZylH9pRNTcl1VMa59Lsl8lZWlTzw==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@lezer/css" "^1.0.0"
-
-"@codemirror/lang-html@^6.0.0":
-  version "6.4.2"
-  resolved "http://localhost:4873/@codemirror/lang-html/-/lang-html-6.4.2.tgz"
-  integrity sha512-bqCBASkteKySwtIbiV/WCtGnn/khLRbbiV5TE+d9S9eQJD7BA4c5dTRm2b3bVmSpilff5EYxvB4PQaZzM/7cNw==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/lang-css" "^6.0.0"
-    "@codemirror/lang-javascript" "^6.0.0"
-    "@codemirror/language" "^6.4.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.2.2"
-    "@lezer/common" "^1.0.0"
-    "@lezer/css" "^1.1.0"
-    "@lezer/html" "^1.3.0"
-
-"@codemirror/lang-javascript@^6.0.0", "@codemirror/lang-javascript@^6.1.4":
-  version "6.1.4"
-  resolved "http://localhost:4873/@codemirror/lang-javascript/-/lang-javascript-6.1.4.tgz"
-  integrity sha512-OxLf7OfOZBTMRMi6BO/F72MNGmgOd9B0vetOLvHsDACFXayBzW8fm8aWnDM0yuy68wTK03MBf4HbjSBNRG5q7A==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/language" "^6.6.0"
-    "@codemirror/lint" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
-    "@lezer/javascript" "^1.0.0"
-
-"@codemirror/lang-markdown@^6.1.0":
-  version "6.1.0"
-  resolved "http://localhost:4873/@codemirror/lang-markdown/-/lang-markdown-6.1.0.tgz"
-  integrity sha512-HQDJg1Js19fPKKsI3Rp1X0J6mxyrRy2NX6+Evh0+/jGm6IZHL5ygMGKBYNWKXodoDQFvgdofNRG33gWOwV59Ag==
-  dependencies:
-    "@codemirror/lang-html" "^6.0.0"
-    "@codemirror/language" "^6.3.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
-    "@lezer/markdown" "^1.0.0"
-
-"@codemirror/language@^6.0.0", "@codemirror/language@^6.3.0", "@codemirror/language@^6.4.0", "@codemirror/language@^6.6.0":
-  version "6.6.0"
-  resolved "http://localhost:4873/@codemirror/language/-/language-6.6.0.tgz"
-  integrity sha512-cwUd6lzt3MfNYOobdjf14ZkLbJcnv4WtndYaoBkbor/vF+rCNguMPK0IRtvZJG4dsWiaWPcK8x1VijhvSxnstg==
-  dependencies:
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
-    "@lezer/highlight" "^1.0.0"
-    "@lezer/lr" "^1.0.0"
-    style-mod "^4.0.0"
-
-"@codemirror/lint@^6.0.0":
-  version "6.2.0"
-  resolved "http://localhost:4873/@codemirror/lint/-/lint-6.2.0.tgz"
-  integrity sha512-KVCECmR2fFeYBr1ZXDVue7x3q5PMI0PzcIbA+zKufnkniMBo1325t0h1jM85AKp8l3tj67LRxVpZfgDxEXlQkg==
-  dependencies:
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    crelt "^1.0.5"
-
-"@codemirror/search@^6.0.0":
-  version "6.2.3"
-  resolved "http://localhost:4873/@codemirror/search/-/search-6.2.3.tgz"
-  integrity sha512-V9n9233lopQhB1dyjsBK2Wc1i+8hcCqxl1wQ46c5HWWLePoe4FluV3TGHoZ04rBRlGjNyz9DTmpJErig8UE4jw==
-  dependencies:
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    crelt "^1.0.5"
-
-"@codemirror/state@^6.0.0", "@codemirror/state@^6.1.1", "@codemirror/state@^6.1.4", "@codemirror/state@^6.2.0":
-  version "6.2.0"
-  resolved "http://localhost:4873/@codemirror/state/-/state-6.2.0.tgz"
-  integrity sha512-69QXtcrsc3RYtOtd+GsvczJ319udtBf1PTrr2KbLWM/e2CXUPnh0Nz9AUo8WfhSQ7GeL8dPVNUmhQVgpmuaNGA==
-
-"@codemirror/theme-one-dark@^6.0.0":
-  version "6.1.1"
-  resolved "http://localhost:4873/@codemirror/theme-one-dark/-/theme-one-dark-6.1.1.tgz"
-  integrity sha512-+CfzmScfJuD6uDF5bHJkAjWTQ2QAAHxODCPxUEgcImDYcJLT+4l5vLnBHmDVv46kCC5uUJGMrBJct2Z6JbvqyQ==
-  dependencies:
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-    "@lezer/highlight" "^1.0.0"
-
-"@codemirror/view@^6.0.0", "@codemirror/view@^6.2.2", "@codemirror/view@^6.6.0", "@codemirror/view@>=6.0.0":
-  version "6.9.1"
-  resolved "http://localhost:4873/@codemirror/view/-/view-6.9.1.tgz"
-  integrity sha512-bzfSjJn9dAADVpabLKWKNmMG4ibyTV2e3eOGowjElNPTdTkSbi6ixPYHm2u0ADcETfKsi2/R84Rkmi91dH9yEg==
-  dependencies:
-    "@codemirror/state" "^6.1.4"
-    style-mod "^4.0.0"
-    w3c-keyname "^2.2.4"
 
 "@esbuild/win32-x64@0.16.17":
   version "0.16.17"
@@ -385,58 +254,6 @@
   dependencies:
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
-
-"@lezer/common@^1.0.0":
-  version "1.0.2"
-  resolved "http://localhost:4873/@lezer/common/-/common-1.0.2.tgz"
-  integrity sha512-SVgiGtMnMnW3ActR8SXgsDhw7a0w0ChHSYAyAUxxrOiJ1OqYWEKk/xJd84tTSPo1mo6DXLObAJALNnd0Hrv7Ng==
-
-"@lezer/css@^1.0.0", "@lezer/css@^1.1.0":
-  version "1.1.1"
-  resolved "http://localhost:4873/@lezer/css/-/css-1.1.1.tgz"
-  integrity sha512-mSjx+unLLapEqdOYDejnGBokB5+AiJKZVclmud0MKQOKx3DLJ5b5VTCstgDDknR6iIV4gVrN6euzsCnj0A2gQA==
-  dependencies:
-    "@lezer/highlight" "^1.0.0"
-    "@lezer/lr" "^1.0.0"
-
-"@lezer/highlight@^1.0.0", "@lezer/highlight@^1.1.3":
-  version "1.1.3"
-  resolved "http://localhost:4873/@lezer/highlight/-/highlight-1.1.3.tgz"
-  integrity sha512-3vLKLPThO4td43lYRBygmMY18JN3CPh9w+XS2j8WC30vR4yZeFG4z1iFe4jXE43NtGqe//zHW5q8ENLlHvz9gw==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-
-"@lezer/html@^1.3.0":
-  version "1.3.3"
-  resolved "http://localhost:4873/@lezer/html/-/html-1.3.3.tgz"
-  integrity sha512-04Fyvu66DjV2EjhDIG1kfDdktn5Pfw56SXPrzKNQH5B2m7BDfc6bDsz+ZJG8dLS3kIPEKbyyq1Sm2/kjeG0+AA==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-    "@lezer/highlight" "^1.0.0"
-    "@lezer/lr" "^1.0.0"
-
-"@lezer/javascript@^1.0.0":
-  version "1.4.1"
-  resolved "http://localhost:4873/@lezer/javascript/-/javascript-1.4.1.tgz"
-  integrity sha512-Hqx36DJeYhKtdpc7wBYPR0XF56ZzIp0IkMO/zNNj80xcaFOV4Oj/P7TQc/8k2TxNhzl7tV5tXS8ZOCPbT4L3nA==
-  dependencies:
-    "@lezer/highlight" "^1.1.3"
-    "@lezer/lr" "^1.3.0"
-
-"@lezer/lr@^1.0.0", "@lezer/lr@^1.3.0":
-  version "1.3.3"
-  resolved "http://localhost:4873/@lezer/lr/-/lr-1.3.3.tgz"
-  integrity sha512-JPQe3mwJlzEVqy67iQiiGozhcngbO8QBgpqZM6oL1Wj/dXckrEexpBLeFkq0edtW5IqnPRFxA24BHJni8Js69w==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-
-"@lezer/markdown@^1.0.0":
-  version "1.0.2"
-  resolved "http://localhost:4873/@lezer/markdown/-/markdown-1.0.2.tgz"
-  integrity sha512-8CY0OoZ6V5EzPjSPeJ4KLVbtXdLBd8V6sRCooN5kHnO28ytreEGTyrtU/zUwo/XLRzGr/e1g44KlzKi3yWGB5A==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-    "@lezer/highlight" "^1.0.0"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -512,54 +329,6 @@
   resolved "http://localhost:4873/@types/scheduler/-/scheduler-0.16.2.tgz"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
-"@uiw/codemirror-extensions-basic-setup@4.19.9":
-  version "4.19.9"
-  resolved "http://localhost:4873/@uiw/codemirror-extensions-basic-setup/-/codemirror-extensions-basic-setup-4.19.9.tgz"
-  integrity sha512-O4yAgVpD3Pon4t4+lwZ2MTGg2TeU/Jv8YzKS9ap4fP/WMTVrKmpdq+DOafbhZSlhmU0XGfQPPJ4WX6rtZgx3Rw==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/commands" "^6.0.0"
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/lint" "^6.0.0"
-    "@codemirror/search" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-
-"@uiw/codemirror-theme-okaidia@^4.19.9":
-  version "4.19.9"
-  resolved "http://localhost:4873/@uiw/codemirror-theme-okaidia/-/codemirror-theme-okaidia-4.19.9.tgz"
-  integrity sha512-8NWKVbxQrBZc8jA5urwuzkdtotmCo60vvtRzjuq1jyVO+Rh2hyjE2oPbE+7H8qdZRsU+JqGZgEe9Y4Vm/3hlSA==
-  dependencies:
-    "@uiw/codemirror-themes" "4.19.9"
-
-"@uiw/codemirror-theme-sublime@^4.19.9":
-  version "4.19.9"
-  resolved "http://localhost:4873/@uiw/codemirror-theme-sublime/-/codemirror-theme-sublime-4.19.9.tgz"
-  integrity sha512-u6BtA0jt1bsIK2tBAHr7YF4ZbkW7sEkoHAGgNqjnkYUsSyyvtKliv3AERRKM5WYFJ5npw1mxytpYQ61piUns5Q==
-  dependencies:
-    "@uiw/codemirror-themes" "4.19.9"
-
-"@uiw/codemirror-themes@4.19.9":
-  version "4.19.9"
-  resolved "http://localhost:4873/@uiw/codemirror-themes/-/codemirror-themes-4.19.9.tgz"
-  integrity sha512-PH3hl1w42z7GXe/zoD9gSadOGBWyKPl7vHm/8V1PUuHXT21+neyfRc7v0xPwb05pGP6ExfbmPi78y4+g6cHopg==
-  dependencies:
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-
-"@uiw/react-codemirror@^4.19.9":
-  version "4.19.9"
-  resolved "http://localhost:4873/@uiw/react-codemirror/-/react-codemirror-4.19.9.tgz"
-  integrity sha512-U+A1fSfELMFFs5a+ZOPwCJKZMYaMy6QHOfNOOV7WhSveM7GYHT970GjTfs2dn1LlvhebwyK9ei0rCXZdsI9n9Q==
-  dependencies:
-    "@babel/runtime" "^7.18.6"
-    "@codemirror/commands" "^6.1.0"
-    "@codemirror/state" "^6.1.1"
-    "@codemirror/theme-one-dark" "^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup" "4.19.9"
-    codemirror "^6.0.0"
-
 "@vitejs/plugin-react@^3.1.0":
   version "3.1.0"
   resolved "http://localhost:4873/@vitejs/plugin-react/-/plugin-react-3.1.0.tgz"
@@ -615,6 +384,11 @@ asynckit@^0.4.0:
   resolved "http://localhost:4873/asynckit/-/asynckit-0.4.0.tgz"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
+autobahn-browser@^22.11.1:
+  version "22.11.1"
+  resolved "http://localhost:4873/autobahn-browser/-/autobahn-browser-22.11.1.tgz"
+  integrity sha512-LXsP82RdaxtzW81Zh9Q139sbgz8lZOJDcUOiuQoXNiLK39Qy98raRgOOJu7WBkFk/jB6//HbJdhjob7z9VsaxQ==
+
 autoprefixer@^10.4.13:
   version "10.4.13"
   resolved "http://localhost:4873/autoprefixer/-/autoprefixer-10.4.13.tgz"
@@ -663,6 +437,13 @@ browserslist@^4.21.3, browserslist@^4.21.4, "browserslist@>= 4.21.0":
     node-releases "^2.0.8"
     update-browserslist-db "^1.0.10"
 
+bufferutil@^4.0.1:
+  version "4.0.7"
+  resolved "http://localhost:4873/bufferutil/-/bufferutil-4.0.7.tgz"
+  integrity sha512-kukuqc39WOHtdxtw4UScxF/WVnMFVSQVKhtx3AjZJzhd0RGZZldcrfSEbVsWWe6KNH253574cq5F+wpv0G9pJw==
+  dependencies:
+    node-gyp-build "^4.3.0"
+
 call-bind@^1.0.0:
   version "1.0.2"
   resolved "http://localhost:4873/call-bind/-/call-bind-1.0.2.tgz"
@@ -705,19 +486,6 @@ chokidar@^3.5.3:
   optionalDependencies:
     fsevents "~2.3.2"
 
-codemirror@^6.0.0:
-  version "6.0.1"
-  resolved "http://localhost:4873/codemirror/-/codemirror-6.0.1.tgz"
-  integrity sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==
-  dependencies:
-    "@codemirror/autocomplete" "^6.0.0"
-    "@codemirror/commands" "^6.0.0"
-    "@codemirror/language" "^6.0.0"
-    "@codemirror/lint" "^6.0.0"
-    "@codemirror/search" "^6.0.0"
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.0.0"
-
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "http://localhost:4873/color-convert/-/color-convert-1.9.3.tgz"
@@ -746,11 +514,6 @@ convert-source-map@^1.7.0:
   version "1.9.0"
   resolved "http://localhost:4873/convert-source-map/-/convert-source-map-1.9.0.tgz"
   integrity sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==
-
-crelt@^1.0.5:
-  version "1.0.5"
-  resolved "http://localhost:4873/crelt/-/crelt-1.0.5.tgz"
-  integrity sha512-+BO9wPPi+DWTDcNYhr/W90myha8ptzftZT+LwcmUbbok0rcP/fequmFYCw8NMoH7pkAZQzU78b3kYrlua5a9eA==
 
 cssesc@^3.0.0:
   version "3.0.0"
@@ -1095,6 +858,11 @@ ncp@^2.0.0:
   resolved "http://localhost:4873/ncp/-/ncp-2.0.0.tgz"
   integrity sha512-zIdGUrPRFTUELUvr3Gmc7KZ2Sw/h1PiVM0Af/oHB6zgnV1ikqSfRk+TOufi79aHYCW3NiOXmr1BP5nWbzojLaA==
 
+node-gyp-build@^4.3.0:
+  version "4.6.0"
+  resolved "http://localhost:4873/node-gyp-build/-/node-gyp-build-4.6.0.tgz"
+  integrity sha512-NTZVKn9IylLwUzaKjkas1e4u2DLNcV4rdYagA4PWdPwW87Bi7z+BznyKSRwS/761tV/lzCGXplWsiaMjLqP2zQ==
+
 node-releases@^2.0.8:
   version "2.0.10"
   resolved "http://localhost:4873/node-releases/-/node-releases-2.0.10.tgz"
@@ -1222,7 +990,7 @@ quick-lru@^5.1.1:
   resolved "http://localhost:4873/quick-lru/-/quick-lru-5.1.1.tgz"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-react-dom@^18.2.0, react-dom@>=16.8.0:
+react-dom@^18.2.0:
   version "18.2.0"
   resolved "http://localhost:4873/react-dom/-/react-dom-18.2.0.tgz"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -1255,11 +1023,6 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
-
-regenerator-runtime@^0.13.11:
-  version "0.13.11"
-  resolved "http://localhost:4873/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz"
-  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 resolve@^1.1.7, resolve@^1.22.1:
   version "1.22.1"
@@ -1338,11 +1101,6 @@ source-map-js@^1.0.2:
   resolved "http://localhost:4873/source-map-js/-/source-map-js-1.0.2.tgz"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
 
-style-mod@^4.0.0:
-  version "4.0.0"
-  resolved "http://localhost:4873/style-mod/-/style-mod-4.0.0.tgz"
-  integrity sha512-OPhtyEjyyN9x3nhPsu76f52yUGXiZcgvsrFVtvTkyGRQJ0XK+GPc6ov1z+lRpbeabka+MYEQxOYRnt5nF30aMw==
-
 supports-color@^5.3.0:
   version "5.5.0"
   resolved "http://localhost:4873/supports-color/-/supports-color-5.5.0.tgz"
@@ -1409,6 +1167,13 @@ use-between@^1.3.5:
   resolved "http://localhost:4873/use-between/-/use-between-1.3.5.tgz"
   integrity sha512-IP9eJfszZr0aah/6i/pzaM7n/QgMPwWKJ+mnWqT5O0qFhLnztPbkVC6L7zI6ygeBIMJHfmUGvsw0b28pyrEGSA==
 
+utf-8-validate@^5.0.2:
+  version "5.0.10"
+  resolved "http://localhost:4873/utf-8-validate/-/utf-8-validate-5.0.10.tgz"
+  integrity sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==
+  dependencies:
+    node-gyp-build "^4.3.0"
+
 util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "http://localhost:4873/util-deprecate/-/util-deprecate-1.0.2.tgz"
@@ -1430,11 +1195,6 @@ vite@^4.1.0, vite@^4.1.0-beta.0:
     rollup "^3.10.0"
   optionalDependencies:
     fsevents "~2.3.2"
-
-w3c-keyname@^2.2.4:
-  version "2.2.6"
-  resolved "http://localhost:4873/w3c-keyname/-/w3c-keyname-2.2.6.tgz"
-  integrity sha512-f+fciywl1SJEniZHD6H+kUO8gOnwIr7f4ijKA6+ZvJFjeGi1r4PDLl53Ayud9O/rk64RqgoQine0feoeOU0kXg==
 
 ws@~8.11.0:
   version "8.11.0"
