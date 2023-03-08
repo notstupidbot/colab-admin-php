@@ -10,30 +10,40 @@ class Sentences{
 	sentence = null
 	content = null
 	items = []
-
+	sentences_sr = null
 	constructor(sentences_sr, content){
 		this.content = content;
+		this.sentences_sr = sentences_sr;
+
 		try{
-			const items = JSON.parse(sentences_sr);
+			this.items = JSON.parse(sentences_sr);
 			if(items.length == 0){
 				// console.log('Here')
 				this.buildItems();
 				return; 
 			}
+			this.init();
 			// console.log('Here')
 			// console.log(items)
-			this.items = items.map(item=>{
-				item.ref = React.createRef();
-				item.ttf_ref = React.createRef();
-				item.audio_ref = React.createRef();
-				item.loading = false;
-				item.loading_ttf = false;
-				item.audio_source = "";
-				return item;
-			});
+			
 		}catch(e){
 			// console.log(e);
 		}
+	}
+	init(){
+		this.items = this.items.map((item,idx)=>{
+		item.ref = React.createRef();
+		item.ttf_ref = React.createRef();
+		item.audio_ref = React.createRef();
+		item.loading = false;
+		item.loading_ttf = false;
+		item.audio_source = "";
+		if(this.sentence){
+			item.audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${this.sentence.pk}-${idx}.wav`	
+
+		}
+		return item;
+	});
 	}
 	setItemsRefValue(what){
 		what = what || 'all';
@@ -41,6 +51,8 @@ class Sentences{
 			if(what == 'all'){
 				item.ref.current.value = item.text;
 				item.ttf_ref.current.value = item.ttf;
+
+
 			}
 			if(what == 'text'){
 				item.ref.current.value = item.text;
@@ -48,9 +60,38 @@ class Sentences{
 			if(what == 'ttf'){
 				item.ttf_ref.current.value = item.ttf;
 			}
-			// if(what == 'audio_source'){
-			// 	item.audio_source = item.ttf;
-			// }
+			
+			
+		});
+	}
+	loadItemRefAudioSource(index){
+		index = index || -1;
+		this.items.map((item,idx)=>{
+			if(item.audio_source == ""){
+				item.audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${this.sentence.pk}-${idx}.wav`	
+			}
+			if(index > -1){
+				// console.log('A')
+
+				if(index == idx){
+					try{
+						// console.log(item.audio_source);
+
+						item.audio_ref.current.load()
+					}catch(e){
+
+					}
+				}
+			}else{
+				// console.log('B')
+				try{
+					// console.log(item.audio_source);
+					item.audio_ref.current.load()
+				}catch(e){
+
+				}
+			}
+			
 		});
 	}
 	setSentence(sentence){
@@ -102,6 +143,8 @@ class Sentences{
 	
 	buildItems(newContent){
 		console.log('HERE')
+		const audio_source_base = `${app_config.getApiEndpoint()}/public/tts-output/${this.sentence.pk}-`;
+
 		let content = this.content;
 		if(newContent){
 			content = newContent
@@ -112,7 +155,7 @@ class Sentences{
 
 		let tmpSentences = [];
 		const dotSentences = content.split('.');
-
+		let source_index = 0;
 		for(let i in dotSentences){
 			const commaSentence = dotSentences[i].split(',');
 
@@ -121,14 +164,21 @@ class Sentences{
 				for(let j in commaSentence){
 					const text = commaSentence[j].replace(/^\s+/,'');
 					const type = j == lastIndex ? 'dot':'comma';
-					if(text.length)
-						tmpSentences.push({text:fixTttsText(text), type,ttf:'',loading:false,loading_ttf:false,audio_source:"", ref: React.createRef(null),audio_ref: React.createRef(null), ttf_ref: React.createRef(null)})
+					const audio_source = `${audio_source_base}${source_index}.wav`;
+					if(text.length){
+						tmpSentences.push({text:fixTttsText(text), type,ttf:'',loading:false,loading_ttf:false,audio_source, ref: React.createRef(null),audio_ref: React.createRef(null), ttf_ref: React.createRef(null)})
+						source_index += 1;
+					}
+					
 				}
 			}else{
 				const text = commaSentence[0].replace(/^\s+/,'');
-				if(text.length)
-				tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'',loading:false,loading_ttf:false,audio_source:"", ref: React.createRef(null),audio_ref: React.createRef(null), ttf_ref: React.createRef(null)})
+				if(text.length){
+					const audio_source = `${audio_source_base}${source_index}.wav`;
 
+					tmpSentences.push({text:fixTttsText(text), type:'dot',ttf:'',loading:false,loading_ttf:false,audio_source , ref: React.createRef(null),audio_ref: React.createRef(null), ttf_ref: React.createRef(null)})
+					source_index += 1;
+				}
 			}
 		}
 		console.log(tmpSentences)
@@ -154,17 +204,19 @@ class Sentence {
 	}
 	
 	static fromRow(row){
-		const sentences = new Sentences(row.sentences, row.text);
-		const sentence = new Sentence(row.text, sentences);
+		const sentences = new Sentences(row.sentences, row.content);
+		const sentence = new Sentence(row.content, sentences);
 
 		sentence.setSentences(sentences);
 		// sentences.setSentence(sentence);
 
 		sentence.setPk(row.id);
-		sentence.setContent(row.text);
-		sentence.setContentTtf(row.ttf_text);
-		sentence.setTitle(row.name);
+		sentence.setContent(row.content);
+		sentence.setContentTtf(row.content_ttf);
+		sentence.setTitle(row.title);
 		sentences.setSentence(sentence);
+		sentences.init();
+
 		return sentence;
 	}
 
@@ -193,15 +245,15 @@ class Sentence {
 
 	toRow(){
 		const id = this.pk;
-		const name = this.title;
-		const text = this.content;
-		const ttf_text = this.contentTtf;
+		const title = this.title;
+		const content = this.content;
+		const content_ttf = this.contentTtf;
 		const output_file = this.outputFile;
 		const sentences = this.sentences.getItems().map(item=>{
 			return {text : item.text, ttf : item.ttf , type : item.type}
 		});
 
-		return {id, name, text, sentences, ttf_text, output_file};
+		return {id, title, content, sentences, content_ttf, output_file};
 	}
 
 	setPk(pk){

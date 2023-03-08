@@ -1,7 +1,7 @@
 export default function Toast({id, message,show,onOk,onClose,status}){
 	return(<>
-<div className={"fixed top-0 left-1/2 -translate-x-1/2 " + (!show?"hidden":"")}>	
-<div id={id} className="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 max-w-xs bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700" role="alert">
+<div style={{zIndex:15}} className={"fixed  top-0 left-1/2 -translate-x-1/2 " + (!show?"hidden":"")}>	
+<div id={id} style={{maxWidth:420}} className="hs-removing:translate-x-5 hs-removing:opacity-0 transition duration-300 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700" role="alert">
   <div className="flex p-4">
     <div className="flex-shrink-0">
     { status?(

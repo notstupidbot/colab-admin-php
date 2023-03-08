@@ -9,7 +9,7 @@ class Tts extends REST_Controller {
     function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
-        $this->load->model("TtsProjectMdl","model");
+        $this->load->model("TtsProjectMdl","m_project");
         $this->load->model("SentenceMdl","m_sentence");
         $this->load->model("WordListMdl","m_word_list");
         $this->load->model("WordListTtfMdl","m_word_list_ttf");
@@ -18,39 +18,39 @@ class Tts extends REST_Controller {
 
 
     function project_post() {
-        
-        $text = $this->post('text');
+        $title = $this->post('title');
 
-        
-        $id = $this->model->createId($text);
-
-        $project = $this->model->getById($id);
-
-        if(!$project){
-            $project = $this->model->create($id,$text,$id);
+        if(!empty($title)){
+            $project = $this->m_project->create($title);
+            $this->response($project, 200);
         }
-
-
-        $output = [
-            "id" => $id,
-            "project" => $project
-
-        ]; 
-        $this->response($output, 200);
     }
-
-    
 
     function project_get() {
         
-        $id = $this->get("id");
+        $id = $this->input->get("id");
+        $page = $this->input->get("page");
+        $limit = $this->input->get("limit");
+        $order_by = $this->input->get("order_by");
+        $order_dir = $this->input->get("order_dir");
+
+        if(empty($page))
+            $page =1;
+        if(empty($limit))
+            $limit =10;
+        if(empty($order_by)){
+            $order_by = "create_date";
+        }
+        if(empty($order_dir)){
+            $order_dir = "asc";
+        }
         if($id){
-            $project = $this->model->getById($id);
-            $this->response($project, 200);
+            $record = $this->m_project->getById($id);
+            $this->response($record, 200);
         }else{
-            $limit = 10;
-            $projects = $this->model->getAll($limit);
-            $this->response($projects, 200);
+           
+            $paged_list = $this->m_project->getAllPaged($page,$limit, $order_by, $order_dir);
+            $this->response($paged_list, 200);
         }
  
     }
@@ -85,9 +85,9 @@ class Tts extends REST_Controller {
     function sentence_post() {
         
         $id = $this->input->get("id");
-        $name = $this->input->post('name');
-        $text = $this->input->post('text');
-        $ttf_text = $this->input->post('ttf_text');
+        $title = $this->input->post('title');
+        $content = $this->input->post('content');
+        $content_ttf = $this->input->post('content_ttf');
         $sentences = $this->input->post('sentences');
         
         
@@ -95,9 +95,9 @@ class Tts extends REST_Controller {
         if($id){
             $sentence = $this->m_sentence->getById($id);
             $sentence = [
-                'name' => $name,
-                'text' => $text,
-                'ttf_text' => $ttf_text,
+                'title' => $title,
+                'content' => $content,
+                'content_ttf' => $content_ttf,
                 'sentences' => $sentences,
                 'last_updated' => date('Y-m-d H:i:s'),
 
@@ -105,7 +105,7 @@ class Tts extends REST_Controller {
             $this->m_sentence->update($id, $sentence);
             $this->response($sentence, 200);
         }else{
-            $sentence = $this->m_sentence->create($name, $text, $ttf_text, $sentences, '-');
+            $sentence = $this->m_sentence->create($title, $content, $content_ttf, $sentences, '-');
             $this->response($sentence, 200);
         }
  

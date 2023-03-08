@@ -81,7 +81,7 @@ export default class SentenceTab extends React.Component{
 		const dummyRow= [1,2,3,4,5,6,7,8,9]
 return(<>
 <div className="pager">
-<button onClick={evt=>this.addSentenceHandler(evt)} title="Add Sentence"
+<button onClick={evt=>this.addSentenceHandler(evt)} style={{zIndex:15}} title="Add Sentence"
         className="fixed z-90 bottom-10 right-8 bg-blue-600 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
 			<i className="bi bi-file-plus"></i>
 		</button>
@@ -96,10 +96,10 @@ return(<>
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">No</th>
 
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              	<button onClick={evt=>this.updateListWithOrder('name')}>{this.state.grid.order_by=='name' ? (this.state.grid.order_dir=='asc'?(<i class="bi bi-sort-alpha-down"></i>):(<i class="bi bi-sort-alpha-up"></i>)):''} Name</button>
+              	<button onClick={evt=>this.updateListWithOrder('title')}>{this.state.grid.order_by=='title' ? (this.state.grid.order_dir=='asc'?(<i class="bi bi-sort-alpha-down"></i>):(<i class="bi bi-sort-alpha-up"></i>)):''} Title/Date</button>
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              <button onClick={evt=>this.updateListWithOrder('text')}>{this.state.grid.order_by=='text' ? (this.state.grid.order_dir=='asc'?(<i class="bi bi-sort-alpha-down"></i>):(<i class="bi bi-sort-alpha-up"></i>)):''} Text</button>
+              <button onClick={evt=>this.updateListWithOrder('content')}>{this.state.grid.order_by=='content' ? (this.state.grid.order_dir=='asc'?(<i class="bi bi-sort-alpha-down"></i>):(<i class="bi bi-sort-alpha-up"></i>)):''} Content</button>
               </th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
             </tr>
@@ -126,9 +126,9 @@ return(<>
 		              { (parseInt(index) + 1) + ((parseInt(this.state.grid.page)-1) * parseInt(this.state.grid.limit))}
 		              </td>
 
-		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.name} <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{moment(item.create_date).format('MMMM Do YYYY, h:mm:ss a')}</span>
+		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.title} <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{moment(item.create_date).format('MMMM Do YYYY, h:mm:ss a')}</span>
 </td>
-		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{item.text}</td>
+		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{item.content}</td>
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 		                <button className="text-blue-500 hover:text-blue-700" onClick={evt=>this.viewInEditor(item)}>View in Editor</button>
 		              </td>

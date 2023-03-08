@@ -8,59 +8,72 @@ class TtsProjectMdl extends BaseMdl{
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model("WordListMdl","m_word_list");
-        $this->load->model("WordListTtfMdl","m_word_list_ttf");
+		$this->load->model("SentenceMdl","m_sentence");
 	}
-	function getById($id){
-		$row = $this->db->where("id",$id)->from($this->table)->get()->row_array();
 
-		if($row){
-		
-			$word_list = json_decode($row['word_list']);
-	        $row["word_list_ttf"] = $this->process_world_list($word_list);
-	        $row["word_list_ttf_str"] = implode(" ", $row["word_list_ttf"]);
-		}
-		return $row;
-	}
-	function create($id,$text,$name){
-		$word_list = explode(" ",$text);
-		if(!$name){
-			$name = $id;
-		}
+	function create($title){
         $row= [
-        	"id" => $id,
-        	"word_list" => json_encode($word_list),
-         	"text" => $text,
-        	"word_count" => count($word_list),
-        	"output_file" => "",
-        	"name" => $name
+        	"id" => gen_uuid(),
+        	"title" => $title
         ];
         $this->db->insert($this->table, $row);
-        $row["word_list_ttf"] = $this->process_world_list($word_list);
-        $row["word_list_ttf_str"] = implode(" ", $row["word_list_ttf"]);
 
-        return $row;
+        return  $this->getById($row['id']);
 	}
 
-	function createId($text){
-		return md5sum($text);
+	function add_item($pk, $item_id){
+		$row = $this->getById($id);
+		$items = json_decode($row['items']);
+
+		$items[] = $item_id;
+
+		$items = json_encode($items);
+
+		$this->db->where($this->pk, $pk)->update($this->table, ['items'=>$items]);
+
+		return $items;
 	}
 
-	public function process_world_list($word_list)
-	{
-		$word_ttf_list = [];
-		foreach ($word_list as $text) {
-			$word_ttf = $this->m_word_list_ttf->getByWord($text);
-			if(!$word_ttf){
-				$word_ttf = $this->m_word_list_ttf->convert($text);
+	function get_items($pk){
+		$row = $this->getById($pk);
+		$items = json_decode($row['items']);
 
-			}else{
-				$word_ttf = $word_ttf['content'];
-			}
-			$word_ttf_list[] = trim($word_ttf);
+		return $items;
+	}
+
+	function delete_item($pk, $item_id, $cascade=false){
+		$row = $this->getById($id);
+		$items = json_decode($row['items']);
+
+		if (($key = array_search($item_id, $items)) !== false) {
+		    unset($items[$key]);
+		    if($cascade){
+		    	$this->m_sentence->delete($item_id);
+		    }
+			$items = json_encode($items);
+			$this->db->where($this->pk, $pk)->update($this->table, ['items'=>$items]);
 		}
 
-		return $word_ttf_list;
+		
+		return $items;
+	}
+
+	function delete_items($pk, $item_ids, $cascade=false){
+		$row = $this->getById($id);
+		$items = json_decode($row['items']);
+
+		$items = array_diff( $items, $item_ids );
+
+		if ($cascade) {
+			foreach($item_ids as $item_id){
+				$this->m_sentence->delete($item_id);
+			}
+		}
+		$items = json_encode($items);
+		$this->db->where($this->pk, $pk)->update($this->table, ['items'=>$items]);
+			
+		return $items;
+		
 	}
 
 }

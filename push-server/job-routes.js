@@ -11,6 +11,11 @@ const {m_jobs} = require("./models")
     return fn(...args);
 }
 
+const preferences{
+	tts_job : {
+		check_pid_try_count : 1
+	}
+}
 
 class TtsJob{
 	pid = 0;
@@ -19,11 +24,15 @@ class TtsJob{
 	socketManager = null;
 	uuid = null;
 	job = null;
-	constructor(project_id, text, socketManager, uuid){
+	chunkMode = false;
+	index = 0
+	constructor(project_id, text, socketManager, uuid, chunkMode, index){
 		this.project_id = project_id;
 		this.text = text;
 		this.socketManager = socketManager;
 		this.uuid = uuid;
+		this.chunkMode = chunkMode;
+		this.index = index;
 	}
 	async get_pid_by_filter(filter_a, filter_b, filter_c){
 		try{
@@ -140,7 +149,9 @@ class TtsJob{
 			job_name : 'tts',
 			at : 'run_process',
 			uuid,project_id,job_id,
-			success: status
+			success: status,
+			chunkMode : this.chunkMode,
+			index: this.index
 		}
 		this.socketManager.emit('log',log_message,null,uuid, log_data);
 		m_jobs.updateTtsJobStatus(this.job.id,status);
@@ -154,7 +165,7 @@ class TtsJob{
  
 	async check_running_pid(pid){
 		const project_id = this.project_id;
-		let try_count = 5;
+		let try_count = preferences.tts_job.check_pid_try_count;
 		let ps_status;
 		while(try_count){
 			console.log(`checking the real pid ${try_count}`)
@@ -238,7 +249,10 @@ class TtsJob{
 		console.log(`JobRoute.create`)
 		const www_dir = '/container/dist/www/html';
 		const job_name = "tts";
-		const cmdline = `bash ${www_dir}/addon/tts-job.sh ${this.project_id} "${this.text}"`;
+		let cmdline = `bash ${www_dir}/addon/tts-job.sh ${this.project_id} "${this.text}"`;
+		if(this.chunkMode){
+			cmdline =  `${cmdline} ${this.index}`
+		}
 		const project_id = this.project_id;
 		let job = await m_jobs.getTtsJob(project_id);
 
@@ -273,20 +287,29 @@ function JobRoute(socketManager, app){
 		const uuid = req.query.uuid;
 		const socket_id = req.query.socket_id;
 		const job_name = req.query.job_name; 
+		let chunkMode = req.query.chunkMode || false;
+		if(chunkMode == 'true'){
+			chunkMode = true;
+		}
+		let index = req.query.index || 0;
+
+		index = parseInt(index);
 		
 		if(uuid && job_name){
 			switch(job_name){
 				case 'tts':
 					const {text,project_id} = req.body;
 					// console.log(text,project_id);
-					const ttsJob = new TtsJob(project_id,text,socketManager, uuid);
+					const ttsJob = new TtsJob(project_id,text,socketManager, uuid, chunkMode, index);
 					const job = await ttsJob.create(uuid); 
 					const create_job_messages = `Job created with id ${job.id}`;
 					const create_job_data = {
 						job_name : 'tts',
 						at : 'create_job',
 						uuid,project_id,job_id:job.id,
-						success: true
+						success: true,
+						chunkMode,
+						index
 					};
 					const emitedSocketLength = await socketManager.emit('log', create_job_messages, socket_id, uuid, create_job_data);
 					if(emitedSocketLength){

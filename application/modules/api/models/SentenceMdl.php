@@ -12,12 +12,12 @@ class SentenceMdl extends BaseMdl{
         $this->load->model("WordListTtfMdl","m_word_list_ttf");
 	}
 
-	function create($name, $text, $ttf_text, $sentences, $output_file){
+	function create($title, $content, $content_ttf, $sentences, $output_file){
 		$sentence = [
 			'id' => gen_uuid(),
-            'name' => $name,
-            'text' => $text,
-            'ttf_text' => $ttf_text,
+            'title' => $title,
+            'content' => $content,
+            'content_ttf' => $content_ttf,
             'sentences' => $sentences,
             'output_file'=>'-',
             'last_updated' => date('Y-m-d H:i:s'),
@@ -25,15 +25,8 @@ class SentenceMdl extends BaseMdl{
         ];
         $this->db->insert($this->table, $sentence);
         return $sentence;
-	}
-	function getById($id){
-
-	}
-	// function getAll($limit){
-
-	// }
+	} 
 	function getAllPaged($page_number, $limit, $order_by="create_date", $order_dir="asc"){
-		// $page_number = s$page_number;
 		$total_records = $this->getCount();
 		$offset = ($page_number  == 1) ? 0 : ($page_number * $limit) - $limit;
 

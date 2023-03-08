@@ -19,6 +19,8 @@ class Restore extends MX_Controller {
 		$this->word_list_ttf();
 		$this->socket_session();
 		$this->jobs();
+		$this->user();
+		$this->group();
 
 
 		$this->load_db_dump();
@@ -30,19 +32,19 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
-	        'name' => array(
+	        'title' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
-	        'text' => array(
+	        'content' => array(
                 'type' =>'TEXT',
                 'default' => '',
 	        ),
 	        'sentences' => array(
                 'type' =>'JSON'
 	        ),
-	        'ttf_text' => array(
+	        'content_ttf' => array(
                 'type' =>'TEXT',
                 'default' => '',
 	        ),
@@ -50,8 +52,18 @@ class Restore extends MX_Controller {
                 'type' => 'VARCHAR',
                 'constraint' => '225',
 	        ),
+	        'user_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'default' => NULL
+	        ),
 	        'create_date' => [
-	        	'type' => 'DATETIME'
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
 	        ]
 		);
 		
@@ -66,33 +78,130 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
-	        'name' => array(
-                'type' => 'VARCHAR',
-                'constraint' => '100',
-                'unique' => TRUE,
-	        ),
-	        'text' => array(
-                'type' =>'TEXT',
-                'default' => '',
-	        ),
-	        'word_list' => array(
-                'type' =>'JSON',
-	        ),
-	        'word_count' => array(
-                'type' => 'INT'
-	        ),
-	        'output_file' => array(
+	        'title' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '225',
+                'unique' => TRUE,
+	        ),
+	        'items' => array(
+                'type' =>'JSON',
+                'default' => '[]',
+	        ),
+	        'user_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'default' => NULL
 	        ),
 	        'create_date' => [
-	        	'type' => 'DATETIME'
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
 	        ]
+
 		);
 		
 		$table = 'tts_project';
 		init_db_table($fields, $table);
+	}
+	function preferences(){
+		$fields = array(
+	       'key' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'val' => array(
+                'type' => 'JSON',
+                'default' => '{}'
+	        ),
+	        'create_date' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ]
 
+		);
+		
+		$table = 'preferences';
+		init_db_table($fields, $table);
+	}
+	function group(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'name' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '16',
+                'unique' => TRUE,
+	        ),
+	        'description' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '500'
+	        ),
+	        'group_can' => array(
+                'type' => 'JSON',
+                'default' => '[]'
+	        ),
+	        'create_date' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ]
+		);
+		
+		$table = 'user';
+		init_db_table($fields, $table);
+	}
+	function user(){
+		$fields = array(
+	       'id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'username' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '16',
+                'unique' => TRUE,
+	        ),
+	        'password' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '500'
+	        ),
+	        'email' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'phone' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '16',
+                'unique' => TRUE,
+	        ),
+	        'create_date' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ]
+		);
+		
+		$table = 'user';
+		init_db_table($fields, $table);
 	}
 	function word_list(){
 		$fields = array(
@@ -106,8 +215,18 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
+	        'user_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'default' => NULL
+	        ),
 	        'create_date' => [
-	        	'type' => 'DATETIME'
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
 	        ]
 		);
 		
@@ -135,8 +254,18 @@ class Restore extends MX_Controller {
                 'type' => 'VARCHAR',
                 'constraint' => '225',
 	        ),
+	        'user_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'default' => NULL
+	        ),
 	        'create_date' => [
-	        	'type' => 'DATETIME'
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
 	        ]
 		);
 		$table = 'word_list_ttf';
@@ -172,7 +301,12 @@ class Restore extends MX_Controller {
                 'constraint' => '1',
 	        ),
 	        'create_date' => [
-	        	'type' => 'DATETIME'
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
 	        ]
 		);
 		$table = 'socket_session';
@@ -201,7 +335,12 @@ class Restore extends MX_Controller {
                 'constraint' => '1',
 	        ),
 	        'create_date' => [
-	        	'type' => 'DATETIME'
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
 	        ]
 		);
 		$table = "jobs";

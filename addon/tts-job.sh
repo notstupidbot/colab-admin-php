@@ -6,9 +6,14 @@ PWD=`pwd`
 cd $TTS_DIR
 # source bin/activate
 OUTPATH=$WWW_DIR/public/tts-output
+OUTFILE="$OUTPATH/$1.wav"
+if [ ! -z "$3" ]
+then
+  OUTFILE="$OUTPATH/$1-$3.wav"
+fi
 mkdir -p "$OUTPATH"
 tts --text "$2" \
     --model_path "checkpoint.pth" \
     --config_path "config.json" \
     --speaker_idx "SU-03712" \
-    --out_path "$OUTPATH/$1.wav"
+    --out_path $OUTFILE

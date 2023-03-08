@@ -85,37 +85,51 @@ export default class SentenceEditorTab extends React.Component{
 		}catch(e){}
 		// $('#docs-sidebar').hide()
 	}
+	processSocketLog(message, data){
+		const self = this;
+		if(data.job_name == 'tts'){
+			let success = data.success;
+			success == true ? true : (success == -1 ? false : (success== 1? true : false))
+			const chunkMode = data.chunkMode;
+			self.doToast(message, success)
+			
+			if(data.at == 'run_process'){
+				if(chunkMode){
+					const index = data.index;
+					const audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}-${index}.wav?uuid=${v4()}`;
+					const sentences = self.state.sentences;
+					sentences[index].audio_source = audio_source;
+					sentences[index].loading_ttf = false;
+					
+					self.setState({sentences},()=>{
+							self.state.sentences[index].audio_ref.current.load();
+							setTimeout(()=>{
+								self.state.sentences[index].audio_ref.current.play();
+							},250)
+					});
+				}else{
+					const audioOutput = `${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}.wav?uuid=${v4()}`;
+					self.setState({onProcess:false,audioOutput},()=>{
+							self.audioRef.current.load();
+							setTimeout(()=>{
+								self.audioRef.current.play();
+							},250)
+					});
+				}
+			}
+			if(data.at == 'create_job'){
+				
+			}
+			
+		}
+	}
 	loadSocketCallback(){
 		const self = this;
 		this.props.onSocketConnect((socket)=>{
 			console.log(`${socket.id} connected on SentenceEditorTab`)
 		});
 		this.props.onSocketLog((message, data)=>{
-			// const job_status = self.state.job_status;
-			// console.log(job_status) 
-			// job_status.push(message);
-			// job_status.push(data)
-			// self.setState({job_status})
-			console.log(`log ${message} arrived in SentenceEditorTab`)
-			
-
-			if(data){
-				console.log(data);
-				if(data.job_name == 'tts'){
-					if(data.at == 'run_process'){
-						self.doToast(message, data.success)
-						self.setState({onProcess:false,audioOutput:`${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}.wav?uuid=${v4()}`},()=>{
-								self.audioRef.current.load();
-
-							setTimeout(()=>{
-								self.audioRef.current.play();
-							},250)
-							
-						});
-					}
-					
-				}
-			}
+			this.processSocketLog(message, data)
 
 		});
 	}
@@ -160,8 +174,10 @@ export default class SentenceEditorTab extends React.Component{
 
 	loadSentencesFormData(){
 		const sentences = this.model.getSentences().getItems();
-		this.setState({sentences},o=>{this.model.getSentences().setItemsRefValue()
+		this.setState({sentences},o=>{
+			this.model.getSentences().setItemsRefValue()
 			setTimeout(()=>{
+					this.model.getSentences().loadItemRefAudioSource();
 					this.loadGrowWrap()
 			},1000)
 		})
@@ -345,33 +361,11 @@ export default class SentenceEditorTab extends React.Component{
 		const audioRef = item.audio_ref;
 		const ttf = item.ttf;
 
-		/*
-	this.setState({onProcess:true});
-		const ttfText = this.stInputTtfRef.current.value;
-		const job_res = await this.model.runTtsJob(ttfText);
-		const data = job_res.data;
-		const status = data.status;
-		const message = data.message;
-		const emitedSocketLength = data.emitedSocketLength;
-		if(typeof data.job == 'object'){
-			const {id,job_name} = data.job;
-			const job_id = id;
-			const {pid,project_id,uuid} = data.job.params;
-		}
-
-		const toastMessage = `${message}`;
-		this.doToast(toastMessage,status);
-
-		if(!status){
-			this.setState({onProcess:false});
-
-		}
-
-		console.log(data)
-		*/
-		const job_res = await this.model.runTtsJob(ttf, true, index);
+	
 		sentences[index].loading_ttf = true;
-		this.setState({sentences})		
+		this.setState({sentences})
+		const job_res = await this.model.runTtsJob(ttf, true, index);
+				
 		console.log(ttf)
 
 	}
