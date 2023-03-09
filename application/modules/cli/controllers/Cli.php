@@ -6,10 +6,7 @@ class Cli extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('api/MessagingMdl', 'm_messaging');
-		$this->load->model('api/ZmqMdl', 'm_zmq');
-
-		$this->m_zmq->connect();
+		
 	}
 
 	function index(){
@@ -17,6 +14,10 @@ class Cli extends MX_Controller {
 	}
 
 	function messaging(){
+		$this->load->model('api/MessagingMdl', 'm_messaging');
+		$this->load->model('api/ZmqMdl', 'm_zmq');
+
+		$this->m_zmq->connect();
 		$subscribers = $this->m_messaging->getAll();
 		echo "List of subscribers \n"; 
 
