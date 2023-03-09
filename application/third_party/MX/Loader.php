@@ -326,7 +326,6 @@ class MX_Loader extends CI_Loader
         }
 
         ($_alias = $object_name) or $_alias = basename($model);
-
         if (in_array($_alias, $this->_ci_models, true)) {
             return $this;
         }
@@ -336,10 +335,11 @@ class MX_Loader extends CI_Loader
         if (version_compare(phpversion(), '7.1', '<')) {
             // php version isn't high enough
             // check module
-            list($path, $_model) = Modules::find(strtolower($model), $this->_module, 'models/');
+            list($path, $_model) = Modules::find($model, $this->_module, 'models/');
         } else {
-            [$path, $_model] = Modules::find(strtolower($model), $this->_module, 'models/');
+            [$path, $_model] = Modules::find($model, $this->_module, 'models/');
         }
+        // print_r( [$path, $_model] );
 
         if ($path === false) {
             // check application & packages

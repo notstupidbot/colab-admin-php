@@ -10,6 +10,9 @@ class Tts extends REST_Controller {
         parent::__construct($config);
         $this->load->database();
         $this->load->model("TtsProjectMdl","m_project");
+        $this->load->model("JobMdl","m_job");
+        $this->load->model("ZmqMdl","m_zmq");
+
         $this->load->model("PreferenceMdl","m_preference");
         $this->load->model("SentenceMdl","m_sentence");
         $this->load->model("WordListMdl","m_word_list");
@@ -158,6 +161,37 @@ class Tts extends REST_Controller {
         $this->response($output_text,200);
              
         
+
+    }
+
+    function job_post(){
+        $subscriber_id = $this->input->get('subscriber_id');
+        $chunkMode = $this->input->get('chunkMode');
+        $index_number = $this->input->get('index');
+
+        $sentence_id = $this->input->post('sentence_id');
+        $text = $this->input->post('sentence_id');
+
+        $script = APPPATH . 'bin/tts-job.php';
+        
+        $speaker_id =  'SU-03712';
+        $pidfile = "/tmp/tts-$sentence_id-$index_number.pid";
+        $job_id = gen_uuid();
+        $index = is_numeric($index_number) ? $index_number : -1; 
+        $shell_cmd = sprintf('sudo %s %s %s %s %s %s > /dev/null 2>&1 & echo $! > %s', 
+                              $script, $job_id, $sentence_id, $text, $speaker_id, $index, $pidfile);
+        shell_exec($shell_cmd);
+       
+        $pid = trim(file_get_contents($pidfile));
+        $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $pid);
+        
+        $result = [
+            'job' => $job,
+            'chunkMode' => $chunkMode,
+            'index' => $index,
+            'sentence_id' => $sentence_id
+        ];
+        $this->response($result,200);
 
     }        
 

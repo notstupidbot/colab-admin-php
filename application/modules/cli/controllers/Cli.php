@@ -14,6 +14,7 @@ class Cli extends MX_Controller {
 	}
 
 	function messaging(){
+		$this->load->model('api/PreferenceMdl', 'm_preference');
 		$this->load->model('api/MessagingMdl', 'm_messaging');
 		$this->load->model('api/ZmqMdl', 'm_zmq');
 
@@ -31,5 +32,22 @@ class Cli extends MX_Controller {
 			$this->m_zmq->send_loged_in($subscriber_id);
 			
 		}
+	}
+
+	function job(){
+		$script = APPPATH . 'bin/tts-job.php';
+		$job_id = 'job_id_1';
+		$text = 'halo';
+		$speaker_id = 'wibowo';
+		$pidfile = "/tmp/tts-job.pid";
+		$index = -1;
+		// putenv("SHELL=/bin/bash");
+		$shell_cmd = sprintf('%s %s %s %s %s > /dev/null 2>&1 & echo $! > %s', $script, $job_id, $text, $speaker_id, $index, $pidfile);
+		echo shell_exec($shell_cmd) . "\n";
+		// sleep(1);
+		$pid = trim(file_get_contents($pidfile));
+
+		echo $pid . "\n";
+
 	}
 }

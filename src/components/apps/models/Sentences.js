@@ -317,11 +317,13 @@ class Sentence {
 		
 	} 
 	runTtsJob(finalTtf, chunkMode, index){
+		const subscriber_id = localStorage.messagingSubscriberId;
+
 		if(!finalTtf){
 			finalTtf = this.getContentTtf(true);
 		}
-		const uuid = localStorage.socketUuid;
-		let url = `${ttsApiEndpoint}/job?uuid=${uuid}&job_name=tts`;
+		
+		let url = `${apiEndpoint}/tts/job?subscriber_id=${subscriber_id}&job_name=tts`;
 
 		chunkMode = chunkMode || false;
 		index = index || 0;
@@ -330,12 +332,10 @@ class Sentence {
 			url += `&chunkMode=true&index=${index}`	
 		}
 			
-		const params = new URLSearchParams({  });
-		params.append('project_id', this.pk);
+		const params = new URLSearchParams({ });
+		params.append('sentence_id', this.pk);
 		params.append('text',finalTtf);
-
-	
-
+		
 		return axios.post(url, params);
 	}
 }

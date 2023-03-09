@@ -209,3 +209,7 @@ function load_db_dump($backup_dir){
 		restore_json_dump($table, $dump_file);
 	}
 }
+
+function underscore($str){
+	return preg_replace('/\W+/','_',strtolower($str));
+}

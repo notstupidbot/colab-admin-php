@@ -7,4 +7,4 @@
 	- last row for sentence editor [ok]
 - job routine still need to be refined
 - be able to select speaker id in tts job
-- porting job to php-zmq to replace nodejs requirement
+- porting job to php-zmq to replace nodejs requirement [ok]

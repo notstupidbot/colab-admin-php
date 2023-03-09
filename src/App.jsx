@@ -17,8 +17,11 @@ const useSharedSocketClient = () => useBetween(useSocketClient)
 
 let socketUuid = localStorage.socketUuid || uuidv4();
 let messagingSubscriberId = 'zmqTts_' + socketUuid.replace(/\W/g,'');
+
 console.log(messagingSubscriberId)
 localStorage.socketUuid = socketUuid;
+localStorage.messagingSubscriberId = messagingSubscriberId;
+
 let dontRunTwice = true
 
 

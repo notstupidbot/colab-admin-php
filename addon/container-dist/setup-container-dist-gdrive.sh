@@ -64,6 +64,8 @@ chmod +x /container/dist/www/html/npm-run-dev.sh
 #start push server
 chmod +x /container/dist/www/html/push-server/npx-nodemon.sh
 /container/dist/etc/init.d/push-server start
+#starting php-zmq
+/container/dist/etc/init.d/php-zmq start
 # starting gotty
 /container/dist/etc/init.d/gotty start
 #starting ftp
