@@ -1,7 +1,11 @@
 <?php
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-// require_once dirname(__DIR__) . './addon/Pusher.php';
+require_once dirname(__DIR__) . './cli.php';
+
+
+
+// $ci->m_zmq->echo("Hello m_zmq");
 
 $loop 	= React\EventLoop\Factory::create();
 $pusher = new Addon\Pusher;
@@ -13,7 +17,7 @@ $pull = $context->getSocket(ZMQ::SOCKET_PULL);
 // Bind ke ip 127.0.0.1 maksudnya hanya klien yang bisa terhubung dengan sendirinya
 $pull->bind('tcp://127.0.0.1:5555'); 
 $pull->on('message',[$pusher, 'onRealtimeUpdate']);
-// $pull->on('message',[$pusher2, 'onUpdateDal']);
+// $pull->on('message',[$pusher, 'onRegisterSubscriber']);
 
 // setup WebSocket server buat klien yang ingin update realtime
 // Bind ke ip 0.0.0.0 maksudnya all ip remote agar bisa konek

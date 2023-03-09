@@ -16,44 +16,11 @@ const useSharedSocketState = () => useBetween(useSocketState);
 const useSharedSocketClient = () => useBetween(useSocketClient)
 
 let socketUuid = localStorage.socketUuid || uuidv4();
+let messagingSubscriberId = 'zmqTts_' + socketUuid.replace(/\W/g,'');
+console.log(messagingSubscriberId)
 localStorage.socketUuid = socketUuid;
 let dontRunTwice = true
 
-let Ws = {
-    conn: 0,
-    instance:false,
-    autoReconnectInterval : 5*1000,
-    init:function() {
-            console.log('here')
-            Ws.conn = new ab.Session(app_config.getZmqEndpoint(),
-                ()=>{
-                    Ws.conn.subscribe('onUpdateDal',(cat,item)=>{
-                        // appMonitorVm.setData(item.data);
-                        console.log(cat)
-                        console.log(item.data)
-
-                    });
-                },
-                ()=>{
-                    console.log('koneksi WecbSocket ditutup');
-                    Ws.reconnect();
-                },
-                {'skipSubprotocolCheck': true}
-            );
-        
-         
-    },
-    reconnect : function( ){
-        console.log('Ws: retry in '+Ws.autoReconnectInterval+'ms' );
-        var self = Ws;
-        setTimeout(function(){
-            console.log("Ws: reconnecting...");
-            self.init();
-        },Ws.autoReconnectInterval);
-    }
-
-}
-Ws.init();
 
 function App() {
   const [count, setCount] = useState(0)
@@ -75,6 +42,8 @@ function App() {
   const sideBarRef = useRef(null);
   const mainContentRef = useRef(null);
 
+  let Ws_conn, Ws_autoReconnectInterval = 5000;
+
   const onSocketLogHandler=(message, data)=>{
     socketLogHandlerList.map(callback=>callback(message,data))
   }
@@ -90,62 +59,56 @@ function App() {
   const onSocketConnect=(callback)=>{
     socketConnectHandlerList.push(callback);
   }
-  const createSocket = ()=>{
-        const url = `${app_config.getPushEndpoint()}`;
-        if(!url){
-            console.log("skip initSocket: url empty")
-        }
-        console.log(`initSocket ${url}`)
-        socket = io(url,{
-            reconnection: false,
-            extraHeaders: {
-                'ngrok-skip-browser-warning':1
-            }
-        });
-        socket.on("connect",() => {
-            setSocketConnected(true);
-            onSocketConnectHandler(socket);
+ 
+  
+    const Ws_reconnect = () => {
+        console.log(`Ws: retry in ${Ws_autoReconnectInterval} ms`);
+        setTimeout(()=>{
+            console.log("Ws: reconnecting...");
+            Ws_init();
+        },Ws_autoReconnectInterval);
+    } 
+    const Ws_init = () => {
+        const wampEndpoint = app_config.getZmqEndpoint();
+        Ws_conn = new ab.Session(wampEndpoint,()=>{
+        /*SOCKET OPEN*/    
+            Ws_conn.subscribe(messagingSubscriberId,(subscriber_id, res)=>{
+                switch(res.type){
+                    case 'loged_in':
+                        setSocketConnected(true);
+                    break;
 
-            const uuid = socketUuid;
+                    case 'log' :
+                        const message = res.message;
+                        const data = res.data;
+                        onSocketLogHandler(message, data);
+                        console.log(`Ws.log with message ${message} and data:`)
+                        console.log(data);
+                    break;
+                    /*
+                    case 'job' :
+                        const job = res.job;
+                        const message = res.message;
 
-            socket.on("disconnect",()=>{
-                console.log("socket disconnect");
-                onSocketDisconnectHandler(socket);
-
-                socket.emit("logout", uuid);
-                setSocketConnected(false);
-
+                        console.log(`Ws.log with message ${message} and data:`)
+                        console.log(data);
+                    break;    
+                    */
+                }
             });
-
-            socket.on("log", (message, data)=>{
-                onSocketLogHandler(message, data)
-               // console.log(`server log with message ${message}`)
-            });
-            socket.emit("login", uuid);
-
+        },()=>{
+        /*SOCKET CLOSE*/    
+            console.log('Ws is closed');
+            setSocketConnected(false);
+            onSocketDisconnectHandler(Ws_conn);
+            Ws_reconnect();
+        },{
+            skipSubprotocolCheck: true
         });
-
-        setSocketClient(socket);
     }
-    
-    const reconnectSocket = ()=>{
-        setInterval(()=>{ 
-            if(!socketConnectedRef.current){
-              console.log("socketConnected is false");
-              return createSocket();
-            }
-            if(!socketClientRef.current.connected){
-              console.log("socketClient.connected is false");
-
-              return createSocket();
-            }
-        },5000);
-    }
-    
     useEffect(() => {
         if(dontRunTwice){
-            createSocket();
-            reconnectSocket();
+            Ws_init();
             dontRunTwice=false
         }
             

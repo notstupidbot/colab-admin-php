@@ -201,9 +201,9 @@ ab.log = function (o) {
    }
 };
 
-ab._debugrpc = true;
-ab._debugpubsub = true;
-ab._debugws = true;
+ab._debugrpc = false;
+ab._debugpubsub = false;
+ab._debugws = false;
 
 ab.debug = function (debugWamp, debugWs) {
    if ("console" in window) {
