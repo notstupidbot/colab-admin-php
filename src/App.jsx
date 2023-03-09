@@ -18,7 +18,7 @@ const useSharedSocketClient = () => useBetween(useSocketClient)
 let socketUuid = localStorage.socketUuid || uuidv4();
 let messagingSubscriberId = 'zmqTts_' + socketUuid.replace(/\W/g,'');
 
-console.log(messagingSubscriberId)
+// console.log(messagingSubscriberId)
 localStorage.socketUuid = socketUuid;
 localStorage.messagingSubscriberId = messagingSubscriberId;
 
@@ -79,6 +79,7 @@ function App() {
                 switch(res.type){
                     case 'loged_in':
                         setSocketConnected(true);
+                        onSocketConnectHandler(Ws_conn);
                     break;
 
                     case 'log' :

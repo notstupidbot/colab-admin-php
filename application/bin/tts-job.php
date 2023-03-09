@@ -31,7 +31,7 @@ echo $cmdline . "\n";
 $ps_output = shell_exec("$cmdline  2>&1 ");
 
 
-
+$original=$ps_output;
 $ps_output_split = str_replace(' | > ', '', $ps_output);
 $ps_output_split = str_replace(' > ', '', $ps_output_split);
 $ps_output_split = explode("\n", $ps_output_split);
@@ -62,12 +62,17 @@ $job = $ci->m_job->getById($job_id);
 
 $subscriber_id = $job['subscriber_id'];
 $message = "job id $job_id success";
-$data = ['ps_output'=>$ps_output];
+
+$data = ['ps_output'=>json_encode($ps_output), 'cmdline'=>$cmdline];
+$ci->m_job->update($job_id, $data);
+$job['ps_output'] = $ps_output;
+$job['cmdline'] = $cmdline;
 $result = [
 	'at' => 'run_process',
     'job' => $job,
     'chunkMode' => $chunkMode,
     'index' => $index_number,
-    'sentence_id' => $sentence_id
+    'sentence_id' => $sentence_id,
+    'success' => true
 ];
-$ci->m_zmq->send_log($subscriber_id, $message, $data);
+$ci->m_zmq->send_log($subscriber_id, $message, $result);

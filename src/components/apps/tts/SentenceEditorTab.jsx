@@ -89,16 +89,23 @@ export default class SentenceEditorTab extends React.Component{
 	}
 	processSocketLog(message, data){
 		const self = this;
-		if(data.job_name == 'tts'){
+		if(typeof data.job == 'object'){
+			if(data.job.name == 'tts'){
 			let success = data.success;
 			success == true ? true : (success == -1 ? false : (success== 1? true : false))
 			const chunkMode = data.chunkMode;
+
+			try{
+				message += ` done in ${data.job.ps_output.info.processing_time} seconds`
+
+			}catch(e){}
+
 			self.doToast(message, success)
 			
 			if(data.at == 'run_process'){
 				if(chunkMode){
 					const index = data.index;
-					const audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}-${index}.wav?uuid=${v4()}`;
+					const audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${data.sentence_id}-${index}.wav?uuid=${v4()}`;
 					const sentences = self.state.sentences;
 					sentences[index].audio_source = audio_source;
 					sentences[index].loading_ttf = false;
@@ -110,7 +117,7 @@ export default class SentenceEditorTab extends React.Component{
 							},250)
 					});
 				}else{
-					const audioOutput = `${app_config.getApiEndpoint()}/public/tts-output/${data.project_id}.wav?uuid=${v4()}`;
+					const audioOutput = `${app_config.getApiEndpoint()}/public/tts-output/${data.sentence_id}.wav?uuid=${v4()}`;
 					self.setState({onProcess:false,audioOutput},()=>{
 							self.audioRef.current.load();
 							setTimeout(()=>{
@@ -124,6 +131,8 @@ export default class SentenceEditorTab extends React.Component{
 			}
 			
 		}
+		}
+		
 	}
 	loadSocketCallback(){
 		const self = this;
@@ -131,6 +140,8 @@ export default class SentenceEditorTab extends React.Component{
 			console.log(`${socket.id} connected on SentenceEditorTab`)
 		});
 		this.props.onSocketLog((message, data)=>{
+			console.log(`${message} arived SentenceEditorTab`)
+
 			this.processSocketLog(message, data)
 
 		});
@@ -401,7 +412,9 @@ export default class SentenceEditorTab extends React.Component{
 		this.setState({sentences})
 		const job_res = await this.model.runTtsJob(ttf, true, index);
 				
-		console.log(ttf)
+		console.log(job_res)
+
+		this.doToast(`${job_res.data.sentence_id} index ${job_res.data.index} created`,true)
 
 	}
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"

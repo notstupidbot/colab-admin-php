@@ -64,6 +64,48 @@ class Sentences{
 			
 		});
 	}
+	audioHandler = {};
+	addAudioHandler(index){
+		// console.log(index)
+		const items = this.getItems();
+		if(typeof items[index] != 'object'){
+			return
+		}
+		// console.log(items);
+
+		const item = items[index];
+				
+		if(typeof item.audio_ref != 'object'){
+			return
+		}
+		const handlerKey = `audioHandler_${index}`;
+
+		if(typeof this.audioHandler[handlerKey] != 'object'){
+			this.audioHandler[handlerKey] = {
+				index ,
+				onEnd : ()=>{
+					try{
+						const nextItem = this.items[index+1].audio_ref.current;
+						nextItem.play();
+					}catch(e){
+						console.log(e)
+					}
+				},
+				onError : ()=>{
+
+				}
+			}
+			try{
+				console.log(item.audio_ref)
+				item.audio_ref.current.onended = (evt)=>{
+					this.audioHandler[handlerKey].onEnd();
+				};
+			}catch(e){
+				console.log(e)
+			}
+			
+		}		
+	}
 	loadItemRefAudioSource(index){
 		index = index || -1;
 		this.items.map((item,idx)=>{
@@ -71,6 +113,7 @@ class Sentences{
 				item.audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${this.sentence.pk}-${idx}.wav`	
 			}
 			if(index > -1){
+				this.addAudioHandler(idx);
 				// console.log('A')
 
 				if(index == idx){
@@ -83,6 +126,8 @@ class Sentences{
 					}
 				}
 			}else{
+				this.addAudioHandler(idx);
+
 				// console.log('B')
 				try{
 					// console.log(item.audio_source);
@@ -323,7 +368,7 @@ class Sentence {
 			finalTtf = this.getContentTtf(true);
 		}
 		
-		let url = `${apiEndpoint}/tts/job?subscriber_id=${subscriber_id}&job_name=tts`;
+		let url = `${apiEndpoint}/api/tts/job?subscriber_id=${subscriber_id}&job_name=tts`;
 
 		chunkMode = chunkMode || false;
 		index = index || 0;
@@ -335,7 +380,7 @@ class Sentence {
 		const params = new URLSearchParams({ });
 		params.append('sentence_id', this.pk);
 		params.append('text',finalTtf);
-		
+
 		return axios.post(url, params);
 	}
 }

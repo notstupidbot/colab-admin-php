@@ -170,15 +170,18 @@ class Tts extends REST_Controller {
         $index_number = $this->input->get('index');
 
         $sentence_id = $this->input->post('sentence_id');
-        $text = $this->input->post('sentence_id');
+        $text = $this->input->post('text');
 
-        $script = APPPATH . 'bin/tts-job.php';
+        $script = APPPATH . 'bin/tts-job.sh';
         
         $speaker_id =  'SU-03712';
         $pidfile = "/tmp/tts-$sentence_id-$index_number.pid";
         $job_id = gen_uuid();
         $index = is_numeric($index_number) ? $index_number : -1; 
-        $shell_cmd = sprintf('sudo %s %s %s %s %s %s > /dev/null 2>&1 & echo $! > %s', 
+        /* sudo /container/dist/www/html/application/bin/tts-job.php abeb07f812e14c2d938f00d113cacd83 
+        2dc84b59bc5e46788792d2ae9d4fe61 
+        2dc84b59bc5e46788792d2ae9d4fe61 SU-03712 15 */
+        $shell_cmd = sprintf('sudo bash %s %s %s "%s" "%s" %s > /dev/null 2>&1 & echo $! > %s', 
                               $script, $job_id, $sentence_id, $text, $speaker_id, $index, $pidfile);
         shell_exec($shell_cmd);
        
