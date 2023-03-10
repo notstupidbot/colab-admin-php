@@ -6,9 +6,11 @@ import {Sentence, Sentences} from "../models/Sentences";
 import ModalConfirm from "./ModalConfirm"
 import Toast from "./Toast"
 let lastText = localStorage.lastText || "";
+let lastSpeakerId = localStorage.lastSpeakerId || "wibowo";
 import app_config from "../../../app.config"
 import "./auto-grow-textarea.css"
 import JobChecker from "./JobChecker";
+import speaker_ids from "./speaker_ids";
 
 var delay = makeDelay(1000);
 let dontRunTwice = true;
@@ -26,7 +28,9 @@ export default class SentenceEditorTab extends React.Component{
 		toastStatus:true,
 		audioOutput:"",
 
-		cm_text : ""
+		cm_text : "",
+		speaker_id : lastSpeakerId,
+		loopAudioItem:false,
 	}
 
 	stInputTextRef = null
@@ -39,7 +43,7 @@ export default class SentenceEditorTab extends React.Component{
 	inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
 	inputOkCls = "py-3 px-4 block w-full border-green-500 rounded-md text-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
 	inputDefaultCls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
-	
+
 	constructor(){
 		super()
 		this.stInputNameRef = React.createRef(null)
@@ -445,12 +449,30 @@ export default class SentenceEditorTab extends React.Component{
 	queueSynthesizeTaskSentenceItemHandler(evt){
 		console.log('queue Synthesize event handler clicked')
 	}
+	chSpeakerId(evt){
+		const speaker_id = $(evt.target).find('option:selected').val();
+		this.setState({speaker_id});
+		localStorage.lastSpeakerId = speaker_id;
+	}
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
 	loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
 	render (){
 		const socketConnected = this.props.socketConnected; 
 	return(<>
 		{/*--------------------MODAL/Toast--------------------------*/}
+		<div  style={{zIndex:15}} className="fixed  top-0 right-0 ">
+		<select id="speaker_id" onChange={evt=>this.chSpeakerId(evt)}>
+			{
+				speaker_ids.map((speaker,index)=>{
+					const speaker_id = speaker.name;
+					let speaker_display_name = speaker.alias != '' ? speaker.alias : speaker.name;
+					speaker_display_name = `${speaker_display_name}/${speaker.gender}/${speaker.age}/${speaker.fast?'Fast':'Low'} `
+					return(<option key={index} value={speaker_id} selected={speaker_id==this.state.speaker_id}>{speaker_display_name}</option>)
+				})
+			}            
+      
+    </select>
+    </div>
  		<JobChecker ref={this.jobCheckerRef}/>
 		<ModalConfirm id="confirmInsertAllTtfText" title="Insert All TTF Text ?" content="This action will replace result on currently saved final TTF Text" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doReplaceAllTttfText(evt)} onCancel={evt=>{}} />
 		<ModalConfirm id="confirmSaveRow" title="Save Sentence ?" content="This action will save current sentence in database" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doSaveRow(evt)} onCancel={evt=>{}} />

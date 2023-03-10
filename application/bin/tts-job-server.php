@@ -26,7 +26,7 @@ if($index_number > -1){
 $output_file = $output_path . '/' . $output_file;
 $tts_server_endpoint = 'http://localhost:5002';
 
-const $curl_url = sprintf('%s/api/tts?text=%s&speaker_id=%s&style_wav=&language_id=',$tts_server_endpoint, urlencode($text), $speaker_id);
+$curl_url = sprintf('%s/api/tts?text=%s&speaker_id=%s&style_wav=&language_id=',$tts_server_endpoint, urlencode($text), $speaker_id);
 
 $cmdline = sprintf('curl "%s" -o "%s"', $curl_url, $output_file); 
 $ps_output = shell_exec("$cmdline  2>&1 ");

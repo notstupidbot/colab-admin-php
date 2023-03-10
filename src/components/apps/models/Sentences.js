@@ -85,6 +85,10 @@ class Sentences{
 				index ,
 				onEnd : ()=>{
 					try{
+						const loopAudioItem = this.sentence.editor.state.loopAudioItem;
+						if(!loopAudioItem){
+							return;
+						}
 						const nextItem = this.items[index+1].audio_ref.current;
 						nextItem.play();
 					}catch(e){
@@ -367,8 +371,8 @@ class Sentence {
 		if(!finalTtf){
 			finalTtf = this.getContentTtf(true);
 		}
-		
-		let url = `${apiEndpoint}/api/tts/job?subscriber_id=${subscriber_id}&job_name=tts`;
+		const speaker_id = this.editor.state.speaker_id;
+		let url = `${apiEndpoint}/api/tts/job?subscriber_id=${subscriber_id}&job_name=tts&use_server=true&speaker_id=${speaker_id}`;
 
 		chunkMode = chunkMode || false;
 		index = index || 0;
