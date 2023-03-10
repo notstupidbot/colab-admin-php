@@ -35,7 +35,7 @@ export default class SentenceEditorTab extends React.Component{
 	stInputNameRef = null
 	audioRef = null
 	model = null; 
-
+	jobCheckerRef = null
 	inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
 	inputOkCls = "py-3 px-4 block w-full border-green-500 rounded-md text-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
 	inputDefaultCls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
@@ -47,6 +47,7 @@ export default class SentenceEditorTab extends React.Component{
 		this.runBtnRef = React.createRef(null)
 		this.stInputTextRef = React.createRef(null)
 		this.audioRef = React.createRef(null)
+		this.jobCheckerRef = React.createRef(null)
 	}
  	componentDidMount(){
 
@@ -88,8 +89,10 @@ export default class SentenceEditorTab extends React.Component{
 		// $('#docs-sidebar').hide()
 	}
 	processSocketLog(message, data){
-		const self = this;
+		console.log('processSocketLog',data)
 		if(typeof data.job == 'object'){
+			this.jobCheckerRemove(data.job);
+
 			if(data.job.name == 'tts'){
 			let success = data.success;
 			success == true ? true : (success == -1 ? false : (success== 1? true : false))
@@ -100,28 +103,32 @@ export default class SentenceEditorTab extends React.Component{
 
 			}catch(e){}
 
-			self.doToast(message, success)
+			this.doToast(message, success)
 			
 			if(data.at == 'run_process'){
 				if(chunkMode){
 					const index = data.index;
 					const audio_source = `${app_config.getApiEndpoint()}/public/tts-output/${data.sentence_id}-${index}.wav?uuid=${v4()}`;
-					const sentences = self.state.sentences;
-					sentences[index].audio_source = audio_source;
-					sentences[index].loading_ttf = false;
-					
-					self.setState({sentences},()=>{
-							self.state.sentences[index].audio_ref.current.load();
-							setTimeout(()=>{
-								self.state.sentences[index].audio_ref.current.play();
-							},250)
-					});
+					setTimeout(()=>{
+
+						const sentences = this.state.sentences;
+						sentences[index].audio_source = audio_source;
+						sentences[index].loading_ttf = false;
+						
+						this.setState({sentences},()=>{
+								this.state.sentences[index].audio_ref.current.load();
+								setTimeout(()=>{
+									this.state.sentences[index].audio_ref.current.play();
+								},250)
+						});
+
+					},250);
 				}else{
 					const audioOutput = `${app_config.getApiEndpoint()}/public/tts-output/${data.sentence_id}.wav?uuid=${v4()}`;
-					self.setState({onProcess:false,audioOutput},()=>{
-							self.audioRef.current.load();
+					this.setState({onProcess:false,audioOutput},()=>{
+							this.audioRef.current.load();
 							setTimeout(()=>{
-								self.audioRef.current.play();
+								this.audioRef.current.play();
 							},250)
 					});
 				}
@@ -142,7 +149,7 @@ export default class SentenceEditorTab extends React.Component{
 		this.props.onSocketLog((message, data)=>{
 			console.log(`${message} arived SentenceEditorTab`)
 
-			this.processSocketLog(message, data)
+			self.processSocketLog(message, data)
 
 		});
 	}
@@ -401,7 +408,7 @@ export default class SentenceEditorTab extends React.Component{
 		 	this.setState({ttfText})	
 		}
 	}
-	async playSentenceItem(evt,index){
+	async synthesizeSentenceItem(evt,index){
 		const sentences = this.state.sentences;
 		const item = sentences[index];
 		const audioRef = item.audio_ref;
@@ -412,10 +419,31 @@ export default class SentenceEditorTab extends React.Component{
 		this.setState({sentences})
 		const job_res = await this.model.runTtsJob(ttf, true, index);
 				
-		console.log(job_res)
+		const data = job_res.data;
+		console.log(data)
 
+		const job = data.job;
+
+		this.jobCheckerAdd(job);
 		this.doToast(`${job_res.data.sentence_id} index ${job_res.data.index} created`,true)
 
+	}
+	jobCheckerAdd(job){
+		const jobChecker = this.jobCheckerRef.current;
+		const jobList = jobChecker.state.jobList;
+		const job_id = job.id;
+		jobList[job_id] = job;
+		jobChecker.setState({jobList});
+	}
+	jobCheckerRemove(job){
+		const jobChecker = this.jobCheckerRef.current;
+		const jobList = jobChecker.state.jobList;
+		const job_id = job.id;
+		delete jobList[job_id];
+		jobChecker.setState({jobList});
+	}
+	queueSynthesizeTaskSentenceItemHandler(evt){
+		console.log('queue Synthesize event handler clicked')
 	}
 	btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
 	loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
@@ -423,7 +451,7 @@ export default class SentenceEditorTab extends React.Component{
 		const socketConnected = this.props.socketConnected; 
 	return(<>
 		{/*--------------------MODAL/Toast--------------------------*/}
- 		<JobChecker/>
+ 		<JobChecker ref={this.jobCheckerRef}/>
 		<ModalConfirm id="confirmInsertAllTtfText" title="Insert All TTF Text ?" content="This action will replace result on currently saved final TTF Text" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doReplaceAllTttfText(evt)} onCancel={evt=>{}} />
 		<ModalConfirm id="confirmSaveRow" title="Save Sentence ?" content="This action will save current sentence in database" cancelText="Cancel" okText="Okay, Do it!" onOk={evt=>this.doSaveRow(evt)} onCancel={evt=>{}} />
 
@@ -444,6 +472,9 @@ export default class SentenceEditorTab extends React.Component{
 			  </button>
 			  <button title="Translate All" type="button" onClick={evt=>this.queueTaskSentenceItemHandler(evt)} className="py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
 			    <i className="bi bi-translate"></i>
+			  </button>
+			  <button title="Synthesize All" type="button" onClick={evt=>this.queueSynthesizeTaskSentenceItemHandler(evt)} className="py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+			    <i className="bi bi-soundwave"></i>
 			  </button>
 
 			</div>
@@ -492,7 +523,7 @@ export default class SentenceEditorTab extends React.Component{
 						<div className={"sentence-ttf relative"}>
 						<div className="absolute z-10 right-1">
 									<div className="inline-flex shadow-sm">
-									  <button title="Translate this line" disabled={sentence.loading_ttf} type="button" onClick={evt=>this.playSentenceItem(evt,index)} className="mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
+									  <button title="Translate this line" disabled={sentence.loading_ttf} type="button" onClick={evt=>this.synthesizeSentenceItem(evt,index)} className="mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400">
 									    {sentence.loading_ttf?(
 				  	<span className={this.loadingCls} role="status" aria-label="loading">
 				    	<span className="sr-only">Loading...</span>

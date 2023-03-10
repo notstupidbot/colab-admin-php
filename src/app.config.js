@@ -4,6 +4,7 @@ let config = {
 };
 config.api_endpoint = `http://${config.host}`;
 config.push_endpoint = `http://${config.host}:7000`;
+config.tts_server_endpoint = `http://${config.host}:5002`;
 config.zmq_endpoint = `ws://${config.host}:7001`;
 
 config.getApiEndpoint =()=>{
@@ -18,4 +19,11 @@ config.getZmqEndpoint=()=>{
 	return config.zmq_endpoint;
 }
 
+config.getZmqEndpoint=()=>{
+	return config.zmq_endpoint;
+}
+
+config.getTtsServerEndpoint=()=>{
+	return config.zmq_endpoint;
+}
 export default config;

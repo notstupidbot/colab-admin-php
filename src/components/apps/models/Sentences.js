@@ -96,7 +96,7 @@ class Sentences{
 				}
 			}
 			try{
-				console.log(item.audio_ref)
+				// console.log(item.audio_ref)
 				item.audio_ref.current.onended = (evt)=>{
 					this.audioHandler[handlerKey].onEnd();
 				};

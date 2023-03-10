@@ -1,18 +1,72 @@
-import React from "react"
+import React,{useState} from "react"
+import {makeDelay,terbilang,fixTttsText,timeout,sleep} from "../../../helper";
+
+class Job extends React.Component {
+	id = ""
+	title = ""
+	message = ""
+	type = ""
+	stopTimer = true
+	state = {
+		inc : 0
+
+	}
+	testFn = ()=>{
+		console.log('Test fn')
+	}
+	constructor(){
+		super()
+
+	}
+	componentDidMount(){
+			this.id = this.props.id
+		this.title = this.props.title
+		this.message = this.props.message
+		this.type = this.props.type
+
+		this.runTimer()
+	}
+	async runTimer(){
+		this.setState({inc:0})
+		let inc = this.state.inc;
+		this.stopTimer = false
+		while(!this.stopTimer){
+			inc += 1;
+			this.setState({inc})
+			await timeout(1000);
+		}
+	}
+	stopTimer(){
+		this.stopTimer = true
+	}
+
+	render(){
+		return(<>
+			{this.state.inc}
+		</>)
+	}
+}
 
 export default class JobChecker extends React.Component{
+
 	state = {
-		job_list : [
-			{id:'job_id',title:'title', message:'test message', type: 'info'}
-		]
+		jobList : {}
+	}
+	addJob(job, index){
+		// setJobList([...job_list,job]);
+	}
+
+	stopJob(index){
+
 	}
 	render(){
 	return (<>
-<div>
+<div style={{zIndex:15}} className="fixed  top-0 left-0 ">
 	{
-	this.state.job_list.map((job,index)=>{
+	Object.keys(this.state.jobList).map((job_id,index)=>{
+		const job = this.state.jobList[job_id];
 		return(
-			<div key={index} style={{zIndex:15}} className="fixed  top-0 left-0 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700" role="alert">
+			<div key={index} style={{zIndex:15}} className="bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-700" role="alert">
 			  <div className="flex p-4">
 			    <div className="flex-shrink-0">
 			      <svg className="h-5 w-5 text-gray-600 mt-1 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -26,18 +80,7 @@ export default class JobChecker extends React.Component{
 			      <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
 			      	{job.message}
 			      </div>
-			      {/*
-			      <div className="mt-4">
-			        <div className="flex space-x-3">
-			          <button type="button" className="inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-medium text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm">
-			            Don't allow
-			          </button>
-			          <button type="button" className="inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-medium text-blue-600 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm">
-			            Allow
-			          </button>
-			        </div>
-			      </div>
-			      */}
+			      <Job id={job.id} title={job.title} message={job.message} type={job.type}/>
 			    </div>
 			  </div>
 			</div>
@@ -46,5 +89,5 @@ export default class JobChecker extends React.Component{
 	}
 </div>
 	</>)
-	}
+}
 }

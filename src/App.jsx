@@ -86,8 +86,8 @@ function App() {
                         const message = res.message;
                         const data = res.data;
                         onSocketLogHandler(message, data);
-                        console.log(`Ws.log with message ${message} and data:`)
-                        console.log(data);
+                        // console.log(`Ws.log with message ${message} and data:`)
+                        // console.log(data);
                     break;
                     /*
                     case 'job' :
