@@ -41,10 +41,11 @@ class BaseMdl extends CI_Model{
 			'total_records' => $total_records,
 			'total_pages' => $total_pages,
 			'order_by' => $order_by,
-			'order_dir' => $order_dir
+			'order_dir' => $order_dir,
+			'limit'=>$limit
 		];
 	}
-	function getCount(){
+	function getCount($filter=[]){
 		return $this->db->count_all($this->table);
 	}
 }

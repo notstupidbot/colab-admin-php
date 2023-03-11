@@ -12,7 +12,7 @@ class SentenceMdl extends BaseMdl{
         $this->load->model("WordListTtfMdl","m_word_list_ttf");
 	}
 
-	function create($title, $content, $content_ttf, $sentences, $output_file){
+	function create($title, $content, $content_ttf, $sentences, $output_file, $project_id){
 		$sentence = [
 			'id' => gen_uuid(),
             'title' => $title,
@@ -20,19 +20,26 @@ class SentenceMdl extends BaseMdl{
             'content_ttf' => $content_ttf,
             'sentences' => $sentences,
             'output_file'=>'-',
+            'project_id'=>$project_id,
             'last_updated' => date('Y-m-d H:i:s'),
             'create_date' => date('Y-m-d H:i:s'),
         ];
         $this->db->insert($this->table, $sentence);
         return $sentence;
 	} 
-	function getAllPaged($page_number, $limit, $order_by="create_date", $order_dir="asc"){
-		$total_records = $this->getCount();
+	function getAllPaged($page_number, $limit, $order_by="create_date", $order_dir="asc",$filter=[]){
+		$total_records = $this->getCount($filter);
 		$offset = ($page_number  == 1) ? 0 : ($page_number * $limit) - $limit;
 
 		$total_pages = ceil($total_records / $limit);
 
-
+		if(!empty($filter)){
+			if(!empty($filter['fields'])){
+				foreach($filter['fields'] as $field => $value){
+					$this->db->where($field, $value);
+				}
+			}
+		}
 		$records = $this->db->order_by($order_by,$order_dir)->offset($offset)->limit($limit)->get($this->table)->result_array();
 
 		return [
@@ -44,7 +51,18 @@ class SentenceMdl extends BaseMdl{
 			'order_dir' => $order_dir
 		];
 	}
-	function getCount(){
-		return $this->db->count_all($this->table);
+	function getCount($filter=[]){
+		if(!empty($filter)){
+			if(!empty($filter['fields'])){
+				foreach($filter['fields'] as $field => $value){
+					$this->db->where("$field='$value'");
+				}
+			}
+		}
+		// print_r($filter);
+		$count =  $this->db->count_all_results($this->table);
+		// print_r($count);
+		// print_r($this->db->last_query());
+		return $count;
 	}
 }

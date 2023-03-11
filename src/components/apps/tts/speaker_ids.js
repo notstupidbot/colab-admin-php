@@ -148,386 +148,386 @@ const speaker_ids = [
   },
   {
     "name": "JV-05540",
-    "alias": "",
-    "gender": "",
-    "age": 18,
-    "fast": false
+    "alias": "Kiki",
+    "gender": "F",
+    "age": 24,
+    "fast": true
   },
   {
     "name": "JV-05667",
-    "alias": "",
-    "gender": "",
+    "alias": "Dono",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "JV-05970",
-    "alias": "",
-    "gender": "",
+    "alias": "Tarno",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "JV-06080",
-    "alias": "",
-    "gender": "",
-    "age": 18,
-    "fast": false
+    "alias": "Joni",
+    "gender": "M",
+    "age": 26,
+    "fast": true
   },
   {
     "name": "JV-06207",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Neni",
+    "gender": "F",
+    "age": 19,
     "fast": false
   },
   {
     "name": "JV-06383",
-    "alias": "",
-    "gender": "",
+    "alias": "Karni",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "JV-06510",
-    "alias": "",
-    "gender": "",
+    "alias": "Mela",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "JV-06941",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Dini",
+    "gender": "F",
+    "age": 15,
     "fast": false
   },
   {
     "name": "JV-07335",
-    "alias": "",
-    "gender": "",
+    "alias": "Hani Cadel",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "JV-07638",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Siti Gunung",
+    "gender": "F",
+    "age": 19,
     "fast": false
   },
   {
     "name": "JV-07765",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Ino",
+    "gender": "M",
+    "age": 29,
     "fast": false
   },
   {
     "name": "JV-07875",
-    "alias": "",
-    "gender": "",
+    "alias": "Heru",
+    "gender": "M",
     "age": 18,
-    "fast": false
+    "fast": true
   },
   {
     "name": "JV-08002",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Cibi",
+    "gender": "F",
+    "age": 24,
     "fast": false
   },
   {
     "name": "JV-08178",
-    "alias": "",
-    "gender": "",
-    "age": 18,
-    "fast": false
+    "alias": "Farid",
+    "gender": "M",
+    "age": 29,
+    "fast": true
   },
   {
     "name": "JV-08305",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Yeni",
+    "gender": "F",
+    "age": 22,
     "fast": false
   },
   {
     "name": "JV-08736",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Dian",
+    "gender": "F",
+    "age": 24,
     "fast": false
   },
   {
     "name": "JV-09039",
-    "alias": "",
-    "gender": "",
+    "alias": "Wartimah",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "JV-09724",
-    "alias": "",
-    "gender": "",
+    "alias": "Wardani",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-00060",
-    "alias": "",
-    "gender": "",
+    "alias": "Katro",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-00297",
-    "alias": "",
-    "gender": "",
+    "alias": "Sulastri",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-00454",
-    "alias": "",
-    "gender": "",
+    "alias": "Wage",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-00600",
-    "alias": "",
-    "gender": "",
+    "alias": "Tati",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-00691",
-    "alias": "",
-    "gender": "",
+    "alias": "Mawar",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-00994",
-    "alias": "",
-    "gender": "",
+    "alias": "Rini",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-01038",
-    "alias": "",
-    "gender": "",
+    "alias": "Hendi",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-01056",
-    "alias": "",
-    "gender": "",
+    "alias": "Heti",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-01359",
-    "alias": "",
-    "gender": "",
+    "alias": "Titi",
+    "gender": "F",
     "age": 18,
-    "fast": false
+    "fast": true
   },
   {
     "name": "SU-01552",
-    "alias": "",
-    "gender": "",
+    "alias": "Henky",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-01596",
-    "alias": "",
-    "gender": "",
+    "alias": "Yanto",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-01855",
-    "alias": "",
-    "gender": "",
+    "alias": "Rifki",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-01899",
-    "alias": "",
-    "gender": "",
+    "alias": "Anda",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-02092",
-    "alias": "",
-    "gender": "",
+    "alias": "Yeti",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-02395",
-    "alias": "",
-    "gender": "",
+    "alias": "Idawati",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-02716",
-    "alias": "",
-    "gender": "",
+    "alias": "Rendi",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-02953",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Rani",
+    "gender": "F",
+    "age": 16,
     "fast": false
   },
   {
     "name": "SU-03391",
-    "alias": "",
-    "gender": "",
+    "alias": "Heru",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-03650",
-    "alias": "",
-    "gender": "",
+    "alias": "Ko Ahsan",
+    "gender": "26",
     "age": 18,
-    "fast": false
+    "fast": true
   },
   {
     "name": "SU-03694",
-    "alias": "",
-    "gender": "",
+    "alias": "Rudono",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-03712",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Indira",
+    "gender": "F",
+    "age": 16,
     "fast": false
   },
   {
     "name": "SU-03887",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Cita Bule",
+    "gender": "F",
+    "age": 17,
     "fast": false
   },
   {
     "name": "SU-04190",
-    "alias": "",
-    "gender": "",
+    "alias": "Cewe ",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-04208",
-    "alias": "",
-    "gender": "",
+    "alias": "Cowo Serak",
+    "gender": "M",
     "age": 18,
-    "fast": false
+    "fast": true
   },
   {
     "name": "SU-04511",
-    "alias": "",
-    "gender": "",
+    "alias": "Cowo Agor",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-04646",
-    "alias": "",
-    "gender": "",
+    "alias": "Umbra",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-04748",
-    "alias": "",
-    "gender": "",
-    "age": 18,
+    "alias": "Umbra Kalem",
+    "gender": "F",
+    "age": 24,
     "fast": false
   },
   {
     "name": "SU-05051",
-    "alias": "",
-    "gender": "",
-    "age": 18,
-    "fast": false
+    "alias": "Widya",
+    "gender": "F",
+    "age": 27,
+    "fast": true
   },
   {
     "name": "SU-05186",
-    "alias": "",
-    "gender": "",
+    "alias": "Bowo",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-05507",
-    "alias": "",
-    "gender": "",
+    "alias": "Tini",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-06003",
-    "alias": "",
-    "gender": "",
+    "alias": "Igun",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-06047",
-    "alias": "",
-    "gender": "",
+    "alias": "Abeng",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-06543",
-    "alias": "",
-    "gender": "",
+    "alias": "Windi",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-07302",
-    "alias": "",
-    "gender": "",
+    "alias": "Putri",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-07842",
-    "alias": "",
-    "gender": "",
+    "alias": "Ibing",
+    "gender": "M",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-08338",
-    "alias": "",
-    "gender": "",
+    "alias": "Dewi",
+    "gender": "F",
     "age": 18,
     "fast": false
   },
   {
     "name": "SU-08659",
-    "alias": "",
-    "gender": "",
+    "alias": "Juned",
+    "gender": "M",
     "age": 18,
     "fast": false
   },

@@ -9,12 +9,13 @@ import moment from "moment"
 import "moment/dist/locale/id";
 moment.locale('id');
 
-export default class SentenceTab extends React.Component{
+export default class ProjectItem extends React.Component{
 	state = {
 		grid :{
 			records : [],
 			limit : 10,
 			page : 1,
+			loading : false,
 			total_pages : 0,
 			total_records : 0,
 			order_by:'create_date',
@@ -28,6 +29,7 @@ export default class SentenceTab extends React.Component{
 	viewInEditor(sentence){
 		this.props.setActiveTab('sentence-editor');
 		this.props.setActiveSentence(sentence);
+
 		
 	}
 	async componentDidMount(){
@@ -46,11 +48,14 @@ export default class SentenceTab extends React.Component{
 	async updateList(page_number){
 		page_number = page_number || 1;
 		let grid = this.state.grid;
+		grid.loading = true;
 		grid.records =[]
 		this.setState({grid})
 		// await timeout(2000)
-		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/sentence?page=${page_number}&order_by=${grid.order_by}&order_dir=${grid.order_dir}`);
+		const project_id = this.props.project.id;
+		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/sentence?page=${page_number}&order_by=${grid.order_by}&order_dir=${grid.order_dir}&project_id=${project_id}`);
 		 grid = Object.assign(grid,res.data);
+		 grid.loading =false;
 		this.setState({grid})
 		return grid;
 	}
@@ -65,6 +70,7 @@ export default class SentenceTab extends React.Component{
 		bodyFormData.append('sentences', '[]');
 		bodyFormData.append('content_ttf', '');
 		bodyFormData.append('output_file', '-');
+		bodyFormData.append('project_id', this.props.project.id);
 
 		const res = await axios({
 			method: "post",
@@ -86,6 +92,9 @@ return(<>
 			<i className="bi bi-file-plus"></i>
 		</button>
 </div>
+<h2 className="px-2 py-2 font-extrabold text-2xl text-center">Items</h2>
+<div className="border rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">		
+
 <div className="flex flex-col">
   <div className="-m-1.5 overflow-x-auto">
     <div className="p-1.5 min-w-full inline-block align-middle">
@@ -106,10 +115,10 @@ return(<>
           </thead>
           <tbody>
           {
-          	this.state.grid.records.length == 0 ?
+          	this.state.grid.loading ?
           		dummyRow.map(r=>{return(
           		<tr className="animate-pulse" key={r}>
-          			<td className="w-1/3 "><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className=""><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			<td className="w-1/3 "><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			<td className="w-2/3 "><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			<td className="w-1/3"><span className=" my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
@@ -117,6 +126,13 @@ return(<>
           		</tr>
           	)})
           	:""
+          }
+          {
+          	this.state.grid.records.length == 0 && !this.state.grid.loading ? (
+          		<tr className="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700">
+		              <td colSpan="4" className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200"> <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">No records</span></td>
+		            </tr>
+          	):""
           }
           {
           	this.state.grid.records.map((item,index)=>{
@@ -128,7 +144,7 @@ return(<>
 
 		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.title} <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{moment(item.create_date).format('MMMM Do YYYY, h:mm:ss a')}</span>
 </td>
-		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{item.content}</td>
+		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{item.content.substr(0,225)}</td>
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 		                <button className="text-blue-500 hover:text-blue-700" onClick={evt=>this.viewInEditor(item)}>View in Editor</button>
 		              </td>
@@ -145,6 +161,7 @@ return(<>
       <Pager page={this.state.grid.page} total_pages={this.state.grid.total_pages} limit={this.state.grid.limit} gotoPage={(page_number)=>this.updateList(page_number)}/>
     </div>
   </div>
+</div>		
 </div>		
 	</>)
 	}

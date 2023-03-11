@@ -53,6 +53,12 @@ class Restore extends MX_Controller {
                 'type' => 'VARCHAR',
                 'constraint' => '225',
 	        ),
+	        
+	        'project_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'default' => NULL
+	        ),
 	        'user_id' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '100',

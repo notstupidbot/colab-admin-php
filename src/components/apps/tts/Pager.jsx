@@ -22,9 +22,9 @@ export default function Pager({limit,total_pages,page, gotoPage}){
 			    <span aria-hidden="true">«</span>
 			    <span>Sebelum</span>
 			  </button>):""}
-			  {forPages().map(page_number=>{
+			  {forPages().map((page_number,index)=>{
 			  	const isActive = page_number == page;
-			  	return isActive ? (<button key={page_number} className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"  aria-current="page" aria-current="page"  onClick={evt=>gotoPage(page_number)}>{page_number}</button>):(<button  onClick={evt=>gotoPage(page_number)}className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full" href="#">{page_number}</button>
+			  	return isActive ? (<button key={index} className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"  aria-current="page" aria-current="page"  onClick={evt=>gotoPage(page_number)}>{page_number}</button>):(<button  onClick={evt=>gotoPage(page_number)}className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full" href="#">{page_number}</button>
 			  )
 			  })
 

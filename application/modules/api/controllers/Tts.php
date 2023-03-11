@@ -65,7 +65,8 @@ class Tts extends REST_Controller {
         $limit = $this->input->get("limit");
         $order_by = $this->input->get("order_by");
         $order_dir = $this->input->get("order_dir");
-
+        $project_id = $this->input->get("project_id");
+        $filter = ['fields'=>[], 'search'=>[]];
         if(empty($page))
             $page =1;
         if(empty($limit))
@@ -76,12 +77,18 @@ class Tts extends REST_Controller {
         if(empty($order_dir)){
             $order_dir = "asc";
         }
+        if(!empty($project_id)){
+            $filter['fields'] = [
+                'project_id' => $project_id
+            ];
+
+        }
         if($id){
             $sentence = $this->m_sentence->getById($id);
             $this->response($project, 200);
         }else{
            
-            $sentences = $this->m_sentence->getAllPaged($page,$limit, $order_by, $order_dir);
+            $sentences = $this->m_sentence->getAllPaged($page,$limit, $order_by, $order_dir,$filter);
             $this->response($sentences, 200);
         }
  
@@ -93,6 +100,7 @@ class Tts extends REST_Controller {
         $content = $this->input->post('content');
         $content_ttf = $this->input->post('content_ttf');
         $sentences = $this->input->post('sentences');
+        $project_id = $this->input->post('project_id');
         
         
 
@@ -109,7 +117,7 @@ class Tts extends REST_Controller {
             $this->m_sentence->update($id, $sentence);
             $this->response($sentence, 200);
         }else{
-            $sentence = $this->m_sentence->create($title, $content, $content_ttf, $sentences, '-');
+            $sentence = $this->m_sentence->create($title, $content, $content_ttf, $sentences, '-',$project_id);
             $this->response($sentence, 200);
         }
  
