@@ -89,3 +89,5 @@ mkdir -p /container/site-packages
 squashfuse /container/site-packages.squashfs  /container/site-packages
 echo "Running tts"
 tts
+
+chmod +x $WWW_DIR/application/bin/*
