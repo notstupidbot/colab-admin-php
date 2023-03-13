@@ -13,7 +13,7 @@ export default class ProjectItem extends React.Component{
 	state = {
 		grid :{
 			records : [],
-			limit : 10,
+			limit : 5,
 			page : 1,
 			loading : false,
 			total_pages : 0,
@@ -119,9 +119,9 @@ return(<>
           		dummyRow.map(r=>{return(
           		<tr className="animate-pulse" key={r}>
           			<td className=""><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-1/3 "><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-2/3 "><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-1/3"><span className=" my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className="w-1/3 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className="w-2/3 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className="w-1/3"><span className=" my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			
           		</tr>
           	)})
@@ -158,7 +158,10 @@ return(<>
           </tbody>
         </table>
       </div>
+      <div className="mt-3">
+
       <Pager page={this.state.grid.page} total_pages={this.state.grid.total_pages} limit={this.state.grid.limit} gotoPage={(page_number)=>this.updateList(page_number)}/>
+    </div>
     </div>
   </div>
 </div>		

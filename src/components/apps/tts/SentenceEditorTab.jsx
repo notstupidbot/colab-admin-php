@@ -73,15 +73,22 @@ export default class SentenceEditorTab extends React.Component{
 		// console.log(growers)
 		growers.forEach((grower) => {
 		  const textarea = grower.querySelector("textarea");
-		  textarea.addEventListener("input", () => {
-		    grower.dataset.replicatedValue = textarea.value;
-		  });
+				if(!$(textarea).hasClass('growed-up')){
+					textarea.addEventListener("input", () => {
+					    grower.dataset.replicatedValue = textarea.value;
+					  });
+		  			$(textarea).addClass('growed-up')
+
+				}
+		  
 		});
 
 		setTimeout(()=>{
 			$('.grow-wrap textarea').each((i,el)=>{
 				// console.log(i,el)
-				el.dispatchEvent(new Event("input"))
+				
+					el.dispatchEvent(new Event("input"));
+
 			});
 		},1000)
 	}
@@ -461,13 +468,13 @@ export default class SentenceEditorTab extends React.Component{
 	return(<>
 		{/*--------------------MODAL/Toast--------------------------*/}
 		<div  style={{zIndex:15}} className="fixed  top-0 right-0 ">
-		<select id="speaker_id" onChange={evt=>this.chSpeakerId(evt)}>
+		<select id="speaker_id" onChange={evt=>this.chSpeakerId(evt)} value={this.state.speaker_id}>
 			{
 				speaker_ids.map((speaker,index)=>{
 					const speaker_id = speaker.name;
 					let speaker_display_name = speaker.alias != '' ? speaker.alias : speaker.name;
 					speaker_display_name = `${speaker_display_name}/${speaker.gender}/${speaker.age}/${speaker.fast?'Fast':'Low'} `
-					return(<option key={index} value={speaker_id} selected={speaker_id==this.state.speaker_id}>{speaker_display_name}</option>)
+					return(<option key={index} value={speaker_id}>{speaker_display_name}</option>)
 				})
 			}            
       

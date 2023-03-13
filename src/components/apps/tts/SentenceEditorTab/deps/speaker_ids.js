@@ -575,7 +575,7 @@ const speaker_ids = [
   },
   {
     "name": "wibowo",
-    "alias": "Wobowo",
+    "alias": "Wibowo",
     "gender": "M",
     "age": 30,
     "fast": false

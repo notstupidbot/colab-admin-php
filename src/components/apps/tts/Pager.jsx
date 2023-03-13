@@ -1,5 +1,6 @@
-
+// import {v4} from "uuid"
 export default function Pager({limit,total_pages,page, gotoPage}){
+	const name = 'pager' 
 	page = parseInt(page)
 	total_pages = parseInt(total_pages)
 	limit = parseInt(limit)
@@ -17,22 +18,25 @@ export default function Pager({limit,total_pages,page, gotoPage}){
 		return pages;
 	}
 	return(
-		<nav className="flex items-center space-x-2">
-			  {hasPrev(page)?(<button className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md" onClick={evt=>gotoPage(page-1)}>
-			    <span aria-hidden="true">«</span>
-			    <span>Sebelum</span>
-			  </button>):""}
-			  {forPages().map((page_number,index)=>{
-			  	const isActive = page_number == page;
-			  	return isActive ? (<button key={index} className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"  aria-current="page" aria-current="page"  onClick={evt=>gotoPage(page_number)}>{page_number}</button>):(<button  onClick={evt=>gotoPage(page_number)}className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full" href="#">{page_number}</button>
-			  )
-			  })
+		<nav className="flex items-center place-content-center space-x-2" key={name}>
+		  {hasPrev(page)?(<button key={`${name}-min-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md" onClick={evt=>gotoPage(page-1)}>
+		    <span aria-hidden="true">«</span>
+		    <span>Sebelum</span>
+		  </button>):""}
+		  {forPages().map((page_number,index)=>{
+		  	const isActive = (page_number == page);
+		  	return isActive ? (<button key={`${name}-num-${index}`} 
+		  		className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"  
+		  		aria-current="page" aria-current="page"  
+		  		onClick={total_pages > 1? evt=>gotoPage(page_number):null}>{page_number}</button>):(<button key={`${name}-num-${index}`} onClick={evt=>gotoPage(page_number)}className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full">{page_number}</button>
+		  )
+		  })
 
-			  }
-			  {hasNext(page)?(<button className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"  onClick={evt=>gotoPage(page+1)}>
-			    <span>Selanjutnya</span>
-			    <span aria-hidden="true">»</span>
-			  </button>):""}
-			  
-			</nav>)
+		  }
+		  {hasNext(page)?(<button key={`${name}-plus-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"  onClick={evt=>gotoPage(page+1)}>
+		    <span>Selanjutnya</span>
+		    <span aria-hidden="true">»</span>
+		  </button>):""}
+		  
+		</nav>)
 }

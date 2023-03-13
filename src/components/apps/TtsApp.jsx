@@ -1,43 +1,24 @@
 
 import React ,{useEffect,useState,useRef}from "react"
-import { useBetween } from "use-between";
-import useSocketClient from "../../shared/useSocketClient";
-import useSocketState from "../../shared/useSocketState";
-const useSharedSocketState = () => useBetween(useSocketState);
-const useSharedSocketClient = () => useBetween(useSocketClient)
-
-import useActiveTabState from "./shared/useActiveTabState";
-import useActiveProjectState from "./shared/useActiveProjectState";
-const useSharedActiveTabState = () => useBetween(useActiveTabState);
-const useSharedActiveProjectState = () => useBetween(useActiveProjectState)
 
 let dontRunTwice=true;
 let lastActiveTab = localStorage.activeTab || 'project';
-console.log(lastActiveTab)
+
 import ProjectTab from "./tts/ProjectTab";
 import SentenceTab from "./tts/SentenceTab";
 import ProjectEditorTab from "./tts/ProjectEditorTab";
 import Explorer from "./tts/ExplorerTab";
-import SentenceEditorTab from "./tts/SentenceEditorTab";
+import SentenceEditorTab from "./tts/SentenceEditorTab/Ui";
 
-export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
+export default function TtsApp({config, ws, socketConnected, mainContent}){
 
-	const [displayName,setDisplayName] = useState("Push Server");
-	const {socketConnected} = useSharedSocketState();
-	const {socketClient} = useSharedSocketClient();
-	const socketClientRef = useRef();
-	socketClientRef.current = socketClient;
-
-	const socketConnectedRef = useRef();
 	const projectEditorTabRef = useRef(null);
 	const sentenceEditorTabRef = useRef(null);
 	const sentenceTabRef = useRef(null);
 	const projectTabRef = useRef(null);
-	socketConnectedRef.current = socketConnected;
 
-	const {activeTab, setActiveTab} = useSharedActiveTabState();
-	const {activeProject, setActiveProject} = useSharedActiveProjectState();
-	// setActiveTab(lastActiveTab);
+	const [activeTab, setActiveTab] = useState();
+	const [activeProject, setActiveProject] = useState();
 	const [activeSentence,setActiveSentence] = useState(null);
 
 	const tabs = [
@@ -70,16 +51,7 @@ export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
 		localStorage.activeTab = activeTab;
 		if(activeTab == 'sentence'){
 			try{
-			sentenceTabRef.current.updateList();
-
-			}catch(e){
-
-			}
-		}
-		if(activeTab == 'project'){
-			try{
-			// projectTabRef.current.updateProjectList();
-
+				sentenceTabRef.current.updateList();
 			}catch(e){
 
 			}
@@ -88,10 +60,8 @@ export default function TtsApp({onSocketConnect,onSocketLog,mainContent}){
 	},[activeTab])
 
 	useEffect(()=>{
-		// console.log(activeSentence);
 		if(activeSentence){
-			sentenceEditorTabRef.current.loadRow();
-			// setActiveTab('sentence-editor');
+			// sentenceEditorTabRef.current.loadRow();
 		}
 	},[activeSentence]);
 
@@ -133,28 +103,36 @@ return(<>
 
 <div className="mt-3">
   <div id="bar-with-underline-1"  className={activePanelCls('project')} role="tabpanel" aria-labelledby="bar-with-underline-item-1">
-  
-    <div className="container">
-    	<ProjectTab  ref={projectTabRef} setActiveTab={setActiveTab} setActiveProject={setActiveProject}/>
-    </div>
+    <ProjectTab  setActiveTab={setActiveTab} 
+    						 setActiveProject={setActiveProject} 
+    						 activeTab={activeTab} 
+    						 config={config}/>
   </div>
   <div id="bar-with-underline-2" className={activePanelCls('project-editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-2">
-    
-  <div className="container">
-  <ProjectEditorTab ref={projectEditorTabRef} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab} activeProject={activeProject}  setActiveTab={setActiveTab} setActiveSentence={setActiveSentence}/>
+  	<ProjectEditorTab ref={projectEditorTabRef} activeTab={activeTab} 
+  																							activeProject={activeProject}  
+  																							setActiveTab={setActiveTab} 
+  																							setActiveSentence={setActiveSentence}
+  																							config={config}/>
+
   </div>
-  </div>
-  <div id="bar-with-underline-3" className={activePanelCls('explorer')} role="tabpanel" aria-labelledby="bar-with-underline-item-3">
-    
-  </div>
+  
   <div id="bar-with-underline-4" className={activePanelCls('sentence')} role="tabpanel" aria-labelledby="bar-with-underline-item-4">
-    
-  <SentenceTab ref={sentenceTabRef} setActiveTab={setActiveTab} setActiveSentence={setActiveSentence} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab}/>
+	  <SentenceTab ref={sentenceTabRef} setActiveTab={setActiveTab} 
+	  																	setActiveSentence={setActiveSentence}
+	  																	activeTab={activeTab}
+	  																	config={config}/>
   </div>
 
   <div id="bar-with-underline-5" className={activePanelCls('sentence-editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-5">
+	  <SentenceEditorTab  ws={ws} 
+												config={config} 
+												activeSentence={activeSentence} 
+												socketConnected={socketConnected} 
+												activeTab={activeTab}/>
+  </div>
+  <div id="bar-with-underline-3" className={activePanelCls('explorer')} role="tabpanel" aria-labelledby="bar-with-underline-item-3">
     
-  <SentenceEditorTab ref={sentenceEditorTabRef} mainContent={mainContent} onSocketLog={onSocketLog} onSocketConnect={onSocketConnect} activeSentence={activeSentence} socketConnected={socketConnected} socketClient={socketClient} activeTab={activeTab}/>
   </div>
 </div>	
 

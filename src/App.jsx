@@ -1,133 +1,72 @@
-import React,{ useState , useEffect, useRef, createRef} from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React,{ useState , useEffect, useRef} from 'react'
 import SideBar from "./components/SideBar"
 import MainContent from "./components/MainContent"
-import { io } from "socket.io-client";
-import { v4 as uuidv4 } from 'uuid';
 
-import { useBetween } from "use-between";
-import useSocketClient from "./shared/useSocketClient";
-import useSocketState from "./shared/useSocketState";
-// import useServerCfgState from "./shared/useServerCfgState";
-import app_config from "./app.config"
-// const useSharedServerCfgState = () => useBetween(useServerCfgState);
-const useSharedSocketState = () => useBetween(useSocketState);
-const useSharedSocketClient = () => useBetween(useSocketClient)
-
-let socketUuid = localStorage.socketUuid || uuidv4();
-let messagingSubscriberId = 'zmqTts_' + socketUuid.replace(/\W/g,'');
-
-// console.log(messagingSubscriberId)
-localStorage.socketUuid = socketUuid;
-localStorage.messagingSubscriberId = messagingSubscriberId;
 
 let dontRunTwice = true
 
+import Ws from "./components/app/Ws"
+import AppConfig from "./components/app/AppConfig"
+
+const ws = Ws.getInstance();
+const config = AppConfig.getInstance();
 
 function App() {
-  const [count, setCount] = useState(0)
-  const {socketConnected,setSocketConnected} = useSharedSocketState();
-  const {socketClient,setSocketClient} = useSharedSocketClient();
 
-  let socket = null;
+    const [socketConnected,setSocketConnected] = useState(false);
+    const [hideSidebar,setHideSidebar] = useState(false);
 
-  const socketClientRef = useRef();
-  socketClientRef.current = socketClient;
+    const socketConnectHandlerList = [];
+    const socketLogHandlerList = [];
+    const socketDisconnectHandlerList = [];
 
-  const socketConnectedRef = useRef();
-  socketConnectedRef.current = socketConnected;
 
-  const socketConnectHandlerList = [];
-  const socketLogHandlerList = [];
-  const socketDisconnectHandlerList = [];
-
-  const sideBarRef = useRef(null);
-  const mainContentRef = useRef(null);
-
-  let Ws_conn, Ws_autoReconnectInterval = 5000;
-
-  const onSocketLogHandler=(message, data)=>{
-    socketLogHandlerList.map(callback=>callback(message,data))
-  }
-  const onSocketConnectHandler=(socket)=>{
-    socketConnectHandlerList.map(callback=>callback(socket))
-  }
-  const onSocketDisconnectHandler=(socket)=>{
-    socketDisconnectHandlerList.map(callback=>callback(socket))
-  }
-  const onSocketLog=(callback)=>{
-    socketLogHandlerList.push(callback);
-  }
-  const onSocketConnect=(callback)=>{
-    socketConnectHandlerList.push(callback);
-  }
+    
  
-  
-    const Ws_reconnect = () => {
-        console.log(`Ws: retry in ${Ws_autoReconnectInterval} ms`);
-        setTimeout(()=>{
-            console.log("Ws: reconnecting...");
-            Ws_init();
-        },Ws_autoReconnectInterval);
-    } 
-    const Ws_init = () => {
-        const wampEndpoint = app_config.getZmqEndpoint();
-        Ws_conn = new ab.Session(wampEndpoint,()=>{
-        /*SOCKET OPEN*/    
-            Ws_conn.subscribe(messagingSubscriberId,(subscriber_id, res)=>{
-                switch(res.type){
-                    case 'loged_in':
-                        setSocketConnected(true);
-                        onSocketConnectHandler(Ws_conn);
-                    break;
-
-                    case 'log' :
-                        const message = res.message;
-                        const data = res.data;
-                        onSocketLogHandler(message, data);
-                        // console.log(`Ws.log with message ${message} and data:`)
-                        // console.log(data);
-                    break;
-                    /*
-                    case 'job' :
-                        const job = res.job;
-                        const message = res.message;
-
-                        console.log(`Ws.log with message ${message} and data:`)
-                        console.log(data);
-                    break;    
-                    */
-                }
-            });
-        },()=>{
-        /*SOCKET CLOSE*/    
-            console.log('Ws is closed');
-            setSocketConnected(false);
-            onSocketDisconnectHandler(Ws_conn);
-            Ws_reconnect();
-        },{
-            skipSubprotocolCheck: true
-        });
+    
+    ws.setEndpoint(config.getMessagingEndpoint());
+    ws.setSocketConnectedHandlerState(setSocketConnected);
+    config.getUiConfig().setHideSidebarState(setHideSidebar);
+    /*
+    const onSocketLogHandler=(message, data)=>{
+        // console.log(`onSocketLogHandler arrived at App.jsx`);
+        socketLogHandlerList.map(callback=>callback(message,data))
     }
+    const onSocketConnectHandler=(socket)=>{
+        // console.log(`onSocketConnectHandler arrived at App.jsx`);
+        socketConnectHandlerList.map(callback=>callback(socket))
+    }
+    const onSocketDisconnectHandler=(socket)=>{
+        // console.log(`onSocketDisconnectHandler arrived at App.jsx`);
+        socketDisconnectHandlerList.map(callback=>callback(socket))
+    }
+    const onSocketLog=(callback)=>{
+        socketLogHandlerList.push(callback);
+    }
+    const onSocketConnect=(callback)=>{
+        socketConnectHandlerList.push(callback);
+    }
+    
+    ws.setHandler('connect', onSocketConnectHandler, 'app');
+    ws.setHandler('log', onSocketLogHandler, 'app');
+    ws.setHandler('disconnect', onSocketDisconnectHandler, 'app');
+    */
     useEffect(() => {
         if(dontRunTwice){
-            Ws_init();
+            ws.init();
             dontRunTwice=false
         }
-            
-
     }, []);
 
-  
-  return (
-<>
+  return (<>
 
+     <SideBar config={config} hideSidebar={hideSidebar} setHideSidebar={setHideSidebar}/>
+     <MainContent config={config} 
+                  socketConnected={socketConnected}
+                  ws={ws}
+                  hideSidebar={hideSidebar}/>
 
-<SideBar ref={sideBarRef} mainContent={mainContentRef}/>
-<MainContent sideBar={sideBarRef} ref={mainContentRef} onSocketLog={onSocketLog} onSocketConnect={onSocketConnect}/>
-</>
-  )
+    </>)
 }
 
 export default App

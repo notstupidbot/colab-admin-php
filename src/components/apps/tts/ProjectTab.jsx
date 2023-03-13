@@ -21,9 +21,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 			order_by:'create_date',
 			order_dir:'desc'
 		});
-
-	// const {activeProject,setActiveProject} = useSharedActiveProjectState();
-	// const {activeTab,setActiveTab} = useSharedActiveTabState();
+ 
 
 	const updateProjectList = async(page_number)=>{
 		page_number = page_number || 1;
@@ -41,10 +39,10 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 
 	}
 	useEffect(()=>{
-		// if(dontRunTwice){
+		if(activeTab == 'project'){
 			updateProjectList();
 		// 	dontRunTwice = false
-		// }
+		}
 	},[activeTab]);
 
 	const pageNumber=(index)=>{
@@ -60,7 +58,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 	// }
 
 	return(<>
-<div className="border rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">		
+<div className="border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">		
 <div className="flex flex-col">
   <div className="-m-1.5 overflow-x-auto">
     <div className="p-1.5 min-w-full inline-block align-middle">
@@ -70,7 +68,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
             <tr>
               <th scope="col"  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
               <th scope="col"  className="w-3/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-              <th scope="col" className="w-1/4 px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -78,9 +76,9 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
           	grid.records.length == 0 ?
           		Array(parseInt(grid.limit)).fill(1).map((a,r)=>{return(
           		<tr className="animate-pulse" key={r}>
-          			<td className=""><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-3/4 "><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-1/4"><span className=" my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className=""><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className="w-3/4 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td className=""><span className=" my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			
           		</tr>
           	)})
@@ -108,8 +106,9 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
           </tbody>
         </table>
       </div>
+      <div className="mt-3">
       <Pager page={grid.page} total_pages={grid.total_pages} limit={grid.limit} gotoPage={(page_number)=>updateProjectList(page_number)}/>
-
+      </div>
     </div>
   </div>
 </div>		
