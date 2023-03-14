@@ -5,7 +5,7 @@ import {
 	inputOkCls,
 	inputErrorCls
 } from "./deps/inputCls"
-import Helper from "../../../app/Helper"
+import Helper from "../../../lib/Helper"
 
 export default function ContentTtfEditor({contentTtf, setContentTtf}){
 	const contentTtfInputRef = createRef(null)

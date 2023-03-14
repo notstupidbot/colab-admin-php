@@ -6,9 +6,9 @@ import {
 	inputErrorCls
 } from "./deps/inputCls"
 
-import Helper from "../../../app/Helper"
+import Helper from "../../../lib/Helper"
 
-export default function SentenceItemTtf({index,item, items}){
+export default function SentenceItemTtf({index,item, items, config, pk}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 	const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 	const rcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
@@ -17,7 +17,9 @@ export default function SentenceItemTtf({index,item, items}){
 	const loadingCls = ""
 	let cls = ocls;		
 	cls += item.type == 'dot' ? " " : " bg-gray-100"
-	
+	const [audioSource,setAudioSource] = useState("")
+	const [onConvert,setOnConvert] = useState(false)
+	const [hideAudio,setHideAudio] = useState(true)
 	const inputRef = createRef(null)
 	const audioRef = createRef(null)
 
@@ -52,7 +54,13 @@ export default function SentenceItemTtf({index,item, items}){
 		this.doToast(`${job_res.data.sentence_id} index ${job_res.data.index} created`,true)
 		*/
 	}
+	// const setAudioSource = ()=>{
+	// 	try{
+	// 		audioRef.current.value = item.ttf
+	// 	}catch(e){
 
+	// 	}
+	// }
 	const loadFormData = ()=>{
 		try{
 			inputRef.current.value = item.ttf
@@ -62,28 +70,53 @@ export default function SentenceItemTtf({index,item, items}){
 	}
 
 	useEffect(()=>{
+		// setHideAudio(true)
+
+		const asource = `${config.getApiEndpoint()}/public/tts-output/${pk}-${index}.wav`;
+		// console.log(asource)
+		setAudioSource(asource)
 		loadFormData()
 	},[])
+
+	useEffect(()=>{
+		setHideAudio(true)
+
+		try{
+			// console.log(item.audio_source);
+			audioRef.current.load()
+		}catch(e){
+
+		}
+	},[audioSource])
 	
+	const onCanPlay = evt => {
+		setHideAudio(false)
+	}
+	const onCanPlaytrough = evt => {}
+	const onLoaded = evt => {}
+
 	return(<div className={"sentence-ttf relative"}>
 				<div className="absolute z-10 right-1">
 						<div className="inline-flex shadow-sm">
 						  <button title="Synthesize this line" 
-						  		  disabled={item.loading_ttf} type="button" 
+						  		  disabled={onConvert} type="button" 
 						  		  onClick={evt=>onSynthesizeItem(evt,index)} 
 						  		  className={rcls}>
 						    {
-						    	item.loading_ttf ? (<span className={loadingCls} role="status" aria-label="loading">
+						    	onConvert ? (<span className={loadingCls} role="status" aria-label="loading">
 													    	<span className="sr-only">Loading...</span>
 													  	</span>)
 						    						 : (<i className="bi bi-soundwave"></i>)
 						    }
 						  </button>
-						  <div className="audio-container w-7 h-8  overflow-hidden mt-1 py-1 px-1 gap-2 -ml-px  first:ml-0  border">
-								<audio controls ref={audioRef} 
+						  <div style={{display:hideAudio?'none':'block'}} className="audio-container w-7 h-8  overflow-hidden mt-1 py-1 px-1 gap-2 -ml-px  first:ml-0  border">
+								<audio  controls ref={audioRef} 
+									   onCanPlay={e=>onCanPlay(e)}
+								       onCanPlayThrough={e=>onCanPlaytrough(e)}
+								       onLoadedData={e=>onLoaded(e)}
 									   style={{width:100,marginLeft:-17,marginTop:-16}}
 									   className="">
-				          			<source src={item.audio_source} />
+				          			<source src={audioSource} />
 				        		</audio>
 							</div>
 							</div>

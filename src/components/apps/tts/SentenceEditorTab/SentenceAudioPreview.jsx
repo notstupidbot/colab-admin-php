@@ -10,9 +10,9 @@ export default function SentenceAudioPreview(){
 	return(<>
 		<div className="audio-container">
 			<audio style={{visibility:showAudio?'visible':'hidden'}} controls ref={audioRef} 
-				   onCanPlay={evt=>onCanPlay()}
-			       onCanPlayThrough={e=>onCanPlaytrough}
-			       onLoadedData={e=>onLoaded}
+				   onCanPlay={e=>onCanPlay(e)}
+			       onCanPlayThrough={e=>onCanPlaytrough(e)}
+			       onLoadedData={e=>onLoaded(e)}
 			       className="-mt-2 -ml-3">
 				<source src={audioOutput} />
 			</audio>

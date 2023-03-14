@@ -49,7 +49,7 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 					  hideToast={hideToast}
 					  onSave_clicked={onSave_clicked}
 					  onInsertAllTttf_clicked={onInsertAllTttf_clicked}/>
-		<FormItems socketConnected={socketConnected}
+		<FormItems socketConnected={socketConnected} config={config}
 				   title={title} setTitle={setTitle}
 				   content={content} setContent={setContent}
 				   contentTtf={contentTtf} setContentTtf={setContentTtf}

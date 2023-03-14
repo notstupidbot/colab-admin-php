@@ -6,7 +6,7 @@ import {
 	inputOkCls,
 	inputErrorCls
 } from "./deps/inputCls"
-import Helper from "../../../app/Helper"
+import Helper from "../../../lib/Helper"
 export default function ContentEditor({content, setContent}){
 	const inputContentRef = createRef(null)
 	

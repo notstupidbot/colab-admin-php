@@ -1,12 +1,13 @@
 import React,{ useState , useEffect, useRef} from 'react'
 import SideBar from "./components/SideBar"
 import MainContent from "./components/MainContent"
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 let dontRunTwice = true
 
-import Ws from "./components/app/Ws"
-import AppConfig from "./components/app/AppConfig"
+import Ws from "./components/lib/Ws"
+import AppConfig from "./components/lib/AppConfig"
 
 const ws = Ws.getInstance();
 const config = AppConfig.getInstance();
@@ -64,12 +65,15 @@ function App() {
     },[hideSidebar])
 
   return (<>
+    <Router>
 
      <SideBar config={config} hideSidebar={hideSidebar} setHideSidebar={setHideSidebar}/>
      <MainContent config={config} 
                   socketConnected={socketConnected}
                   ws={ws}
                   hideSidebar={hideSidebar}/>
+    </Router>
+
 
     </>)
 }

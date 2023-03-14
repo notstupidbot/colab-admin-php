@@ -3,7 +3,7 @@ import {createRef, useState, useEffect} from "react"
 
 import SentenceItemText from "./SentenceItemText"
 import SentenceItemTtf from "./SentenceItemTtf"
-export default function SentenceItemEditor({items}){
+export default function SentenceItemEditor({items, config, pk}){
 	const [sentenceItems, setSentenceItems] = useState([])
 
 	
@@ -29,8 +29,8 @@ export default function SentenceItemEditor({items}){
 			
 			return(
 				<div className="columns-2 my-1"  key={index}>
-				<SentenceItemText type="text" index={index} item={item} items={sentenceItems}/>
-				<SentenceItemTtf type="ttf" index={index} item={item} items={sentenceItems}/>
+				<SentenceItemText  config={config} type="text" index={index} item={item} items={sentenceItems}/>
+				<SentenceItemTtf pk={pk} config={config} type="ttf" index={index} item={item} items={sentenceItems}/>
 				</div>
 			)
 		})

@@ -9,6 +9,7 @@ import SentenceTab from "./tts/SentenceTab";
 import ProjectEditorTab from "./tts/ProjectEditorTab";
 import Explorer from "./tts/ExplorerTab";
 import SentenceEditorTab from "./tts/SentenceEditorTab/Ui";
+import { Link } from 'react-router-dom';
 
 export default function TtsApp({config, ws, socketConnected, mainContent}){
 
@@ -81,11 +82,12 @@ export default function TtsApp({config, ws, socketConnected, mainContent}){
 	
 return(<>
 
-{/*<h2>TTS Indonesia</h2>*/}
-<nav className="relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700" aria-label="Tabs" role="tablist">
-  <button type="button" tab="project" onClick={evt=>activateTabHandler('project')} className={activeTabCls('project')} id="bar-with-underline-item-1" data-hs-tab="#bar-with-underline-1" aria-controls="bar-with-underline-1" role="tab">
+
+<nav className="relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700">
+  <Link to="/tts/project"
+  			className={activeTabCls('project')} >
     TTS Project
-  </button>
+  </Link>
   <button type="button" tab="editor" onClick={evt=>activateTabHandler('project-editor')} className={activeTabCls('project-editor')} id="bar-with-underline-item-2" data-hs-tab="#bar-with-underline-2" aria-controls="bar-with-underline-2" role="tab">
     Project Editor
   </button>

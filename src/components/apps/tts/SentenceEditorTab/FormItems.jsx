@@ -15,7 +15,7 @@ export default function FormItems({socketConnected,
 								   contentTtf, setContentTtf,
 								   projectId, setProjectId,
 								   items, setItems,
-								   pk, speakerId}){
+								   pk, speakerId, config}){
 	return(<>
 		<div className="container">
 			<TitleEditor title={title} setTitle={setTitle} pk={pk}/>
@@ -23,7 +23,7 @@ export default function FormItems({socketConnected,
 				<SentenceItemTaskQueueToolbar items={items} setItems={setItems} speakerId={speakerId} pk={pk}/>
 				<ContentEditor content={content} setContent={setContent} pk={pk}/>
 			</div>
-			<SentenceItemEditor items={items} setItems={setItems} speakerId={speakerId} pk={pk}/>
+			<SentenceItemEditor pk={pk} config={config} items={items} setItems={setItems} speakerId={speakerId} pk={pk}/>
 			<ContentTtfEditor contentTtf={contentTtf} setContentTtf={setContentTtf}/>
 
 			<div className="columns-2 my-3">

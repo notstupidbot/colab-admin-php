@@ -6,7 +6,7 @@ import {
 	inputErrorCls
 } from "./deps/inputCls"
 
-import Helper from "../../../app/Helper"
+import Helper from "../../../lib/Helper"
 
 export default function SentenceItemText({index,item, items, type}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
@@ -59,7 +59,7 @@ export default function SentenceItemText({index,item, items, type}){
 							  <button title="Translate this line" 
 							  		  disabled={item.loading} 
 							  		  type="button" 
-							  		  onClick = { evt => onTranslateItem(evt, index) } 
+							  		  onClick = { evt => onConvertItem(evt, index) } 
 							  		  className={lcls}>
 							    {
 							    	item.loading ? (<span className={loadingCls} role="status" aria-label="loading">

@@ -1,6 +1,6 @@
 import {createRef, useState, useEffect} from "react"
 
-import Helper from "../../../app/Helper"
+import Helper from "../../../lib/Helper"
 // const delay = Helper.makeDelay(500)
 
 export default function TitleEditor({title, setTitle}){
