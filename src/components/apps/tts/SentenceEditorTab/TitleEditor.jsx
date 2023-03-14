@@ -1,7 +1,7 @@
 import {createRef, useState, useEffect} from "react"
 
 import Helper from "../../../app/Helper"
-const delay = Helper.makeDelay(500)
+// const delay = Helper.makeDelay(500)
 
 export default function TitleEditor({title, setTitle}){
 	const titleInputRef = createRef(null)
@@ -11,7 +11,8 @@ export default function TitleEditor({title, setTitle}){
 		if(!title){
 			return;
 		}
-		delay(async(e)=>{
+		Helper.delay(async(e)=>{
+			console.log(title)
 			setTitle(title)
 		  // this.model.setTitle(title);
 		  // await this.model.updateRow();

@@ -15,10 +15,10 @@
 }
 .grow-wrap > textarea {
   /* You could leave this, but after a user resizes, then it ruins the auto sizing */
-  resize: none;
+/*  resize: none;*/
 
   /* Firefox shows scrollbar on growth, you can hide like this. */
-  overflow: hidden;
+/*  overflow: hidden;*/
 }
 .grow-wrap > textarea,
 .grow-wrap::after {
@@ -28,7 +28,7 @@
 /*  font: inherit;*/
 
   /* Place on top of each other */
-  grid-area: 1 / 1 / 2 / 2;
+/*  grid-area: 1 / 1 / 2 / 2;*/
 }
 
 

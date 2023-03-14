@@ -1,17 +1,24 @@
 class UiConfig {
+	dontRunTwice = false
 	hidenSidebarStatus = false
 	setHideSidebar = (status) => {}
 	constructor(){
-
+		this.dontRunTwice = true
 	}
 
 	hideSidebar(status = true){
-		this.hideSidebar = status;
+		this.hidenSidebarStatus = status;
 		this.setHideSidebar(status)
+		localStorage.hideSidebar = status;
 	}
 
 	setHideSidebarState(setHideSidebar){
 		this.setHideSidebar = setHideSidebar
+		// if(this.dontRunTwice){
+		// 	this.hidenSidebarStatus = localStorage.hideSidebar || false;
+		// 	this.setHideSidebar(this.hidenSidebarStatus )
+		// 	this.dontRunTwice = false
+		// }
 	}
 
 

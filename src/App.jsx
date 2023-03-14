@@ -54,9 +54,14 @@ function App() {
     useEffect(() => {
         if(dontRunTwice){
             ws.init();
+            setHideSidebar(localStorage.hideSidebar == 'true')
+
             dontRunTwice=false
         }
     }, []);
+    useEffect(()=>{
+        localStorage.hideSidebar = hideSidebar
+    },[hideSidebar])
 
   return (<>
 

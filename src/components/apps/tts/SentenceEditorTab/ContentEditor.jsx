@@ -1,37 +1,50 @@
-import {createRef, useState} from "react"
+import {createRef, useState, useEffect} from "react"
 import SentenceItemTaskQueueToolbar from "./SentenceItemTaskQueueToolbar"
-
-export default function ContentEditor(){
+import TextareaAutosize from 'react-textarea-autosize';
+import {
+	inputDefaultCls,
+	inputOkCls,
+	inputErrorCls
+} from "./deps/inputCls"
+import Helper from "../../../app/Helper"
+export default function ContentEditor({content, setContent}){
 	const inputContentRef = createRef(null)
 	
-	const [inputStatus, setInputStatus] = useState(1)
+	const [inputStatus, setInputStatus] = useState(0)
 	
-	const inputDefaultCls = ""
-	const inputOkCls = ""
-	const inputErrorCls = ""
+	
 
 	const onChangeContent = evt => {
-		// const content = evt.target.value;
-		// if(!content){
-		// 	return;
-		// }
+		const content = evt.target.value;
+		if(!content){
+			return;
+		}
 		
-		// delay(async(e)=>{
-		//   this.model.setContent(content);
-		//   await this.model.updateRow();
+		Helper.delay(async(e)=>{
+			setContent(content)
+		  // this.model.setContent(content);
+		  // await this.model.updateRow();
 
 
-		// })
+		})
 	}
+	useEffect(()=>{
+		inputContentRef.current.value = content.trim()
+		setTimeout(()=>{
+			window.dispatchEvent(new Event('resize'));
+		},500);
+
+	},[content])
 	return(<>
 
 			<div className="grow-wrap">
-				<textarea  ref={inputContentRef} 
+				<TextareaAutosize cacheMeasurements={false} ref={inputContentRef} 
 						   onChange={ evt => onChangeContent(evt) } 
 						   className={inputStatus == 0 ? inputDefaultCls 
 						   							   : (inputStatus == 1 ? inputOkCls : inputErrorCls)} 
+						   maxRows={20}
 						   placeholder="Sentence text">
-				</textarea>	
+				</TextareaAutosize>	
 			</div>
 			
 			{
