@@ -1,5 +1,7 @@
 // import {v4} from "uuid"
-export default function Pager({limit,total_pages,page, gotoPage}){
+import { Link } from 'react-router-dom';
+
+export default function Pager({limit,total_pages,page, gotoPage, path=""}){
 	const name = 'pager' 
 	page = parseInt(page)
 	total_pages = parseInt(total_pages)
@@ -19,24 +21,29 @@ export default function Pager({limit,total_pages,page, gotoPage}){
 	}
 	return(
 		<nav className="flex items-center place-content-center space-x-2" key={name}>
-		  {hasPrev(page)?(<button key={`${name}-min-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md" onClick={evt=>gotoPage(page-1)}>
+		  {hasPrev(page)?(<Link key={`${name}-min-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
+		  to={`${path}/page/${page-1}`}>
 		    <span aria-hidden="true">«</span>
 		    <span>Sebelum</span>
-		  </button>):""}
+		  </Link>):""}
 		  {forPages().map((page_number,index)=>{
 		  	const isActive = (page_number == page);
-		  	return isActive ? (<button key={`${name}-num-${index}`} 
+		  	return isActive ? (<Link key={`${name}-num-${index}`} 
 		  		className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"  
 		  		aria-current="page" aria-current="page"  
-		  		onClick={total_pages > 1? evt=>gotoPage(page_number):null}>{page_number}</button>):(<button key={`${name}-num-${index}`} onClick={evt=>gotoPage(page_number)}className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full">{page_number}</button>
+		  		to={`${path}/page/${page_number}`}
+		  		onClick={total_pages > 1? evt=>gotoPage(page_number):null}>{page_number}</Link>):(<Link key={`${name}-num-${index}`} 
+		  		to={`${path}/page/${page_number}`}
+		  		className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full">{page_number}</Link>
 		  )
 		  })
 
 		  }
-		  {hasNext(page)?(<button key={`${name}-plus-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"  onClick={evt=>gotoPage(page+1)}>
+		  {hasNext(page)?(<Link key={`${name}-plus-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"  
+		  	to={`${path}/page/${page+1}`}>
 		    <span>Selanjutnya</span>
 		    <span aria-hidden="true">»</span>
-		  </button>):""}
+		  </Link>):""}
 		  
 		</nav>)
 }

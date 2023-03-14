@@ -65,17 +65,13 @@ function App() {
     },[hideSidebar])
 
   return (<>
-    <Router>
-
-     <SideBar config={config} hideSidebar={hideSidebar} setHideSidebar={setHideSidebar}/>
+    
      <MainContent config={config} 
                   socketConnected={socketConnected}
                   ws={ws}
                   hideSidebar={hideSidebar}/>
-    </Router>
-
-
-    </>)
+    
+     </>)
 }
 
 export default App

@@ -1,14 +1,20 @@
 import React ,{useEffect,useState,useRef}from "react";
-import { useBetween } from "use-between";
 import axios from "axios"
 
+import { Link, useLoaderData } from 'react-router-dom';
 
 import app_config from "../../../app.config" 
 import Pager from "./Pager"
 
+export async function loader({ params }) {
+	console.log(params)
+  const page = parseInt(params.pageNumber) || 1;
+  return { page };
+}
+
 let dontRunTwice = true
 export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
-
+	const {page} = useLoaderData()
 	const [projectList,setProjectList] = useState([
 		
 	]);
@@ -28,7 +34,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 		grid.page = page_number;
 		grid.records = [];
 		setGrid(Object.assign({},grid))
-		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/project?page=${grid.page}&limit=${grid.limit}`);
+		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/project?page=${page}&limit=${grid.limit}`);
 		setGrid(res.data)
 		
 	}
@@ -39,11 +45,11 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 
 	}
 	useEffect(()=>{
-		if(activeTab == 'project'){
+		// if(activeTab == 'project'){
 			updateProjectList();
 		// 	dontRunTwice = false
-		}
-	},[activeTab]);
+		// }
+	},[page]);
 
 	const pageNumber=(index)=>{
 		const p = (parseInt(index) + 1);
@@ -94,7 +100,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.title}</td>
 
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-		                <button className="text-blue-500 hover:text-blue-700" onClick={evt=>viewInEditor(item)}><i className="bi bi-pencil-square"></i></button>
+		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/project-editor/${item.id}`}><i className="bi bi-pencil-square"></i></Link>
 		              </td>
 		            </tr>
           		)
@@ -107,7 +113,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
         </table>
       </div>
       <div className="mt-3">
-      <Pager page={grid.page} total_pages={grid.total_pages} limit={grid.limit} gotoPage={(page_number)=>updateProjectList(page_number)}/>
+      <Pager path="/tts/project" page={grid.page} total_pages={grid.total_pages} limit={grid.limit} gotoPage={(page_number)=>updateProjectList(page_number)}/>
       </div>
     </div>
   </div>

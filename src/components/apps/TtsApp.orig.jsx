@@ -1,6 +1,5 @@
 
 import React ,{useEffect,useState,useRef}from "react"
-import { Outlet , Link,  HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 let dontRunTwice=true;
 let lastActiveTab = localStorage.activeTab || 'project';
@@ -10,7 +9,8 @@ import SentenceTab from "./tts/SentenceTab";
 import ProjectEditorTab from "./tts/ProjectEditorTab";
 import Explorer from "./tts/ExplorerTab";
 import SentenceEditorTab from "./tts/SentenceEditorTab/Ui";
-import SideBar from "../SideBar"
+import { Link } from 'react-router-dom';
+
 export default function TtsApp({config, ws, socketConnected, mainContent}){
 
 	const projectEditorTabRef = useRef(null);
@@ -29,7 +29,6 @@ export default function TtsApp({config, ws, socketConnected, mainContent}){
 		{name:'explorer'},
 		{name:'sentence'}
 	]
-	const cls = "w-full px-4 sm:px-6 md:px-8";// pt-10
 
 	const activeTabCls = (tabName)=>{
 		if(tabName == activeTab){
@@ -80,31 +79,64 @@ export default function TtsApp({config, ws, socketConnected, mainContent}){
 		}
 	});
 
-const 	hideSidebar = false
+	
 return(<>
-<div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>
+
+
 <nav className="relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700">
   <Link to="/tts/project"
-  			className={activeTabCls('project')}>
+  			className={activeTabCls('project')} >
     TTS Project
   </Link>
-  <Link to="/tts/project-editor" className={activeTabCls('project-editor')}>
+  <button type="button" tab="editor" onClick={evt=>activateTabHandler('project-editor')} className={activeTabCls('project-editor')} id="bar-with-underline-item-2" data-hs-tab="#bar-with-underline-2" aria-controls="bar-with-underline-2" role="tab">
     Project Editor
-  </Link>
-  <Link to="/tts/sentence" className={activeTabCls('sentence')}>
+  </button>
+  <button type="button" tab="project" onClick={evt=>activateTabHandler('sentence')} className={activeTabCls('sentence')} id="bar-with-underline-item-1" data-hs-tab="#bar-with-underline-4" aria-controls="bar-with-underline-1" role="tab">
     TTS Sentences
-  </Link>
+  </button>
   
-  <Link to="/tts/sentence-editor" onClick={evt=>activateTabHandler('sentence-editor')} 
-  		  className={activeTabCls('sentence-editor')} >
+  <button type="button" tab="sentence-editor" onClick={evt=>activateTabHandler('sentence-editor')} className={activeTabCls('sentence-editor')} id="bar-with-underline-item-5" data-hs-tab="#bar-with-underline-5" aria-controls="bar-with-underline-5" role="tab">
     Sentence Editor
-  </Link>
- 
+  </button>
+  {/*<button type="button" tab="explorer" onClick={evt=>activateTabHandler('explorer')} className={activeTabCls('explorer')} id="bar-with-underline-item-3" data-hs-tab="#bar-with-underline-3" aria-controls="bar-with-underline-3" role="tab">
+    Explorer
+  </button>*/}
 </nav>
 
 <div className="mt-3">
-  <Outlet/>
+  <div id="bar-with-underline-1"  className={activePanelCls('project')} role="tabpanel" aria-labelledby="bar-with-underline-item-1">
+    <ProjectTab  setActiveTab={setActiveTab} 
+    						 setActiveProject={setActiveProject} 
+    						 activeTab={activeTab} 
+    						 config={config}/>
+  </div>
+  <div id="bar-with-underline-2" className={activePanelCls('project-editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-2">
+  	<ProjectEditorTab ref={projectEditorTabRef} activeTab={activeTab} 
+  																							activeProject={activeProject}  
+  																							setActiveTab={setActiveTab} 
+  																							setActiveSentence={setActiveSentence}
+  																							config={config}/>
+
+  </div>
+  
+  <div id="bar-with-underline-4" className={activePanelCls('sentence')} role="tabpanel" aria-labelledby="bar-with-underline-item-4">
+	  <SentenceTab ref={sentenceTabRef} setActiveTab={setActiveTab} 
+	  																	setActiveSentence={setActiveSentence}
+	  																	activeTab={activeTab}
+	  																	config={config}/>
+  </div>
+
+  <div id="bar-with-underline-5" className={activePanelCls('sentence-editor')} role="tabpanel" aria-labelledby="bar-with-underline-item-5">
+	  <SentenceEditorTab  ws={ws} 
+												config={config} 
+												activeSentence={activeSentence} 
+												socketConnected={socketConnected} 
+												activeTab={activeTab}/>
+  </div>
+  <div id="bar-with-underline-3" className={activePanelCls('explorer')} role="tabpanel" aria-labelledby="bar-with-underline-item-3">
+    
+  </div>
 </div>	
-</div>
+
 </>)
 }

@@ -1,19 +1,49 @@
 import {useEffect} from "react"
 import TtsApp from "./apps/TtsApp"
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import {  RouterProvider,
+  createRoutesFromElements,
+  createBrowserRouter,Route,Routes } from 'react-router-dom';
 
+import Dashboard from "./apps/Dashboard"
+import DashboardItem1 from "./apps/dashboard/DashboardItem1"
+import DashboardItem2 from "./apps/dashboard/DashboardItem2"
+import DashboardItem3 from "./apps/dashboard/DashboardItem3"
+import DashboardItem4 from "./apps/dashboard/DashboardItem4"
+
+
+import ProjectTab, {loader as projectTabLoader} from "./apps/tts/ProjectTab";
+
+import SentenceTab from "./apps/tts/SentenceTab";
+import ProjectEditorTab from "./apps/tts/ProjectEditorTab";
+import Explorer from "./apps/tts/ExplorerTab";
+import SentenceEditorTab from "./apps/tts/SentenceEditorTab/Ui"; 
+import SideBar from "./SideBar"
+import Root from "./apps/tts/routes/root"
 export default function MainContent({hideSidebar, config, socketConnected, ws}){
-	const cls = "w-full px-4 sm:px-6 md:px-8";// pt-10
-	return(<>
-		<div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>
-            <Routes>
-                <Route exac path="/tts" element={<TtsApp socketConnected={socketConnected} 
+	const router = createBrowserRouter(
+		  createRoutesFromElements(
+		   <Route path="/" element={<Root />}>
+
+		        <Route exac path="/tts" element={<TtsApp socketConnected={socketConnected} 
 														 config={config} 
 														 ws={ws}/>}>
-				</Route>
+					<Route  path="/tts/project" 
+							element={<ProjectTab />} 
+							loader={projectTabLoader}/>
+					<Route exac path="/tts/project/page/:pageNumber" loader={projectTabLoader} element={<ProjectTab />}/>
+					<Route exac path="/tts/project-editor/:projectId" element={<ProjectEditorTab/>}/>
+					<Route exac path="/tts/project-editor" element={<ProjectEditorTab/>}/>
+					<Route exac path="/tts/sentence" element={<SentenceTab/>}/>
+					<Route exac path="/tts/sentence-editor" element={<SentenceEditorTab/>}/>
 
-			
-			</Routes>		
-		</div>
-	</>)
+				</Route>
+				<Route  path="/dashboard" element={<Dashboard/>}>
+					
+				</Route>
+			</Route>
+				
+
+		  )
+		);
+	return(<RouterProvider router={router}/>)
 }
