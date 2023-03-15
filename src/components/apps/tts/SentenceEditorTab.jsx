@@ -14,6 +14,7 @@ import speaker_ids from "./speaker_ids";
 
 var delay = makeDelay(1000);
 let dontRunTwice = true;
+
 export default class SentenceEditorTab extends React.Component{
 	state = {
 		sentences : [],

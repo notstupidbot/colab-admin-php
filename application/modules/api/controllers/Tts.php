@@ -85,7 +85,7 @@ class Tts extends REST_Controller {
         }
         if($id){
             $sentence = $this->m_sentence->getById($id);
-            $this->response($project, 200);
+            $this->response($sentence, 200);
         }else{
            
             $sentences = $this->m_sentence->getAllPaged($page,$limit, $order_by, $order_dir,$filter);

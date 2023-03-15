@@ -3,17 +3,19 @@ import axios from "axios"
 
 import { Link, useLoaderData } from 'react-router-dom';
 
-import app_config from "../../../app.config" 
+ 
 import Pager from "./Pager"
+import AppConfig from "../../lib/AppConfig"
+import Helper from "../../lib/Helper"
 
 export async function loader({ params }) {
-	console.log(params)
   const page = parseInt(params.pageNumber) || 1;
   return { page };
 }
 
 let dontRunTwice = true
-export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
+const delay = Helper.makeDelay(512)
+export default function ProjectTab(){
 	const {page} = useLoaderData()
 	const [projectList,setProjectList] = useState([
 		
@@ -34,7 +36,7 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 		grid.page = page_number;
 		grid.records = [];
 		setGrid(Object.assign({},grid))
-		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/project?page=${page}&limit=${grid.limit}`);
+		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/project?page=${page}&limit=${grid.limit}`);
 		setGrid(res.data)
 		
 	}
@@ -46,9 +48,14 @@ export default function ProjectTab({setActiveProject,setActiveTab,activeTab}){
 	}
 	useEffect(()=>{
 		// if(activeTab == 'project'){
-			updateProjectList();
+			// updateProjectList();
 		// 	dontRunTwice = false
 		// }
+		delay(()=>{
+			console.log(page)
+			updateProjectList();
+		})
+		
 	},[page]);
 
 	const pageNumber=(index)=>{

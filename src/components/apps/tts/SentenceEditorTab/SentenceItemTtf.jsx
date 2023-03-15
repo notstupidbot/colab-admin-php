@@ -7,6 +7,7 @@ import {
 } from "./deps/inputCls"
 
 import Helper from "../../../lib/Helper"
+import AppConfig from "../../../lib/AppConfig"
 
 export default function SentenceItemTtf({index,item, items, config, pk}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
@@ -72,7 +73,7 @@ export default function SentenceItemTtf({index,item, items, config, pk}){
 	useEffect(()=>{
 		// setHideAudio(true)
 
-		const asource = `${config.getApiEndpoint()}/public/tts-output/${pk}-${index}.wav`;
+		const asource = `${AppConfig.getInstance().getApiEndpoint()}/public/tts-output/${pk}-${index}.wav`;
 		// console.log(asource)
 		setAudioSource(asource)
 		loadFormData()

@@ -1,10 +1,11 @@
 import {useState, useEffect} from "react"
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export default function SideBar({hideSidebar=false, setHideSidebar=()=>{}}){
 
   const cls = "hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform fixed top-0 left-0 bottom-0 z-[60] w-64 bg-white border-r border-gray-200 pt-7 pb-10 overflow-y-auto scrollbar-y lg:block lg:translate-x-0 lg:right-auto lg:bottom-0 dark:scrollbar-y dark:bg-gray-800 dark:border-gray-700"
-  const linkCls = "flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-slate-700 rounded-md hover:bg-gray-100 dark:bg-gray-900 dark:text-white"
+  const activeTabCls = "flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
+  const inactiveTabCls = "flex items-center gap-x-3.5 py-2 px-2.5  hover:bg-gray-100 text-sm text-slate-700 rounded-md hover:bg-gray-100 dark:bg-gray-900 dark:text-white"
   const toggle = ()=>{
     // setTimeout(()=>{
       const status = !hideSidebar;
@@ -16,6 +17,8 @@ export default function SideBar({hideSidebar=false, setHideSidebar=()=>{}}){
   // useEffect(()=>{
 
   // },[hideSidebar])
+const linkCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactiveTabCls
+
   return(<>
     
     <button onClick={evt=>toggle()} type="button" className="text-gray-500 hover:text-gray-600" aria-controls="docs-sidebar" aria-label="Toggle navigation">
@@ -35,14 +38,14 @@ export default function SideBar({hideSidebar=false, setHideSidebar=()=>{}}){
         </div>
         <ul className="space-y-1.5">
           <li>
-            <Link className={linkCls} to="/dashboard">
+            <NavLink className={linkCls} to="/dashboard">
               <i className="bi bi-speedometer2"></i> Dashboard
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link className={linkCls} to="/tts">
+            <NavLink className={linkCls} to="/tts">
               <i className="bi bi-globe2"></i> TTS
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </nav>

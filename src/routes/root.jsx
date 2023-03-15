@@ -1,36 +1,44 @@
-import { Outlet , Link,  useLoaderData, Form,redirect,  NavLink,
+import {
+  Outlet, 
+  Link,  
+  useLoaderData, 
+  Form,
+  redirect,  
+  NavLink,
   useNavigation,
   useSubmit,
 
 } from "react-router-dom";
+
 import { useEffect } from "react";
 
 import { getContacts, createContact } from "../contacts";
+
 export async function loader({ request }) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
   return { contacts, q };
 }
+
 export async function action() {
   const contact = await createContact();
     return redirect(`/contacts/${contact.id}/edit`);
 
   // return { contact };
 }
+
 export default function Root() {
-      const { contacts, q } = useLoaderData();
+  const { contacts, q } = useLoaderData();
   const submit = useSubmit();
 
   const navigation = useNavigation();
-  const searching =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has(
-      "q"
-    );
-useEffect(() => {
+  const searching = navigation.location && 
+                      new URLSearchParams(navigation.location.search).has("q");
+  useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
+
   return (
     <>
 
@@ -45,20 +53,16 @@ useEffect(() => {
               type="search"
               name="q"
               className={searching ? "loading" : ""}
-               defaultValue={q}
-onChange={(event) => {
+                defaultValue={q}
+                onChange={(event) => {
                 const isFirstSearch = q == null;
                 submit(event.currentTarget.form, {
                   replace: !isFirstSearch,
                 });
               }}
             />
-            <div
-              id="search-spinner"
-              aria-hidden
-                            hidden={!searching}
-
-            />
+            <div id="search-spinner"
+              aria-hidden  hidden={!searching}/>
             <div
               className="sr-only"
               aria-live="polite"
@@ -90,7 +94,7 @@ onChange={(event) => {
                       <i>No Name</i>
                     )}{" "}
                     {contact.favorite && <span>★</span>}
-                  </NavLink>
+                </NavLink>
                 </li>
               ))}
             </ul>
