@@ -7,13 +7,27 @@ import {
 	inputErrorCls
 } from "./deps/inputCls"
 import Helper from "../../../lib/Helper"
-export default function ContentEditor({content, setContent}){
+import AppConfig from "../../../lib/AppConfig"
+
+import axios from "axios"
+export default function ContentEditor({content, setContent, pk}){
 	const inputContentRef = createRef(null)
 	
 	const [inputStatus, setInputStatus] = useState(0)
 	
 	
+	const saveRecord = async()=>{
+		const data = new FormData();
+		data.append('content', content)
+		const res = await axios({
+			method: "post",
+			url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?id=${pk}`,
+			data: data,
+			headers: { "Content-Type": "multipart/form-data" },
+		});
 
+		return res.data;
+	}
 	const onChangeContent = evt => {
 		const content = evt.target.value;
 		if(!content){
@@ -22,8 +36,7 @@ export default function ContentEditor({content, setContent}){
 		
 		Helper.delay(async(e)=>{
 			setContent(content)
-		  // this.model.setContent(content);
-		  // await this.model.updateRow();
+			await saveRecord()
 
 
 		})

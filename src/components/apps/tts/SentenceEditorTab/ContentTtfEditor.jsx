@@ -6,18 +6,32 @@ import {
 	inputErrorCls
 } from "./deps/inputCls"
 import Helper from "../../../lib/Helper"
+import AppConfig from "../../../lib/AppConfig"
+import axios from "axios"
 
-export default function ContentTtfEditor({contentTtf, setContentTtf}){
+export default function ContentTtfEditor({contentTtf, setContentTtf, pk}){
 	const contentTtfInputRef = createRef(null)
 	const cls = "my-3 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+	
+	const saveRecord = async()=>{
+		const data = new FormData();
+		data.append('content_ttf', contentTtf)
+		const res = await axios({
+			method: "post",
+			url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?id=${pk}`,
+			data: data,
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+
+		return res.data;
+	}
 	const onChangeContentTtf = evt => {
 		console.log(evt.target.value)
 
 		const contentTtf = evt.target.value;
 		Helper.delay(async(e)=>{
 			setContentTtf(contentTtf)
-		  // this.model.setContentTtf(contentTtf);
-		  // await this.model.updateRow();
+			await saveRecord()
 		})
 	}
 

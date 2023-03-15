@@ -2,9 +2,10 @@ import {useEffect} from "react"
 import TtsApp from "./apps/TtsApp"
 import {  RouterProvider,
   createRoutesFromElements,
-  createBrowserRouter,Route,Routes } from 'react-router-dom';
+  createBrowserRouter,Route,Routes ,createHashRouter} from 'react-router-dom';
 
 import Dashboard from "./apps/Dashboard"
+import Preferences from "./apps/preferences"
 import DashboardItem1 from "./apps/dashboard/DashboardItem1"
 import DashboardItem2 from "./apps/dashboard/DashboardItem2"
 import DashboardItem3 from "./apps/dashboard/DashboardItem3"
@@ -20,8 +21,11 @@ import Explorer from "./apps/tts/ExplorerTab";
 import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTab/Ui"; 
 import SideBar from "./SideBar"
 import Root from "./apps/tts/routes/root"
+
+import TtsServerPrefTab, {loader as ttsServerPrefTabLoader} from "./apps/preferences/TtsServerPrefTab"
+
 export default function MainContent({hideSidebar, config, socketConnected, ws}){
-	const router = createBrowserRouter(
+	const router = createHashRouter(
 		  createRoutesFromElements(
 		   <Route path="/" element={<Root />}>
 
@@ -40,6 +44,10 @@ export default function MainContent({hideSidebar, config, socketConnected, ws}){
 
 				</Route>
 				<Route  path="/dashboard" element={<Dashboard/>}>
+					
+				</Route>
+				<Route  path="/preferences" element={<Preferences/>}>
+					<Route exac path="/preferences/tts-server" loader={ttsServerPrefTabLoader} element={<TtsServerPrefTab/>}/>
 					
 				</Route>
 			</Route>

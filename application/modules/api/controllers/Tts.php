@@ -152,7 +152,39 @@ class Tts extends REST_Controller {
             
         }
     }
+    function preferences_get(){
+        $key = $this->input->get("key");
+        $group = $this->input->get("group");
+        $page = $this->input->get("page");
+        $limit = $this->input->get("limit");
+        $order_by = $this->input->get("order_by");
+        $order_dir = $this->input->get("order_dir");
+        $filter = ['fields'=>[], 'search'=>[]];
+        if(empty($page))
+            $page =1;
+        if(empty($limit))
+            $limit =10;
+        if(empty($order_by)){
+            $order_by = "create_date";
+        }
+        if(empty($order_dir)){
+            $order_dir = "asc";
+        }
+        if(!empty($group)){
+            $filter['fields'] = [
+                'group' => $group
+            ];
 
+        }
+        if($key){
+            $preference = $this->m_preference->getByKey($key);
+            $this->response($preference, 200);
+        }else{
+           
+            $preferences = $this->m_preference->getAllPaged($page,$limit, $order_by, $order_dir,$filter);
+            $this->response($preferences, 200);
+        }
+    }
     function convert_get(){
         $input_text = trim($this->input->get("text"));
 

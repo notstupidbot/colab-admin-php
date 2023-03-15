@@ -9,7 +9,7 @@ import {
 import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 
-export default function SentenceItemTtf({index,item, items, config, pk}){
+export default function SentenceItemTtf({index,item, items,setSentenceItems, pk}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 	const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 	const rcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
@@ -77,7 +77,8 @@ export default function SentenceItemTtf({index,item, items, config, pk}){
 		// console.log(asource)
 		setAudioSource(asource)
 		loadFormData()
-	},[])
+		// console.log(item)
+	},[items])
 
 	useEffect(()=>{
 		setHideAudio(true)

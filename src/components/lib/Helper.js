@@ -24,41 +24,41 @@ export default class Helper{
 		}
 		else if (parseFloat(x) < 20)
 		{
-			return terbilang(parseFloat(x) - 10)+" belas";
+			return Helper.terbilang(parseFloat(x) - 10)+" belas";
 		}
 		else if (parseFloat(x) < 100)
 		{
-			return terbilang(parseFloat(x) / 10)+" puluh"+terbilang(parseFloat(x)%10);
+			return Helper.terbilang(parseFloat(x) / 10)+" puluh"+Helper.terbilang(parseFloat(x)%10);
 		}
 		else if (parseFloat(x) < 200)
 		{
-			return " seratus"+terbilang(parseFloat(x)-100);
+			return " seratus"+Helper.terbilang(parseFloat(x)-100);
 		}
 		else if (parseFloat(x) < 1000)
 		{
-			return terbilang(parseFloat(x) / 100)+" ratus"+terbilang(parseFloat(x)%100);
+			return Helper.terbilang(parseFloat(x) / 100)+" ratus"+Helper.terbilang(parseFloat(x)%100);
 		}
 		else if (parseFloat(x) < 2000)
 		{
-			return " seribu"+terbilang(parseFloat(x) - 1000);
+			return " seribu"+Helper.terbilang(parseFloat(x) - 1000);
 		}
 		else if (parseFloat(x) < 1000000)
 		{
-			return terbilang(parseFloat(x) / 1000)+" ribu"+terbilang(parseFloat(x)%1000);
+			return Helper.terbilang(parseFloat(x) / 1000)+" ribu"+Helper.terbilang(parseFloat(x)%1000);
 		}
 		else if (parseFloat(x) < 1000000000)
 		{
-			return terbilang(parseFloat(x) / 1000000)+" juta"+terbilang(parseFloat(x) % 1000000);	
+			return Helper.terbilang(parseFloat(x) / 1000000)+" juta"+Helper.terbilang(parseFloat(x) % 1000000);	
 		}
 		else if (parseFloat(x) < 1000000000000)
 		{
-			return terbilang(parseFloat(x) / 1000000000)+" milyar"+terbilang(parseFloat(x) % 1000000000);	
+			return Helper.terbilang(parseFloat(x) / 1000000000)+" milyar"+Helper.terbilang(parseFloat(x) % 1000000000);	
 		}
 	}
 	static fixTttsText(text){
 		text = text.replace(/,/g,' ')
 		text = text.replace(/\W/g,' ')
-		text = text.replace(/\d+/g, terbilang)
+		text = text.replace(/\d+/g, Helper.terbilang)
 		text = text.replace(/\W+/g, ' ')
 		return text;
 	}

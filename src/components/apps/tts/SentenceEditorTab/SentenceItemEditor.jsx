@@ -11,26 +11,33 @@ export default function SentenceItemEditor({items, config, pk}){
 		setSentenceItems([]);
 		setTimeout(()=>{
 			let items_;
-			try{
-				items_ = JSON.parse(items);
-			}catch(e){
-				items_ = []
+			if(typeof items == 'string'){
+				try{
+					items_ = JSON.parse(items);
+				}catch(e){
+					items_ = []
+				}
+
+			}else{
+				items_ = items
 			}
 			setSentenceItems(items_)	
 
 		},250)
-
+		
 	},[items])
 
-	
+	useEffect(()=>{
+		// console.log(sentenceItems)
+	},[sentenceItems])
 	return(<>
 		{
 		sentenceItems.map((item,index)=>{
 			
 			return(
 				<div className="columns-2 my-1"  key={index}>
-				<SentenceItemText  config={config} type="text" index={index} item={item} items={sentenceItems}/>
-				<SentenceItemTtf pk={pk} config={config} type="ttf" index={index} item={item} items={sentenceItems}/>
+				<SentenceItemText pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems}/>
+				<SentenceItemTtf pk={pk}  setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems}/>
 				</div>
 			)
 		})

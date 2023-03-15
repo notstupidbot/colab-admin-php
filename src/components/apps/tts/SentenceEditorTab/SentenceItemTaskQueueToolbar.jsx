@@ -1,19 +1,51 @@
-export default function SentenceItemTaskQueueToolbar(){
+import axios from "axios"
+import Helper from "../../../lib/Helper"
+import AppConfig from "../../../lib/AppConfig"
+const delay = Helper.makeDelay(500)
+export default function SentenceItemTaskQueueToolbar({content, items, setItems, pk}){
+	const buildItems = ()=>{
 
+		const textList = content.split('.');
+
+		let tmpSentences = [];
+		const dotSentences = content.split('.');
+		let source_index = 0;
+		for(let i in dotSentences){
+			const commaSentence = dotSentences[i].split(',');
+
+			if(commaSentence.length > 1){
+				const lastIndex = commaSentence.length - 1;
+				for(let j in commaSentence){
+					const text = commaSentence[j].replace(/^\s+/,'');
+					const type = j == lastIndex ? 'dot':'comma';
+					if(text.length){
+						tmpSentences.push({
+							text : Helper.fixTttsText(text), 
+							type,
+							ttf:''
+						})
+						source_index += 1;
+					}
+					
+				}
+			}else{
+				const text = commaSentence[0].replace(/^\s+/,'');
+				if(text.length){
+
+					tmpSentences.push({
+						text : Helper.fixTttsText(text), 
+						type : 'dot',
+						ttf : '',
+					})
+					source_index += 1;
+				}
+			}
+		}
+		setItems(tmpSentences);
+	}
 	const onExtractContent = evt => {
-		const content = this.stInputTextRef.current.value;
 		console.log(content)
-
-		const sentences = this.model.getSentences().buildItems(content).getItems();
-		console.log(sentences);
-		this.setState({sentences},o=>{
-			this.model.getSentences().setItemsRefValue()
-
-			setTimeout(()=>{
-					this.loadGrowWrap()
-			},1000)
-			
-		})
+		buildItems();
 	}
 
 
