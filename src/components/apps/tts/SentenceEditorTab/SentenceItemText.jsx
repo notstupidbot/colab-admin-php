@@ -25,11 +25,9 @@ export default function SentenceItemText({index,item, items, type, setSentenceIt
 		Helper.delay(async()=>{
 			const res = await axios(`${AppConfig.getInstance().getTtsEndpoint()}/api/convert?text=${encodeURI(text)}`);
 			const ttf = res.data
-			// item.ttf = ttf
-			const items_ = Object.assign([],items)
-			items_[index].ttf = ttf;
-			// console.log(items_)
-			setSentenceItems(items_)
+			const ttfRefCurrent = document.querySelector(`.sententence-item-ttf-${index}`)
+			ttfRefCurrent.value = ttf
+			
 
 		});
 		
@@ -75,7 +73,8 @@ export default function SentenceItemText({index,item, items, type, setSentenceIt
 					<div className="grow-wrap">
 						<textarea ref={inputRef} 
 								  onChange={ evt=> onChangeTextItem(evt,index)} 
-								  className={ocls}  
+								  className={`${item.type} sententence-item-text-${index} `+cls}
+								  oCls={item.type}  
 								  placeholder="Text item">
 						</textarea>
 					</div>	

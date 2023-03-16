@@ -61,11 +61,65 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 
 
 	const hideToast = () => setShowToast(false)
-	const onSave_clicked = () => {
+	const onSave_clicked = async() => {
 		console.log(`SentenceEditorTab.onSave_clicked`)
+		const formData = new FormData();
+		let tmpItems = []; 
+		if(typeof items === 'string'){
+			try{
+				tmpItems = JSON.parse(items);
+
+			}catch(e){}
+		}
+		
+		for(let index in tmpItems){
+			const inputRefCurrent = document.querySelector(`.sententence-item-text-${index}`)
+			const ttfRefCurrent = document.querySelector(`.sententence-item-ttf-${index}`)
+
+			tmpItems[index].text = inputRefCurrent.value;
+			tmpItems[index].ttf = ttfRefCurrent.value;
+		}
+		formData.append('sentences', JSON.stringify(tmpItems));
+
+		formData.append('title', title);
+		formData.append('content', content);
+		formData.append('content_ttf', contentTtf);
+
+		// console.log(formData.entries());
+		// return
+		const res = await axios({
+			method: "post",
+			url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?id=${pk}`,
+			data: formData,
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+
+		return res.data;
+		console.log(items)
 	}
 	const onInsertAllTttf_clicked = () => {
-		console.log(`SentenceEditorTab.onInsertAllTttf_clicked`)
+		console.log(`SentenceEditorTab.onInsertAllTttf_clicked`);
+		let tmpItems = []; 
+		if(typeof items === 'string'){
+			try{
+				tmpItems = JSON.parse(items);
+
+			}catch(e){}
+		}
+		let contentTtfTmp = '';
+		for(let index in tmpItems){
+			const ttfRefCurrent = document.querySelector(`.sententence-item-ttf-${index}`)
+			const isComma = ttfRefCurrent.className.match(/comma/);
+			let ttf = ttfRefCurrent.value.trim()
+
+			if(ttf.length > 0){
+				contentTtfTmp += ttf + (isComma? ",":".\n")
+			}
+		}
+		setContentTtf(contentTtfTmp)
+		setTimeout(()=>{
+			window.dispatchEvent(new Event('resize'));
+		},500);
 	}
 
 	useEffect(()=>{

@@ -3,8 +3,7 @@ import {createRef, useState, useEffect} from "react"
 
 import SentenceItemText from "./SentenceItemText"
 import SentenceItemTtf from "./SentenceItemTtf"
-export default function SentenceItemEditor({items, config, pk}){
-	const [sentenceItems, setSentenceItems] = useState([])
+export default function SentenceItemEditor({items, config, pk, sentenceItems, setSentenceItems}){
 
 	
 	useEffect(()=>{
@@ -30,6 +29,8 @@ export default function SentenceItemEditor({items, config, pk}){
 	useEffect(()=>{
 		// console.log(sentenceItems)
 	},[sentenceItems])
+
+
 	return(<>
 		{
 		sentenceItems.map((item,index)=>{

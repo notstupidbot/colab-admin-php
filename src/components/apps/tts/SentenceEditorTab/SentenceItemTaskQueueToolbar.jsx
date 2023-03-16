@@ -2,7 +2,7 @@ import axios from "axios"
 import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 const delay = Helper.makeDelay(500)
-export default function SentenceItemTaskQueueToolbar({content, items, setItems, pk}){
+export default function SentenceItemTaskQueueToolbar({content, items, setItems, pk, sentenceItems, setSentenceItems}){
 	const buildItems = ()=>{
 
 		const textList = content.split('.');
@@ -48,7 +48,24 @@ export default function SentenceItemTaskQueueToolbar({content, items, setItems, 
 		buildItems();
 	}
 
+	const onConvertTask = async(evt) => {
+		// onConvertTask(evt)
+		const newSentenceItems = [];
+		for(let index in sentenceItems){
+			const sentenceItem = sentenceItems[index];
+			const inputRefCurrent = document.querySelector(`.sententence-item-text-${index}`)
+			const ttfRefCurrent = document.querySelector(`.sententence-item-ttf-${index}`)
+			const text = inputRefCurrent.value;
+	
+			const res = await axios(`${AppConfig.getInstance().getTtsEndpoint()}/api/convert?text=${encodeURI(text)}`);
+			const ttf = res.data
+			ttfRefCurrent.value = ttf;
 
+			// sentenceItem.ttf = ttf;
+			// newSentenceItems.push(sentenceItem)
+		}
+		// setSentenceItems(newSentenceItems);
+	}
 
 	const onSynthesizeTask = evt => {
 		console.log('queue Synthesize event handler clicked')

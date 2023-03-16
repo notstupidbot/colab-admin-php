@@ -16,14 +16,18 @@ export default function FormItems({socketConnected,
 								   projectId, setProjectId,
 								   items, setItems,
 								   pk, speakerId, config}){
+	const [sentenceItems, setSentenceItems] = useState([]);
+	const onConvertTask = evt =>{
+		console.log(`FormItems.onConvertTask`)
+	}
 	return(<>
 		<div className="container">
 			<TitleEditor title={title} setTitle={setTitle} pk={pk}/>
 			<div className="relative my-3">
-				<SentenceItemTaskQueueToolbar content={content} items={items} setItems={setItems} speakerId={speakerId} pk={pk}/>
+				<SentenceItemTaskQueueToolbar sentenceItems={sentenceItems} setSentenceItems={setSentenceItems} content={content} items={items} setItems={setItems} speakerId={speakerId} pk={pk}/>
 				<ContentEditor content={content} setContent={setContent} pk={pk}/>
 			</div>
-			<SentenceItemEditor pk={pk} config={config} items={items} setItems={setItems} speakerId={speakerId}/>
+			<SentenceItemEditor pk={pk} sentenceItems={sentenceItems} setSentenceItems={setSentenceItems} config={config} items={items} setItems={setItems} speakerId={speakerId}/>
 			<ContentTtfEditor pk={pk}  contentTtf={contentTtf} setContentTtf={setContentTtf}/>
 
 			<div className="columns-2 my-3">
