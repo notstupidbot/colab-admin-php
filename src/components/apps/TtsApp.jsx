@@ -28,9 +28,9 @@ return(<>
   <NavLink to="/tts/project-editor" className={activeCls}>
     Project Editor
   </NavLink>
-  <NavLink to="/tts/sentence" className={activeCls}>
+ {/* <NavLink to="/tts/sentence" className={activeCls}>
     TTS Sentences
-  </NavLink>
+  </NavLink>*/}
   
   <NavLink to="/tts/sentence-editor"
   		  className={activeCls} >

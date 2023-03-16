@@ -124,7 +124,7 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 
 	useEffect(()=>{
 		if(sentence){
-			console.log(sentence)
+			// console.log(sentence)
 
 			setTitle(sentence.title)
 			setProjectId(sentence.project_id)
