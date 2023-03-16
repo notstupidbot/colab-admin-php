@@ -69,7 +69,7 @@ function App() {
      <MainContent config={config} 
                   socketConnected={socketConnected}
                   ws={ws}
-                  hideSidebar={hideSidebar}/>
+                  hideSidebar={hideSidebar} setHideSidebar={setHideSidebar}/>
     
      </>)
 }

@@ -1,8 +1,9 @@
 
 import React ,{useEffect,useState,useRef}from "react"
 import { Outlet , NavLink } from 'react-router-dom';
+import "bootstrap-icons/font/bootstrap-icons.css"
 
-export default function TtsApp({}){
+export default function TtsApp({hideSidebar}){
 
 
 
@@ -16,7 +17,6 @@ export default function TtsApp({}){
 
 
 
-const 	hideSidebar = false
 const activeCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactiveTabCls
 return(<>
 <div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>

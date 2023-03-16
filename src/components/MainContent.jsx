@@ -24,14 +24,14 @@ import Root from "./apps/tts/routes/root"
 
 import TtsServerPrefTab, {loader as ttsServerPrefTabLoader} from "./apps/preferences/TtsServerPrefTab"
 
-export default function MainContent({hideSidebar, config, socketConnected, ws}){
+export default function MainContent({hideSidebar,setHideSidebar, config, socketConnected, ws}){
 	const router = createHashRouter(
 		  createRoutesFromElements(
-		   <Route path="/" element={<Root />}>
+		   <Route path="/" element={<Root hideSidebar={hideSidebar} setHideSidebar={setHideSidebar}/>}>
 
-		        <Route exac path="/tts" element={<TtsApp socketConnected={socketConnected} 
+		      <Route exac path="/tts" element={<TtsApp socketConnected={socketConnected} 
 														 config={config} 
-														 ws={ws}/>}>
+														 ws={ws} hideSidebar={hideSidebar}/>}>
 					<Route  path="/tts/project" 
 							element={<ProjectTab />} 
 							loader={projectTabLoader}/>
@@ -39,8 +39,8 @@ export default function MainContent({hideSidebar, config, socketConnected, ws}){
 					<Route exac path="/tts/project-editor/:projectId" loader={projectEditorTabLoader} element={<ProjectEditorTab/>}/>
 					<Route exac path="/tts/project-editor" element={<ProjectEditorTab/>}/>
 					<Route exac path="/tts/sentence" element={<SentenceTab/>}/>
-					<Route exac path="/tts/sentence-editor" loader={sentenceEditorTabLoader} element={<SentenceEditorTab/>}/>
-					<Route exac path="/tts/sentence-editor/:pk" loader={sentenceEditorTabLoader} element={<SentenceEditorTab/>}/>
+					<Route exac path="/tts/sentence-editor" loader={sentenceEditorTabLoader} element={<SentenceEditorTab ws={ws} socketConnected={socketConnected} />}/>
+					<Route exac path="/tts/sentence-editor/:pk" loader={sentenceEditorTabLoader} element={<SentenceEditorTab ws={ws} socketConnected={socketConnected} />}/>
 
 				</Route>
 				<Route  path="/dashboard" element={<Dashboard/>}>

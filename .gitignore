@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 /package-lock.json
 /push-server/yarn.lock
-/__unused
+__unused

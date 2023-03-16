@@ -1,8 +1,7 @@
 import React from "react"
 import axios from "axios"
-import app_config from "../../../app.config"
-import "bootstrap-icons/font/bootstrap-icons.css"
-import {timeout} from "../../../helper"
+import AppConfig from "../../lib/AppConfig"
+import Helper from "../../lib/Helper"
 import Pager from "./Pager"
 import {v4} from "uuid"
 import moment from "moment"
@@ -49,7 +48,7 @@ export default class SentenceTab extends React.Component{
 		grid.records =[]
 		this.setState({grid})
 		// await timeout(2000)
-		const res = await axios(`${app_config.getApiEndpoint()}/api/tts/sentence?page=${page_number}&order_by=${grid.order_by}&order_dir=${grid.order_dir}`);
+		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?page=${page_number}&order_by=${grid.order_by}&order_dir=${grid.order_dir}`);
 		 grid = Object.assign(grid,res.data);
 		this.setState({grid})
 		return grid;
@@ -68,7 +67,7 @@ export default class SentenceTab extends React.Component{
 
 		const res = await axios({
 			method: "post",
-			url: `${app_config.getApiEndpoint()}/api/tts/sentence`,
+			url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence`,
 			data: bodyFormData,
 			headers: { "Content-Type": "multipart/form-data" },
 		});

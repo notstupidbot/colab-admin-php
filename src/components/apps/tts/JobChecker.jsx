@@ -1,6 +1,5 @@
 import React,{useState} from "react"
-import {makeDelay,terbilang,fixTttsText,timeout,sleep} from "../../../helper";
-
+import Helper from "../../lib/Helper"
 class Job extends React.Component {
 	id = ""
 	title = ""
@@ -33,7 +32,7 @@ class Job extends React.Component {
 		while(!this.stopTimer){
 			inc += 1;
 			this.setState({inc})
-			await timeout(1000);
+			await Helper.timeout(1000);
 		}
 	}
 	stopTimer(){

@@ -74,7 +74,6 @@ export default function SentenceItemText({index,item, items, type, setSentenceIt
 						<textarea ref={inputRef} 
 								  onChange={ evt=> onChangeTextItem(evt,index)} 
 								  className={`${item.type} sententence-item-text-${index} `+cls}
-								  oCls={item.type}  
 								  placeholder="Text item">
 						</textarea>
 					</div>	
