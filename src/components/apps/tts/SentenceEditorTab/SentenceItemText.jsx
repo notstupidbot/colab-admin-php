@@ -73,7 +73,7 @@ export default function SentenceItemText({index,item, items, type, setSentenceIt
 					<div className="grow-wrap">
 						<textarea ref={inputRef} 
 								  onChange={ evt=> onChangeTextItem(evt,index)} 
-								  className={`${item.type} sententence-item-text-${index} `+cls}
+								  className={`${item.type} sentence-item-text sentence-item-text-${index} `+cls}
 								  placeholder="Text item">
 						</textarea>
 					</div>	

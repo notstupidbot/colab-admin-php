@@ -26,8 +26,8 @@
     <!-- <script src="./public/jquery.jqGrid.MIN.js"></script> -->
     <!-- <script src="./public/jqgrid/js/i18n/grid.locale-id.js"></script> -->
     
-  <script type="module" crossorigin src="/assets/index-a4b78b62.js"></script>
-  <link rel="stylesheet" href="/assets/index-1ebd84c7.css">
+  <script type="module" crossorigin src="/assets/index-e2a59ce5.js"></script>
+  <link rel="stylesheet" href="/assets/index-de03ddf7.css">
 </head>
 <body id="kt_body">
    
@@ -35,5 +35,6 @@
 
      
     <script src="./node_modules/preline/dist/preline.js"></script>
+    <script src="./autobahn.js"></script>
 </body>
 </html>

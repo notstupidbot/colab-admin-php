@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import speaker_ids from "./deps/speaker_ids"
 
 export default function SelectSpeaker({speakerId, setSpeakerId}){
@@ -8,6 +8,10 @@ export default function SelectSpeaker({speakerId, setSpeakerId}){
 		setSpeakerId(speaker_id);
 		localStorage.lastSpeakerId = speaker_id;
 	}
+
+	useEffect(()=>{
+		setSpeakerId(localStorage.lastSpeakerId||wibowo)
+	},[])
 	
 	const formatSpeakerName = (speaker) => {
 		let speaker_display_name = speaker.alias != '' ? speaker.alias : speaker.name;

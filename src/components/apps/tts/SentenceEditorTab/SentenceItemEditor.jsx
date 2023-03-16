@@ -34,7 +34,9 @@ export default function SentenceItemEditor({items, config, pk, sentenceItems, se
 	return(<>
 		{
 		sentenceItems.map((item,index)=>{
-			
+			if(item.text.trim().length == 0){
+				return ""
+			}
 			return(
 				<div className="columns-2 my-1"  key={index}>
 				<SentenceItemText pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems}/>

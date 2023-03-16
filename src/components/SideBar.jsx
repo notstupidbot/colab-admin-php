@@ -1,22 +1,42 @@
 import {useState, useEffect} from "react"
 import { Link, NavLink } from 'react-router-dom';
 
-export default function SideBar({hideSidebar, setHideSidebar}){
+export default function SideBar(){
 
   const cls = "hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform fixed top-0 left-0 bottom-0 z-[60] w-64 bg-white border-r border-gray-200 pt-7 pb-10 overflow-y-auto scrollbar-y lg:block lg:translate-x-0 lg:right-auto lg:bottom-0 dark:scrollbar-y dark:bg-gray-800 dark:border-gray-700"
   const activeTabCls = "flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
   const inactiveTabCls = "flex items-center gap-x-3.5 py-2 px-2.5  hover:bg-gray-100 text-sm text-slate-700 rounded-md hover:bg-gray-100 dark:bg-gray-900 dark:text-white"
+  const [_hideSidebar,_setHideSidebar] = useState(false)
+  const [runTwice,dontRunTwice] = useState(true)
   const toggle = ()=>{
     // setTimeout(()=>{
-      const status = !hideSidebar;
-      setHideSidebar(status); 
+      const status = !_hideSidebar;
+      _setHideSidebar(status); 
+      hideSidebar_(status)
     // },250)
        
   }
+  const hideSidebar_ =  (status) =>{
+    // console.log(status)
+    if(status){
+        $('#main-content').removeClass('lg:pl-72')
+      }else{
+        $('#main-content').addClass('lg:pl-72')
+      }
+      localStorage.hideSidebar = status
+  }
+  useEffect(()=>{
+    
+    if(runTwice){
+      const status = localStorage.hideSidebar=='true'
+      _setHideSidebar(status)
+      hideSidebar_(status)
+      console.log(runTwice)
+      dontRunTwice(false)
+    }
+    
 
-  // useEffect(()=>{
-
-  // },[hideSidebar])
+  },[runTwice])
 const linkCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactiveTabCls
 
   return(<>
@@ -28,7 +48,7 @@ const linkCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactive
       </svg>
     </button>
 
-    <div id="docs-sidebar" className={cls + " " + (hideSidebar?"hidden":"")} style={hideSidebar?{display:'none'}:{}}>
+    <div id="docs-sidebar" className={cls + " " + (_hideSidebar?"hidden":"")} style={_hideSidebar?{display:'none'}:{}}>
       <div className="px-6">
         <a className="flex-none text-xl font-semibold dark:text-white" href="#home" aria-label="Brand">Colab Admin</a>
       </div>

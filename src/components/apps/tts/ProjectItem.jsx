@@ -14,6 +14,7 @@ let lastFetch = null
 import { Link, NavLink } from 'react-router-dom';
 
 export default function ProjectItem({project}){
+	const [gridLoading,setGridLoading] = useState(false)
 	const [grid, setGrid] = useState({
 			records : [],
 			limit : 5,
@@ -24,18 +25,7 @@ export default function ProjectItem({project}){
 			order_by:'create_date',
 			order_dir:'desc'
 		})
-	// const updateProjectList = async()=>{
-		
-	// }
-	// viewInEditor(sentence){
-	// 	this.props.setActiveTab('sentence-editor');
-	// 	this.props.setActiveSentence(sentence);
 
-		
-	// }
-	// async componentDidMount(){
-	// 	// await this.updateList()
-	// }
 	useEffect(()=>{
 		// console.log(grid)
 	},[grid])
@@ -45,23 +35,7 @@ export default function ProjectItem({project}){
 		// })
 		if(project){
 			
-			// const currDate = (new Date()).getTime();
-			// if(typeof localStorage.lastFetch == 'undefined'){
-			// 	localStorage.lastFetch = currDate
-			// }
-			// const lastDate = parseInt(localStorage.lastFetch);
-			// if(lastProjectId != null){
-			// 	if(lastProjectId == project.id){
-			// 		if((lastFetch - currDate) < 10000){
-			// 			console.log('skip')
-			// 			return ;
-			// 		}
-			// 	}else{
-					
-			// 	}
-			// }
-			// lastProjectId = project.id
-			console.log(lastProjectId)
+			
 			 updateList();
 
 		}	
@@ -78,22 +52,16 @@ export default function ProjectItem({project}){
 		await updateList(grid.page)
 	}
 	const updateList = async(page_number)=>{
-		let grid_ = Object.assign({},grid)
+		setGridLoading(true)
 		page_number = page_number || 1;
-		grid_.loading = true;
-		grid_.records =[]
-		setGrid(grid_);
+		grid.page = page_number;
+		grid.records = [];
+		setGrid(Object.assign({},grid))
 		const project_id = project.id;
 		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?page=${page_number}&order_by=${grid.order_by}&order_dir=${grid.order_dir}&project_id=${project_id}`);
-		// setTimeout(()=>{
-			grid_ = Object.assign(grid_,res.data);
-		 grid_.loading =false;
-		 console.log(grid_)
-		setGrid(grid_);
-		// },1000)
+		setGrid(res.data)
+		setGridLoading(false)
 
-
-		 
 	}
 	const addSentenceHandler = async(evt)=>{
 		console.log('Add sentence clicked');
@@ -150,7 +118,7 @@ return(<>
           </thead>
           <tbody>
           {
-          	grid.loading ?
+          	gridLoading ?
           		dummyRow.map(r=>{return(
           		<tr className="animate-pulse" key={r}>
           			<td className=""><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
@@ -163,7 +131,7 @@ return(<>
           	:""
           }
           {
-          	grid.records.length == 0 && !grid.loading ? (
+          	grid.records.length == 0 && !gridLoading ? (
           		<tr className="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700">
 		              <td colSpan="4" className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200"> <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">No records</span></td>
 		            </tr>

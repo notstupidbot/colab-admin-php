@@ -22,11 +22,12 @@ export default function TitleEditor({title, setTitle, pk}){
 		return res.data;
 	}
 	const onChangeTitle = evt => {
-		const title = evt.target.value;
-		if(!title){
-			return;
-		}
+		
 		Helper.delay(async(e)=>{
+			const title = evt.target.value;
+			if(!title){
+				return;
+			}
 			console.log(title)
 			setTitle(title)
 

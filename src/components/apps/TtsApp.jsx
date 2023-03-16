@@ -19,7 +19,7 @@ export default function TtsApp({hideSidebar}){
 
 const activeCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactiveTabCls
 return(<>
-<div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>
+<div id="main-content" className={cls}>
 <nav className="relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700">
   <NavLink to="/tts/project"
   			className={activeCls}>

@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState, useEffect, useRef} from "react"
 import SelectSpeaker from "./SelectSpeaker"
 import FormMessages from "./FormMessages"
 import FormItems from "./FormItems"
@@ -8,44 +8,16 @@ import Helper from "../../../lib/Helper"
 import { Link, NavLink, useLoaderData } from 'react-router-dom';
 
 import axios from "axios"
-let lastItem = null
+let lastSentenceId = null
 export async function loader({ params }) {
-	let currDate = (new Date).getTime()
-	if(typeof localStorage.loaderIsRunning == 'undefined'){
-		localStorage.loaderIsRunning = currDate
-	}
-	const lastDate = parseInt(localStorage.loaderIsRunning);
 
- 	const timeBetween = currDate - lastDate 
- 	console.log(timeBetween,lastItem)
- 	if(lastItem != null){
- 		if(lastItem.id == params.pk){
-	 		if(timeBetween < 15000){
-				console.log(`skip`)
-				localStorage.loaderIsRunning = currDate
-				return { sentence: lastItem }
-			}
-		}
- 	}
-	
-
-  const config = AppConfig.getInstance()	
-
-  const res = await axios(`${config.getApiEndpoint()}/api/tts/sentence?id=${params.pk}`);
-  const item = res.data;
-  if (!item) {
-    throw new Response("", {
-      status: 404,
-      statusText: "Not Found",
-    });
-  }
-  lastItem = item	
-  localStorage.loaderIsRunning = currDate
-
-  return { sentence:item };
+  return { sentenceId:params.pk };
 }
-export default function SentenceEditorTab({ws, config, activeSentence, socketConnected, activeTab}){
-	const {sentence} = useLoaderData()
+export default function SentenceEditorTab({socketConnected}){
+	const {sentenceId} = useLoaderData()
+	const [sentence,setSentence]= useState(null)
+	// const [lastSentenceId,setLastSentenceId]= useState("")
+
 	const [speakerId, setSpeakerId] = useState("wibowo")
 	const [toastMessage, setToastMessage] = useState("")
 	const [toastStatus, setToastStatus] = useState(true)
@@ -58,8 +30,17 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 	const [items, setItems] = useState("[]")
 	const [projectId, setProjectId] = useState("[]")
 	const [pk, setPk] = useState("")
+	// const lastSentenceRef = useRef()
+	// lastSentenceRef.current = lastSentenceId
+	const getSentence = async() =>{
+
+	  const config = AppConfig.getInstance()	
+
+	  const res = await axios(`${config.getApiEndpoint()}/api/tts/sentence?id=${sentenceId}`);
+	  setSentence( res.data);
 
 
+	}
 	const hideToast = () => setShowToast(false)
 	const onSave_clicked = async() => {
 		console.log(`SentenceEditorTab.onSave_clicked`)
@@ -71,15 +52,21 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 
 			}catch(e){}
 		}
-		
-		for(let index in tmpItems){
-			const inputRefCurrent = document.querySelector(`.sententence-item-text-${index}`)
-			const ttfRefCurrent = document.querySelector(`.sententence-item-ttf-${index}`)
-
-			tmpItems[index].text = inputRefCurrent.value;
-			tmpItems[index].ttf = ttfRefCurrent.value;
+		if(tmpItems.length==0){
+			tmpItems = document.querySelectorAll('.sentence-item-ttf');
 		}
-		formData.append('sentences', JSON.stringify(tmpItems));
+		let frmItems = []
+		for(let index in tmpItems){
+			frmItems.push({text:'',ttf:''})
+			const inputRefCurrent = document.querySelector(`.sentence-item-text-${index}`)
+			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
+
+			if(inputRefCurrent){
+				frmItems[index].text = inputRefCurrent.value;
+				frmItems[index].ttf = ttfRefCurrent.value;
+			}
+		}
+		formData.append('sentences', JSON.stringify(frmItems));
 
 		formData.append('title', title);
 		formData.append('content', content);
@@ -107,13 +94,21 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 			}catch(e){}
 		}
 		let contentTtfTmp = '';
-		for(let index in tmpItems){
-			const ttfRefCurrent = document.querySelector(`.sententence-item-ttf-${index}`)
-			const isComma = ttfRefCurrent.className.match(/comma/);
-			let ttf = ttfRefCurrent.value.trim()
+		console.log(tmpItems);
 
-			if(ttf.length > 0){
-				contentTtfTmp += ttf + (isComma? ",":".\n")
+		if(tmpItems.length==0){
+			tmpItems = document.querySelectorAll('.sentence-item-ttf');
+		}
+		for(let index in tmpItems){
+			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
+			console.log(ttfRefCurrent)
+			if(ttfRefCurrent){
+				const isComma = ttfRefCurrent.className.match(/comma/);
+				let ttf = ttfRefCurrent.value.trim()
+
+				if(ttf.length > 0){
+					contentTtfTmp += ttf + (isComma? ",":".\n")
+				}
 			}
 		}
 		setContentTtf(contentTtfTmp)
@@ -124,7 +119,7 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 
 	useEffect(()=>{
 		if(sentence){
-			// console.log(sentence)
+			console.log(sentence)
 
 			setTitle(sentence.title)
 			setProjectId(sentence.project_id)
@@ -135,6 +130,18 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 		}
 	},[sentence])
 
+	useEffect(()=>{
+		// getSentence()
+		// console.log(lastSentenceId)
+		// if(lastSentenceId != sentenceId){
+		// 	lastSentenceId = sentenceId
+		// 	console.log(`${lastSentenceId},${sentenceId}`)
+			getSentence()
+		// }
+	},[sentenceId])
+
+ 
+
 	return(<>	
 		<SelectSpeaker speakerId={speakerId} setSpeakerId={setSpeakerId}/>
 		<FormMessages toastMessage={toastMessage}
@@ -143,7 +150,7 @@ export default function SentenceEditorTab({ws, config, activeSentence, socketCon
 					  hideToast={hideToast}
 					  onSave_clicked={onSave_clicked}
 					  onInsertAllTttf_clicked={onInsertAllTttf_clicked}/>
-		<FormItems socketConnected={socketConnected} config={config}
+		<FormItems socketConnected={socketConnected}
 				   title={title} setTitle={setTitle}
 				   content={content} setContent={setContent}
 				   contentTtf={contentTtf} setContentTtf={setContentTtf}

@@ -22,11 +22,20 @@ class Tts extends REST_Controller {
 
 
     function project_post() {
-        $title = $this->post('title');
+        $id = $this->input->get('id');
+        $title = $this->input->post('title');
 
-        if(!empty($title)){
-            $project = $this->m_project->create($title);
-            $this->response($project, 200);
+        if(empty($id)){
+            if(!empty($title)){
+                $project = $this->m_project->create($title);
+                $this->response($project, 200);
+            }
+        }else if(!empty($title) && !empty($id)){
+           $row =  ['title' => $title, 'last_updated'=>date('Y-m-d H:i:s')];
+           $project = $this->m_project->update($id,$row);
+           $row['id'] = $id; 
+           $this->response($row, 200);
+
         }
     }
 

@@ -5,27 +5,8 @@ import AppConfig from "../../lib/AppConfig"
 import Helper from "../../lib/Helper"
 import { Link, useLoaderData } from 'react-router-dom';
 const delay = Helper.makeDelay(512)
-let loaderIsRunning = false;
-let lastProject = null
-export async function loader({ params }) {
-	let currDate = (new Date).getTime()
-	if(typeof localStorage.loaderIsRunning == 'undefined'){
-		localStorage.loaderIsRunning = currDate
-	}
-	const lastDate = parseInt(localStorage.loaderIsRunning);
 
- 	const timeBetween = currDate - lastDate 
- 	console.log(timeBetween,lastProject)
- 	if(lastProject != null){
- 		if(lastProject.id == params.projectId){
-	 		if(timeBetween < 15000){
-				console.log(`skip`)
-				localStorage.loaderIsRunning = currDate
-				return { project: lastProject }
-			}
-		}
- 	}
-	
+export async function loader({ params }) {
 
   const config = AppConfig.getInstance()	
 
@@ -37,8 +18,6 @@ export async function loader({ params }) {
       statusText: "Not Found",
     });
   }
-  lastProject = project	
-  localStorage.loaderIsRunning = currDate
 
   return { project };
 }
@@ -47,37 +26,16 @@ export default function ProjectEditorTab(){
 	const {project} = useLoaderData()
 
 	const titleInputRef = createRef(null)
-	// const saveBtnRef = null
-	// const projectItemRef=null
+
 	const inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
 	const inputOkCls = "py-3 px-4 block w-full border-green-500 rounded-md text-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
 	const inputDefaultCls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
-	
-	// constructor(){
-	// 	super()
-	// 	this.titleInputRef = React.createRef(null)
-	// 	this.saveBtnRef = React.createRef(null)
-	// 	this.projectItemRef = React.createRef(null)
-	// }
- 
 
-	
 
-	const loadRow = ()=>{
-		// const project = this.props.activeProject;
-		// if(!project){
-		// 	return
-		// }
-		// this.setState({project},()=>{
-		// 	this.loadFormData();
-		// 	this.projectItemRef.current.updateList()
-		// });
-		
 
-	}
 	useEffect(()=>{
 		delay(()=>{
-			console.log(project)
+			// console.log(project)
 			if(project){
 				loadFormData()
 			}	
@@ -89,8 +47,22 @@ export default function ProjectEditorTab(){
 		titleInputRef.current.value = project.title;
 	}
 
+	
 	const chTitleHandler = (evt)=>{
+		const title = titleInputRef.current.value
 
+		delay(async()=>{
+			const data = new FormData();
+			data.append('title', title)
+			const res = await axios({
+				method: "post",
+				url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/project?id=${project.id}`,
+				data: data,
+				headers: { "Content-Type": "multipart/form-data" },
+			});
+
+			return res.data;
+		})
 	}
 	return(<>
 		<div className="container">

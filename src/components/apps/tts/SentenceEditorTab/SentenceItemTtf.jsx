@@ -126,7 +126,7 @@ export default function SentenceItemTtf({index,item, items,setSentenceItems, pk}
 				<div className="grow-wrap">
 				<textarea  ref={inputRef} 
 						   onChange={ evt => onChangeTtfItem(evt, index)} 
-						   className={`${item.type} sententence-item-ttf-${index} `+cls}
+						   className={`${item.type} sentence-item-ttf sentence-item-ttf-${index} `+cls}
 						  
 
 						   placeholder="Ttf Text">
