@@ -13,7 +13,7 @@ class ZmqMdl extends BaseMdl{
 
 	function connect(){
 		$this->context = new ZMQContext();
-		print_r($this->context);
+		// print_r($this->context);
 	    $this->socket = $this->context->getSocket(ZMQ::SOCKET_PUSH);
 	    $this->socket->connect('tcp://127.0.0.1:5555');
 	}

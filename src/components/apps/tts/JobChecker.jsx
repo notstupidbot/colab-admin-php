@@ -60,7 +60,9 @@ export default class JobChecker extends React.Component{
 	}
 	render(){
 	return (<>
-<div style={{zIndex:15}} className="fixed  top-0 left-0 ">
+<div style={{zIndex:70}} className="fixed  top-0 left-0 ">
+		{/*<h2 className="font-bold"> HELLO</h2>*/}
+
 	{
 	Object.keys(this.state.jobList).map((job_id,index)=>{
 		const job = this.state.jobList[job_id];

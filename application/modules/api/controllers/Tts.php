@@ -222,33 +222,45 @@ class Tts extends REST_Controller {
         $sentence_id = $this->input->post('sentence_id');
         $text = $this->input->post('text');
 
-        $use_server = $this->input->get('use_server');
+        // $use_server = $this->input->get('use_server');
 
-        $script = APPPATH . 'bin/tts-job.sh';
+        // $script = APPPATH . 'bin/tts-job.sh';
 
-        if($use_server){
-            $script = APPPATH . 'bin/tts-job-server.sh';
+        // if($use_server){
+        $script = APPPATH . 'bin/tts-job-server.php';
             // $text = urlencode($text);
-        }
+        // }
         if(empty($speaker_id)){
             $speaker_id =  'SU-03712';
         }
-        $pidfile = "/tmp/tts-$sentence_id-$index_number.pid";
+        $pidfile = sys_get_temp_dir() . "/tts-$sentence_id-$index_number.pid";
         $job_id = gen_uuid();
         $index = is_numeric($index_number) ? $index_number : -1; 
        
-        $shell_cmd = sprintf('sudo bash %s %s %s "%s" "%s" %s > /dev/null 2>&1 & echo $! > %s', 
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $shell_cmd = sprintf('C:\nginx\RunHiddenConsole.exe php %s %s %s "%s" "%s" %s > NUL 2>&1', 
+                              $script, $job_id, $sentence_id, $text, $speaker_id, $index);
+            pclose( popen( $shell_cmd, 'r' ) );
+
+            $pid = 0;
+            $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $pid);
+        } else {
+            $shell_cmd = sprintf('php %s %s %s "%s" "%s" %s > /dev/null 2>&1 & echo $! > %s', 
                               $script, $job_id, $sentence_id, $text, $speaker_id, $index, $pidfile);
-        shell_exec($shell_cmd);
-       
-        $pid = trim(file_get_contents($pidfile));
-        $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $pid);
+            $output = shell_exec($shell_cmd);
+
+            $pid = intval(trim(file_get_contents($pidfile)))+0;
+            $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $pid);
+            
+        }
         
         $result = [
             'job' => $job,
             'chunkMode' => $chunkMode,
             'index' => $index,
-            'sentence_id' => $sentence_id
+            'sentence_id' => $sentence_id,
+            'success' => true,
+            'at' => 'create_job'
         ];
         $this->response($result,200);
 

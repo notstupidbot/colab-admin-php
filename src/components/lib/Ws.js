@@ -49,7 +49,9 @@ export default class Ws{
 		const subscriberId = 'zmqTts_' + this.socketUid.replace(/\W/g,'');
 		this.subscriberId = localStorage.subscriberId || subscriberId;
 	}
-
+	getSubcriberId(){
+		return this.subscriberId;
+	}
 	async reconnect(){
         console.log(`Ws: retry in ${this.reconnectInterval} ms`);
         await Helper.timeout(this.reconnectInterval);

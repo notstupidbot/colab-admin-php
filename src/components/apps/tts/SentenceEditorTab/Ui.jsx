@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "react"
+import {useState, useEffect, useRef, createRef} from "react"
 import SelectSpeaker from "./SelectSpeaker"
 import FormMessages from "./FormMessages"
 import FormItems from "./FormItems"
@@ -8,12 +8,13 @@ import Helper from "../../../lib/Helper"
 import { Link, NavLink, useLoaderData } from 'react-router-dom';
 
 import axios from "axios"
+import {v4} from "uuid"
 let lastSentenceId = null
 export async function loader({ params }) {
 
   return { sentenceId:params.pk };
 }
-export default function SentenceEditorTab({socketConnected}){
+export default function SentenceEditorTab({socketConnected, ws, config}){
 	const {sentenceId} = useLoaderData()
 	const [sentence,setSentence]= useState(null)
 	// const [lastSentenceId,setLastSentenceId]= useState("")
@@ -30,7 +31,8 @@ export default function SentenceEditorTab({socketConnected}){
 	const [items, setItems] = useState("[]")
 	const [projectId, setProjectId] = useState("[]")
 	const [pk, setPk] = useState("")
-	// const lastSentenceRef = useRef()
+	
+	const jobCheckerRef = useRef(null)
 	// lastSentenceRef.current = lastSentenceId
 	const getSentence = async() =>{
 
@@ -64,6 +66,7 @@ export default function SentenceEditorTab({socketConnected}){
 			if(inputRefCurrent){
 				frmItems[index].text = inputRefCurrent.value;
 				frmItems[index].ttf = ttfRefCurrent.value;
+				frmItems[index].type = ttfRefCurrent.className.match(/comma/) ?'comma':'dot';
 			}
 		}
 		formData.append('sentences', JSON.stringify(frmItems));
@@ -130,17 +133,75 @@ export default function SentenceEditorTab({socketConnected}){
 		}
 	},[sentence])
 
-	useEffect(()=>{
-		// getSentence()
-		// console.log(lastSentenceId)
-		// if(lastSentenceId != sentenceId){
-		// 	lastSentenceId = sentenceId
-		// 	console.log(`${lastSentenceId},${sentenceId}`)
-			getSentence()
-		// }
-	},[sentenceId])
 
- 
+	useEffect(()=>{
+		getSentence()
+		ws.setSocketLogHandlerState(onSocketLog)
+	},[sentenceId])
+		
+
+	const jobCheckerRemove = (job) => {
+		const jobChecker = jobCheckerRef.current;
+		console.log(jobChecker)
+
+		const jobList = jobChecker.state.jobList;
+		const job_id = job.id;
+		delete jobList[job_id];
+		jobChecker.setState({jobList});
+	}
+	const jobCheckerAdd = (job) => {
+		const jobChecker = jobCheckerRef.current;
+		console.log(jobChecker)
+		const jobList = jobChecker.state.jobList;
+		const job_id = job.id;
+		jobList[job_id] = job;
+		jobChecker.setState({jobList});
+	}
+	
+	const doToast = (message, status) => {
+		setToastMessage(message)
+		setToastStatus(status)
+		setShowToast(true)
+	}
+	const onSocketLog = (message, data) => {
+		if(typeof data.job == 'object'){
+			jobCheckerRemove(data.job);
+
+			if(data.job.name == 'tts'){
+				let success = data.success;
+				success == true ? true : (success == -1 ? false : (success== 1? true : false))
+				const chunkMode = data.chunkMode;
+
+				try{
+					message += ` done in ${data.elapsed_time} seconds`
+				}catch(e){
+
+				}
+
+				doToast(message, success)
+
+				if(data.at == 'run_process'){
+					/* chunkMode */
+
+					if(chunkMode){
+						const index = data.index;
+
+						const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}-${index}.wav?uuid=${v4()}`;
+						
+						console.log(ausource)
+						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
+						if(audioRefCurrent){
+							audioRefCurrent.load()
+						}
+					/* NOT chunkMode */
+					}else{
+						const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}.wav?uuid=${v4()}`;
+						
+					} /* end of if chunkMode */
+				} /* end of data.at == run_process */
+			} /* end of job.name == tts */
+		} /*end of typeof data == object */
+	}
 
 	return(<>	
 		<SelectSpeaker speakerId={speakerId} setSpeakerId={setSpeakerId}/>
@@ -149,7 +210,8 @@ export default function SentenceEditorTab({socketConnected}){
 					  showToast={showToast}
 					  hideToast={hideToast}
 					  onSave_clicked={onSave_clicked}
-					  onInsertAllTttf_clicked={onInsertAllTttf_clicked}/>
+					  onInsertAllTttf_clicked={onInsertAllTttf_clicked}
+					  jobCheckerRef={jobCheckerRef}/>
 		<FormItems socketConnected={socketConnected}
 				   title={title} setTitle={setTitle}
 				   content={content} setContent={setContent}
@@ -157,6 +219,10 @@ export default function SentenceEditorTab({socketConnected}){
 				   projectId={projectId} setProjectId={setProjectId}
 				   items={items} setItems={setItems}
 				   pk={pk}
-				   speakerId={speakerId}/>							
+				   config={config} ws={ws}
+				   speakerId={speakerId}
+				   hideToast={hideToast}
+				   doToast={doToast}
+				   jobCheckerAdd={jobCheckerAdd}/>							
 	</>)
 }

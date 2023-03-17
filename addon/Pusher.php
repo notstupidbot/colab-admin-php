@@ -37,6 +37,7 @@ class Pusher implements WampServerInterface
 		// sleep(2);
 		// print_r( (string)$subscriber_id );
 		$this->ci->m_zmq->send_loged_in((string)$subscriber_id);
+		$this->ci->m_zmq->send_log((string)$subscriber_id, "$subscriber_id", $subscriber_id);
 	}
 
  

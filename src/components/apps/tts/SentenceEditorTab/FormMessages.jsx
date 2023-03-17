@@ -3,16 +3,17 @@ import JobChecker from "../JobChecker"
 import ModalConfirm from "../ModalConfirm"
 import Toast from "../Toast"
 
-export default function FormMessages({onInsertAllTttf_clicked, onSave_clicked, toastMessage, hideToast, showToast, toastStatus}){
-	// const hideToast = () =>{
-	// 	// this.setState({showToast:false})
-	// }
-	// const doToast = (toastMessage, toastStatus) => {
-	// 	// this.setState({showToast:true, toastMessage, toastStatus})
-	// }
-	const jobCheckerRef = createRef(null) 
+export default function FormMessages({
+	onInsertAllTttf_clicked, 
+	onSave_clicked, 
+	toastMessage, 
+	hideToast, 
+	showToast, 
+	toastStatus,
+	jobCheckerRef}){
+	
 	return(<>
-		<JobChecker/>
+		<JobChecker ref={jobCheckerRef}/>
 		<ModalConfirm id="confirmInsertAllTtfText" 
 					  title="Insert All TTF Text ?" 
 					  content="This action will replace result on currently saved final TTF Text" 

@@ -3,7 +3,9 @@ import {createRef, useState, useEffect} from "react"
 
 import SentenceItemText from "./SentenceItemText"
 import SentenceItemTtf from "./SentenceItemTtf"
-export default function SentenceItemEditor({items, config, pk, sentenceItems, setSentenceItems, speakerId}){
+export default function SentenceItemEditor({items, config, ws, pk, 
+											sentenceItems, setSentenceItems, speakerId,
+										    hideToast, doToast, jobCheckerAdd}){
 
 	
 	useEffect(()=>{
@@ -39,8 +41,10 @@ export default function SentenceItemEditor({items, config, pk, sentenceItems, se
 			}
 			return(
 				<div className="columns-2 my-1"  key={index}>
-				<SentenceItemText pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems}/>
-				<SentenceItemTtf pk={pk} speakerId={speakerId} setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems}/>
+				<SentenceItemText config={config} ws={ws} pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems}/>
+				<SentenceItemTtf hideToast={hideToast}
+				   doToast={doToast}
+				   jobCheckerAdd={jobCheckerAdd} config={config} ws={ws} pk={pk} speakerId={speakerId} setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems}/>
 				</div>
 			)
 		})

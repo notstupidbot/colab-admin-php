@@ -91,7 +91,7 @@ export default class AppConfig {
 		const protoSuffix = secure ? 's' : ''
 		this.api_endpoint 		= `http${protoSuffix}://${this.host}`
 		this.push_endpoint 		= `http${protoSuffix}://${this.host}:7000`
-		this.tts_endpoint 		= `http${protoSuffix}://${this.host}:5002`
+		this.tts_endpoint 		= `http${protoSuffix}://kutukupret:5002`
 		this.messaging_endpoint = `ws${protoSuffix}://${this.host}:7001`
 	}
 }

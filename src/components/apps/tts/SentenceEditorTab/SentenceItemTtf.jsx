@@ -5,17 +5,19 @@ import {
 	inputOkCls,
 	inputErrorCls
 } from "./deps/inputCls"
-
+import axios from "axios"
 import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 
-export default function SentenceItemTtf({index,item, items,setSentenceItems, pk, speakerId}){
+export default function SentenceItemTtf({index,item,config,ws, items,
+	setSentenceItems, pk, speakerId, doToast,jobCheckerAdd}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 	const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 	const rcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 
 
-	const loadingCls = ""
+	const loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
+	const [loading, setLoading] = useState(false)
 	let cls = ocls;		
 	cls += item.type == 'dot' ? " " : " bg-gray-100"
 	const [audioSource,setAudioSource] = useState("")
@@ -35,39 +37,39 @@ export default function SentenceItemTtf({index,item, items,setSentenceItems, pk,
 
 
 	const onSynthesizeItem = async (evt, index) => {
+		setLoading(true)
 		const text = inputRef.current.value
-		const urlEncodeText = encodeURI(text); 
-		// console.log(urlEncodeText)
-		// console.log(speakerId)
-		const ttsUrl = `${AppConfig.getInstance().getTtsEndpoint()}/api/tts?text=${urlEncodeText}&speaker_id=${speakerId}`
-		setAudioSource(ttsUrl)
-		/*
-		const sentences = this.state.sentences;
-		const item = sentences[index];
-		const audioRef = item.audio_ref;
-		const ttf = item.ttf;
+		
+		const subscriber_id = ws.getSubcriberId();
 
-	
-		sentences[index].loading_ttf = true;
-		this.setState({sentences})
-		const job_res = await this.model.runTtsJob(ttf, true, index);
-				
-		const data = job_res.data;
-		console.log(data)
+		
+		const speaker_id = speakerId;
+		let url = `${config.getApiEndpoint()}/api/tts/job?subscriber_id=${subscriber_id}&job_name=tts&speaker_id=${speaker_id}`;
 
+		let chunkMode = true;
+
+		if(chunkMode){
+			url += `&chunkMode=true&index=${index}`	
+		}
+			
+		const params = new URLSearchParams({ });
+		params.append('sentence_id', pk);
+		params.append('text',encodeURI(text));
+
+		const res = await axios.post(url, params);
+		setLoading(false)
+		const data = res.data;
 		const job = data.job;
+		const success = data.success;
+		if(success){
+			jobCheckerAdd(job)
+			doToast(`job created with id ${job.id}`, success)
+		}else{
+			doToast(`job created failed`, false)
+		}
+		console.log(res)
 
-		this.jobCheckerAdd(job);
-		this.doToast(`${job_res.data.sentence_id} index ${job_res.data.index} created`,true)
-		*/
 	}
-	// const setAudioSource = ()=>{
-	// 	try{
-	// 		audioRef.current.value = item.ttf
-	// 	}catch(e){
-
-	// 	}
-	// }
 	const loadFormData = ()=>{
 		try{
 			inputRef.current.value = item.ttf
@@ -79,11 +81,12 @@ export default function SentenceItemTtf({index,item, items,setSentenceItems, pk,
 	useEffect(()=>{
 		// setHideAudio(true)
 
-		const asource = `${AppConfig.getInstance().getApiEndpoint()}/public/tts-output/${pk}-${index}.wav`;
+		const asource = `${config.getApiEndpoint()}/public/tts-output/${pk}-${index}.wav`;
 		// console.log(asource)
 		setAudioSource(asource)
 		loadFormData()
 		// console.log(item)
+
 	},[items])
 
 	useEffect(()=>{
@@ -107,11 +110,11 @@ export default function SentenceItemTtf({index,item, items,setSentenceItems, pk,
 				<div className="absolute z-10 right-1">
 						<div className="inline-flex shadow-sm">
 						  <button title="Synthesize this line" 
-						  		  disabled={onConvert} type="button" 
+						  		  disabled={loading} type="button" 
 						  		  onClick={evt=>onSynthesizeItem(evt,index)} 
 						  		  className={rcls}>
 						    {
-						    	onConvert ? (<span className={loadingCls} role="status" aria-label="loading">
+						    	loading ? (<span className={loadingCls} role="status" aria-label="loading">
 													    	<span className="sr-only">Loading...</span>
 													  	</span>)
 						    						 : (<i className="bi bi-soundwave"></i>)
@@ -132,7 +135,7 @@ export default function SentenceItemTtf({index,item, items,setSentenceItems, pk,
 				<div className="grow-wrap">
 				<textarea  ref={inputRef} 
 						   onChange={ evt => onChangeTtfItem(evt, index)} 
-						   className={`${item.type} sentence-item-ttf sentence-item-ttf-${index} `+cls}
+						   className={`${item.type=='dot'?'dot':'comma'} sentence-item-ttf sentence-item-ttf-${index} `+cls}
 						  
 
 						   placeholder="Ttf Text">
