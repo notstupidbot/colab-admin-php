@@ -3,7 +3,7 @@ import {createRef, useState, useEffect} from "react"
 
 import SentenceItemText from "./SentenceItemText"
 import SentenceItemTtf from "./SentenceItemTtf"
-export default function SentenceItemEditor({items, config, pk, sentenceItems, setSentenceItems}){
+export default function SentenceItemEditor({items, config, pk, sentenceItems, setSentenceItems, speakerId}){
 
 	
 	useEffect(()=>{
@@ -26,9 +26,9 @@ export default function SentenceItemEditor({items, config, pk, sentenceItems, se
 		
 	},[items])
 
-	useEffect(()=>{
-		// console.log(sentenceItems)
-	},[sentenceItems])
+	// useEffect(()=>{
+	// 	console.log(speakerId)
+	// },[speakerId])
 
 
 	return(<>
@@ -40,7 +40,7 @@ export default function SentenceItemEditor({items, config, pk, sentenceItems, se
 			return(
 				<div className="columns-2 my-1"  key={index}>
 				<SentenceItemText pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems}/>
-				<SentenceItemTtf pk={pk}  setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems}/>
+				<SentenceItemTtf pk={pk} speakerId={speakerId} setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems}/>
 				</div>
 			)
 		})

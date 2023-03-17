@@ -46,7 +46,7 @@ case "$1" in
 	cancel "Starting $DESC: [abort] NO_START is not set to zero in $DEFAULTCFG"
 
 	echo -n "Starting $DESC: "
-	start-stop-daemon --start --backround --pidfile /var/run/"$NAME".pid \
+	start-stop-daemon --start  --pidfile /var/run/"$NAME".pid \
 		--exec "$DAEMON" --  -d /container/dist/etc/dropbear/dropbear_dss_host_key -r /container/dist/etc/dropbear/dropbear_rsa_host_key  -E -p 22
 #start-stop-daemon --start --pidfile /var/run/"$NAME".pid --exec "$DAEMON" -- -p "$DROPBEAR_PORT" -W "$DROPBEAR_RECEIVE_WINDOW" $DROPBEAR_EXTRA_ARGS
 	echo "$NAME."

@@ -74,7 +74,7 @@ export default function ProjectItem({project}){
 		bodyFormData.append('sentences', '[]');
 		bodyFormData.append('content_ttf', '');
 		bodyFormData.append('output_file', '-');
-		bodyFormData.append('project_id', this.props.project.id);
+		bodyFormData.append('project_id', project.id);
 
 		const res = await axios({
 			method: "post",
@@ -87,10 +87,11 @@ export default function ProjectItem({project}){
 
 	}
 
+
 		const dummyRow= [1,2,3,4,5,6,7,8,9]
 return(<>
 <div className="pager">
-<button onClick={evt=>this.addSentenceHandler(evt)} style={{zIndex:15}} title="Add Sentence"
+<button onClick={evt=>addSentenceHandler(evt)} style={{zIndex:15}} title="Add Sentence"
         className="fixed z-90 bottom-10 right-8 bg-blue-600 w-20 h-20 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-blue-700 hover:drop-shadow-2xl hover:animate-bounce duration-300">
 			<i className="bi bi-file-plus"></i>
 		</button>

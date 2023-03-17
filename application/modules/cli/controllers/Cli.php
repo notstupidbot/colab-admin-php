@@ -50,4 +50,23 @@ class Cli extends MX_Controller {
 		echo $pid . "\n";
 
 	}
+
+	function guzzle(){
+		echo "this is guzzle\n";
+		$client = new \GuzzleHttp\Client();
+		// $url = 'https://api.ipify.org';
+		// $resource = fopen("public/tts-output/test.txt", 'w');
+
+		
+
+
+		$url = 'http://127.0.0.1:5002/api/tts?text=%C9%AAs%CB%88tilah%20%CB%88ini%20u%CB%88mum%C9%B2a%20di%C9%A1u%CB%88nakan%20%CB%88unt%CA%8A%CA%94%20m%C9%99%CB%88rud%CA%92%CA%8A%CA%94%20%CB%88pada%20a%CA%94%CB%88sara%20a%CA%94%CB%88sara%20abu%CB%88%C9%A1ida%20tu%CB%88runan%20%CB%88brahmi%20ja%C5%8B%20di%C9%A1u%CB%88nakan%20%CB%88ol%C9%9Bh%20ma%CA%83a%CB%88rakat%20indone%CB%88sia%20pra%20k%C9%99m%C9%99rde%CB%88kaan&speaker_id=SU-07842&style_wav=&language_id=';
+		$response = $client->get($url, [
+		'proxy' => "socks5://127.0.0.1:1081",
+		'timeout' => 60*60, // 60 second
+		'verify' => false,
+		]);
+
+		var_dump($response->getBody()->getContents());
+	}
 }
