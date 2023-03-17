@@ -192,6 +192,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
 						if(audioRefCurrent){
 							audioRefCurrent.load()
+							audioRefCurrent.play()
 						}
 					/* NOT chunkMode */
 					}else{
