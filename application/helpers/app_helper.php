@@ -140,6 +140,28 @@ function restore_json_dump($table, $filename, $pk = "id"){
 	}
 	echo "\n";
 }
+function convert_ttf_server($text){
+	$ci = get_instance();
+	$ci->load->model('api/PreferenceMdl', 'm_pref');
+    
+    list($tts_server_endpoint, $tts_server_proxy) = $ci->m_pref->getTtsServerPrefs();
+
+    $client = new \GuzzleHttp\Client();
+    $options = [
+        'timeout' => 60*60*60, // 1 hour
+        'verify' => false,
+    ];
+
+    if(!empty($tts_server_proxy)){
+        $options['proxy'] = $tts_server_proxy;
+    }
+    $url = $tts_server_endpoint . '/api/convert?text=' . urlencode($text);
+    $response = $client->get($url, $options);
+
+    $ttf = $response->getBody()->getContents();
+
+    return $ttf;
+}
 
 function convert_ttf($text){
 	$text = strtolower($text);

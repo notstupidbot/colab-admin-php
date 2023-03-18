@@ -57,8 +57,12 @@ export default function SentenceItemTaskQueueToolbar({content, items, setItems, 
 			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
 			const text = inputRefCurrent.value;
 	
-			const res = await axios(`${AppConfig.getInstance().getTtsEndpoint()}/api/convert?text=${encodeURI(text)}`);
-			const ttf = res.data
+			const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/convert?text=${encodeURI(text)}`);
+			let ttf = ''; 
+			for(let k in res.data){
+				if(typeof res.data[k] == 'object')
+					ttf += res.data[k].ttf + ' '
+			}
 			ttfRefCurrent.value = ttf;
 
 			// sentenceItem.ttf = ttf;

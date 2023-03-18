@@ -26,10 +26,14 @@ export default function SentenceItemText({index,item,config,ws, items, type, set
 		const text = inputRef.current.value;
 		Helper.delay(async()=>{
 			setLoading(true);
-			const res = await axios(`${config.getTtsEndpoint()}/api/convert?text=${encodeURI(text)}`);
-			const ttf = res.data
+			const res = await axios(`${config.getApiEndpoint()}/api/tts/convert?text=${encodeURI(text)}`);
+			let ttf = ''; 
+			for(let k in res.data){
+				ttf += res.data[k].ttf + ' '
+			}
+
 			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
-			ttfRefCurrent.value = ttf
+			ttfRefCurrent.value = ttf.trim()
 			setLoading(false);
 			
 

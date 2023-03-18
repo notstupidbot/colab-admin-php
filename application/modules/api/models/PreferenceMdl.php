@@ -18,6 +18,28 @@ class PreferenceMdl extends BaseMdl{
 		$row['val'] = json_decode($row['val']);
 		return $row;
 	}
+	function getByGroup($group, $key=null, $return_val=false){
+		if(!empty($key)){
+			$this->db->where("group='$group'");
+			$row = $this->getByKey($key);
+			if(!empty($row)){
+				if($return_val){
+					return $row['val'];
+				}
+			}
+			return $row;
+		}
+		$results = $this->db->where("group='$group'")->get($this->table)->result_array();
+		if(empty($results)){
+			return null;
+		}
+
+		foreach($results as $index => $row){
+			$row['val'] = json_decode($row['val']);
+		}
+		
+		return $results;
+	}
 
 	function create($key, $val){
 		$row = [
@@ -69,5 +91,20 @@ class PreferenceMdl extends BaseMdl{
 		$count =  $this->db->count_all_results($this->table);
 
 		return $count;
+	}
+
+	function getTtsServerPrefs(){
+		$tts_server_endpoint = $this->getByGroup('tts_server', 'endpoint', true);
+	    $tts_server_proxy = $this->getByGroup('tts_server', 'proxy', true);
+
+	    if(is_object($tts_server_endpoint)){
+	        $tts_server_endpoint = !empty($tts_server_endpoint->url) ? $tts_server_endpoint->url : "";
+	    }
+
+	    if(is_object($tts_server_proxy)){
+	        $tts_server_proxy = !empty($tts_server_proxy->url) ? $tts_server_proxy->url : "";
+	    }
+
+	    return [$tts_server_endpoint, $tts_server_proxy];
 	}
 }

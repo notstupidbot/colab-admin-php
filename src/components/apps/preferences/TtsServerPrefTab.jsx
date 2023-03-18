@@ -108,7 +108,7 @@ export default function TtsServerPrefTab(){
 		              	{ pageNumber(index)}
 		              </td>
 		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.key}</td>
-		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{JSON.parse(item.val)}</td>
+		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.val}</td>
 
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 		                <Link className="text-blue-500 hover:text-blue-700" to={`/preferences/tts-server/${item.id}`}><i className="bi bi-pencil-square"></i></Link>

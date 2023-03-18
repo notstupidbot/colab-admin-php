@@ -12,7 +12,9 @@ class Cli extends MX_Controller {
 	function index(){
 		// echo "Cli::index() -> APPPATH/modules/cli/controllers/Cli.php line:".__LINE__."\n";
 	}
-
+	function convert(){
+		echo convert_ttf_server('halo bandung');
+	}
 	function messaging(){
 		$this->load->model('api/PreferenceMdl', 'm_preference');
 		$this->load->model('api/MessagingMdl', 'm_messaging');

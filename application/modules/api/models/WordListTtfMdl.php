@@ -37,7 +37,7 @@ class WordListTtfMdl extends BaseMdl{
 		
 		if(!$word_ttf){
 			
-	        $content =  convert_ttf($text); 
+	        $content =  convert_ttf_server($text); 
 	        if(empty($content)){
 	        	return "n/a";
 	        }else{

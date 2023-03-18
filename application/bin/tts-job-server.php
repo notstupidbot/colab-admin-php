@@ -87,18 +87,30 @@ function main(){
     $ci = get_instance();
     $ci->load->model('api/ZmqMdl', 'm_zmq');
     $ci->load->model('api/JobMdl', 'm_job');
+    $ci->load->model('api/PreferenceMdl', 'm_pref');
+
+    
+
+    list($tts_server_endpoint, $tts_server_proxy) = $ci->m_pref->getTtsServerPrefs();
+    if(empty($tts_server_endpoint)){
+        echo json_encode(['error'=>'tts_server_endpoint not configured'],JSON_PRETTY_PRINT);
+        exit(1);
+    }
+
 
     list($job_id, $sentence_id, $text, $speaker_id, $index_number) = parse_args();
     list($chunkMode, $output_file, $output_url) = get_output_file($sentence_id, $index_number);
-    $tts_server_endpoint = 'http://127.0.0.1:5002';
+    // $tts_server_endpoint = 'http://127.0.0.1:5002';
     $url = sprintf('%s/api/tts?text=%s&speaker_id=%s&style_wav=&language_id=',
                          $tts_server_endpoint, $text, $speaker_id);
 
     // echo $url;
     // exit();
-    $result = pre_main($ci, $url, $output_file);
+    $result = pre_main($ci, $url, $output_file, $tts_server_proxy);
     $result['url'] = $url;
     $result['output_url'] = $output_url;
+    $result['tts_server_endpoint']=$tts_server_endpoint;
+    $result['tts_server_proxy'] = $tts_server_proxy;
     $result = after_main($ci, $job_id, $output_file, $chunkMode, $index_number, $sentence_id, $result);
     echo json_encode($result,JSON_PRETTY_PRINT);
 }
