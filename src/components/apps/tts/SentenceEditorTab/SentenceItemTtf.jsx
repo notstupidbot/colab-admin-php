@@ -10,7 +10,7 @@ import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 
 export default function SentenceItemTtf({index,item,config,ws, items,
-	setSentenceItems, pk, speakerId, doToast,jobCheckerAdd}){
+	setSentenceItems, pk, speakerId, doToast,jobCheckerAdd,sentenceItemRefs, setSentenceItemRefs}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 	const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 	const rcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
@@ -37,7 +37,12 @@ export default function SentenceItemTtf({index,item,config,ws, items,
 
 
 	const onSynthesizeItem = async (evt, index) => {
-		setLoading(true)
+		// setLoading(true)
+		let sentenceItemRefs_tmp;
+		sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
+		sentenceItemRefs_tmp[index].loadingTtf = true;
+		setSentenceItemRefs(sentenceItemRefs_tmp);
+
 		const text = inputRef.current.value
 		
 		const subscriber_id = ws.getSubcriberId();
@@ -57,7 +62,8 @@ export default function SentenceItemTtf({index,item,config,ws, items,
 		params.append('text',encodeURI(text));
 
 		const res = await axios.post(url, params);
-		setLoading(false)
+		// setLoading(false)
+
 		const data = res.data;
 		const job = data.job;
 		const success = data.success;
@@ -105,16 +111,21 @@ export default function SentenceItemTtf({index,item,config,ws, items,
 	}
 	const onCanPlaytrough = evt => {}
 	const onLoaded = evt => {}
-
+	const isLoading = (index)=>{
+		if (typeof sentenceItemRefs[index] == 'object'){
+			return sentenceItemRefs[index].loadingTtf
+		}
+		return false
+	}
 	return(<div className={"sentence-ttf relative"}>
 				<div className="absolute z-10 right-1">
 						<div className="inline-flex shadow-sm">
 						  <button title="Synthesize this line" 
-						  		  disabled={loading} type="button" 
+						  		  disabled={isLoading(index)} type="button" 
 						  		  onClick={evt=>onSynthesizeItem(evt,index)} 
 						  		  className={rcls}>
 						    {
-						    	loading ? (<span className={loadingCls} role="status" aria-label="loading">
+						    	isLoading(index) ? (<span className={loadingCls} role="status" aria-label="loading">
 													    	<span className="sr-only">Loading...</span>
 													  	</span>)
 						    						 : (<i className="bi bi-soundwave"></i>)

@@ -2,7 +2,7 @@ import axios from "axios"
 import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 const delay = Helper.makeDelay(500)
-export default function SentenceItemTaskQueueToolbar({content, items, setItems, pk, sentenceItems, setSentenceItems}){
+export default function SentenceItemTaskQueueToolbar({content, items, setItems, pk, sentenceItems, setSentenceItems,sentenceItemRefs, setSentenceItemRefs}){
 	const buildItems = ()=>{
 
 		const textList = content.split('.');
@@ -51,12 +51,16 @@ export default function SentenceItemTaskQueueToolbar({content, items, setItems, 
 	const onConvertTask = async(evt) => {
 		// onConvertTask(evt)
 		const newSentenceItems = [];
+		let sentenceItemRefs_tmp;
 		for(let index in sentenceItems){
 			const sentenceItem = sentenceItems[index];
 			const inputRefCurrent = document.querySelector(`.sentence-item-text-${index}`)
 			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
 			const text = inputRefCurrent.value;
-	
+			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
+			sentenceItemRefs_tmp[index].loading = true;
+			setSentenceItemRefs(sentenceItemRefs_tmp);
+
 			const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/convert?text=${encodeURI(text)}`);
 			let ttf = ''; 
 			for(let k in res.data){
@@ -64,6 +68,9 @@ export default function SentenceItemTaskQueueToolbar({content, items, setItems, 
 					ttf += res.data[k].ttf + ' '
 			}
 			ttfRefCurrent.value = ttf;
+			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
+			sentenceItemRefs_tmp[index].loading = false;
+			setSentenceItemRefs(sentenceItemRefs_tmp);
 
 			// sentenceItem.ttf = ttf;
 			// newSentenceItems.push(sentenceItem)

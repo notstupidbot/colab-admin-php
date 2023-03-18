@@ -31,6 +31,9 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	const [items, setItems] = useState("[]")
 	const [projectId, setProjectId] = useState("[]")
 	const [pk, setPk] = useState("")
+	const [sentenceItemRefs, setSentenceItemRefs] = useState([])
+	const sentenceItemRefs_ = useRef(null)
+	sentenceItemRefs_.current = sentenceItemRefs;
 	
 	const jobCheckerRef = useRef(null)
 	// lastSentenceRef.current = lastSentenceId
@@ -136,10 +139,12 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 	useEffect(()=>{
 		getSentence()
-		ws.setSocketLogHandlerState(onSocketLog)
+		ws.setSocketLogHandlerState(onSocketLog, {sentenceItemRefs})
 	},[sentenceId])
 		
-
+	// useEffect(()=>{
+	// 	// console.log(sentenceItemRefs)
+	// },[sentenceItemRefs])
 	const jobCheckerRemove = (job) => {
 		const jobChecker = jobCheckerRef.current;
 		console.log(jobChecker)
@@ -163,7 +168,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 		setToastStatus(status)
 		setShowToast(true)
 	}
-	const onSocketLog = (message, data) => {
+	const onSocketLog = (message, data, ws_) => {
 		if(typeof data.job == 'object'){
 			jobCheckerRemove(data.job);
 
@@ -187,7 +192,14 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 						const index = data.index;
 
 						const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}-${index}.wav?uuid=${v4()}`;
-						
+							
+						/*****************************************/
+						let sentenceItemRefs_tmp;
+						sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs_.current);
+						sentenceItemRefs_tmp[index].loadingTtf = false;
+						setSentenceItemRefs(sentenceItemRefs_tmp);
+						/*****************************************/	
+
 						console.log(ausource)
 						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
 						if(audioRefCurrent){
@@ -224,6 +236,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 				   speakerId={speakerId}
 				   hideToast={hideToast}
 				   doToast={doToast}
-				   jobCheckerAdd={jobCheckerAdd}/>							
+				   jobCheckerAdd={jobCheckerAdd}
+				   sentenceItemRefs={sentenceItemRefs} 
+				   setSentenceItemRefs={setSentenceItemRefs}/>							
 	</>)
 }

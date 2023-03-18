@@ -10,7 +10,7 @@ import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 
 import axios from "axios"
-export default function SentenceItemText({index,item,config,ws, items, type, setSentenceItems}){
+export default function SentenceItemText({index,item,config,ws, items, type, setSentenceItems, sentenceItemRefs, setSentenceItemRefs}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 	const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 	const rcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
@@ -24,8 +24,12 @@ export default function SentenceItemText({index,item,config,ws, items, type, set
 	const inputRef = createRef(null)
 	const onConvertItem = (evt, index) => {
 		const text = inputRef.current.value;
+		let sentenceItemRefs_tmp;
 		Helper.delay(async()=>{
-			setLoading(true);
+			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
+			sentenceItemRefs_tmp[index].loading = true;
+			setSentenceItemRefs(sentenceItemRefs_tmp);
+
 			const res = await axios(`${config.getApiEndpoint()}/api/tts/convert?text=${encodeURI(text)}`);
 			let ttf = ''; 
 			for(let k in res.data){
@@ -34,7 +38,9 @@ export default function SentenceItemText({index,item,config,ws, items, type, set
 
 			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
 			ttfRefCurrent.value = ttf.trim()
-			setLoading(false);
+			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
+			sentenceItemRefs_tmp[index].loading = false;
+			setSentenceItemRefs(sentenceItemRefs_tmp);
 			
 
 		});
@@ -57,6 +63,15 @@ export default function SentenceItemText({index,item,config,ws, items, type, set
 		}
 	}
 
+	const isLoading = (index)=>{
+		if (typeof sentenceItemRefs[index] == 'object'){
+			// if(sentenceItemRefs[index].loading){
+
+			// }
+			return sentenceItemRefs[index].loading
+		}
+		return false
+	}
 	useEffect(()=>{
 		loadFormData()
 	},[])
@@ -65,12 +80,12 @@ export default function SentenceItemText({index,item,config,ws, items, type, set
 					<div className="absolute z-10 right-1">
 							<div className="inline-flex shadow-sm">
 							  <button title="Translate this line" 
-							  		  disabled={loading} 
+							  		  disabled={isLoading(index)} 
 							  		  type="button" 
 							  		  onClick = { evt => onConvertItem(evt, index) } 
 							  		  className={lcls}>
 							    {
-							    	loading ? (<span className={loadingCls} role="status" aria-label="loading">
+							    	isLoading(index) ? (<span className={loadingCls} role="status" aria-label="loading">
 													    	<span className="sr-only">Loading...</span>
 													  	</span>)
 							    					 : (<i className="bi bi-translate"></i>)

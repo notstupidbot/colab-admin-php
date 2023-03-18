@@ -11,7 +11,7 @@ export default class Ws{
 	
 	setSoketConnected = (isConnected) => {}
 	setSoketLog = (message, data) => {}
-
+	setSoketLog_context = {}
 	static instance = null
 
 	static getInstance(){
@@ -78,8 +78,9 @@ export default class Ws{
     setSocketConnectedHandlerState(setSoketConnected){
     	this.setSoketConnected = setSoketConnected;
     }
-    setSocketLogHandlerState(setSoketLog){
+    setSocketLogHandlerState(setSoketLog, contextObj){
     	this.setSoketLog = setSoketLog;
+    	this.setSoketLog_context = contextObj;
     }
 	init(){
 
@@ -96,7 +97,7 @@ export default class Ws{
                         const message = res.message;
                         const data = res.data;
                         this.onSocketLogHandler(message, data);
-                        this.setSoketLog(message, data);
+                        this.setSoketLog(message, data, this);
 
                     break;
                     /*

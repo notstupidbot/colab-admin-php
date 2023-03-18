@@ -5,7 +5,7 @@ import SentenceItemText from "./SentenceItemText"
 import SentenceItemTtf from "./SentenceItemTtf"
 export default function SentenceItemEditor({items, config, ws, pk, 
 											sentenceItems, setSentenceItems, speakerId,
-										    hideToast, doToast, jobCheckerAdd}){
+										    hideToast, doToast, jobCheckerAdd,sentenceItemRefs, setSentenceItemRefs}){
 
 	
 	useEffect(()=>{
@@ -22,15 +22,27 @@ export default function SentenceItemEditor({items, config, ws, pk,
 			}else{
 				items_ = items
 			}
+			updateSentenceItemRefs(items_)
 			setSentenceItems(items_)	
 
 		},250)
 		
 	},[items])
 
-	// useEffect(()=>{
-	// 	console.log(speakerId)
-	// },[speakerId])
+	const updateSentenceItemRefs = (sentenceItems_) => {
+		const sentenceItemRefs_tmp = [];
+		for(let index in sentenceItems_){
+			const item = sentenceItems_[index];
+			sentenceItemRefs_tmp.push({
+				loading : false,
+				loadingTtf : false
+			})
+		}
+		setSentenceItemRefs(sentenceItemRefs_tmp)
+	}
+	useEffect(()=>{
+		// console.log(sentenceItemRefs)
+	},[sentenceItemRefs])
 
 
 	return(<>
@@ -41,10 +53,12 @@ export default function SentenceItemEditor({items, config, ws, pk,
 			}
 			return(
 				<div className="columns-2 my-1"  key={index}>
-				<SentenceItemText config={config} ws={ws} pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems}/>
+				<SentenceItemText config={config} ws={ws} pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems} sentenceItemRefs={sentenceItemRefs} 
+				   setSentenceItemRefs={setSentenceItemRefs}/>
 				<SentenceItemTtf hideToast={hideToast}
 				   doToast={doToast}
-				   jobCheckerAdd={jobCheckerAdd} config={config} ws={ws} pk={pk} speakerId={speakerId} setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems}/>
+				   jobCheckerAdd={jobCheckerAdd} config={config} ws={ws} pk={pk} speakerId={speakerId} setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems} sentenceItemRefs={sentenceItemRefs} 
+				   setSentenceItemRefs={setSentenceItemRefs}/>
 				</div>
 			)
 		})

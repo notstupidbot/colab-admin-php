@@ -16,7 +16,8 @@ export default function FormItems({socketConnected,
 								   projectId, setProjectId,
 								   items, setItems,
 								   pk, speakerId, config, ws,
-								   doToast,hideToast,jobCheckerAdd}){
+								   doToast,hideToast,jobCheckerAdd,
+								sentenceItemRefs, setSentenceItemRefs}){
 	const [sentenceItems, setSentenceItems] = useState([]);
 	const onConvertTask = evt =>{
 		console.log(`FormItems.onConvertTask`)
@@ -26,7 +27,9 @@ export default function FormItems({socketConnected,
 		<div className="container">
 			<TitleEditor title={title} setTitle={setTitle} pk={pk}/>
 			<div className="relative my-3">
-				<SentenceItemTaskQueueToolbar sentenceItems={sentenceItems} setSentenceItems={setSentenceItems} content={content} items={items} setItems={setItems} speakerId={speakerId} pk={pk}/>
+				<SentenceItemTaskQueueToolbar sentenceItems={sentenceItems} setSentenceItems={setSentenceItems} content={content} items={items} setItems={setItems} speakerId={speakerId} pk={pk}
+				sentenceItemRefs={sentenceItemRefs} 
+				   setSentenceItemRefs={setSentenceItemRefs}/>
 				<ContentEditor content={content} setContent={setContent} pk={pk}/>
 			</div>
 			<SentenceItemEditor pk={pk} 
@@ -39,7 +42,9 @@ export default function FormItems({socketConnected,
 								speakerId={speakerId}
 								hideToast={hideToast}
 							    doToast={doToast}
-							    jobCheckerAdd={jobCheckerAdd}/>
+							    jobCheckerAdd={jobCheckerAdd}
+							    sentenceItemRefs={sentenceItemRefs}
+				   				setSentenceItemRefs={setSentenceItemRefs}/>
 			<ContentTtfEditor pk={pk}  contentTtf={contentTtf} setContentTtf={setContentTtf}/>
 
 			<div className="columns-2 my-3">
