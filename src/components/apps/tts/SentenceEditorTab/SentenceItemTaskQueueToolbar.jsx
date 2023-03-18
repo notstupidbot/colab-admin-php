@@ -2,7 +2,16 @@ import axios from "axios"
 import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
 const delay = Helper.makeDelay(500)
-export default function SentenceItemTaskQueueToolbar({content, items, setItems, pk, sentenceItems, setSentenceItems,sentenceItemRefs, setSentenceItemRefs}){
+import {useEffect, useRef} from "react"
+export default function SentenceItemTaskQueueToolbar({content, 
+	items, setItems, pk, sentenceItems, setSentenceItems,
+	sentenceItemRefs, setSentenceItemRefs,sentenceItemTaskRefs, 
+	setSentenceItemTaskRefs, ws,
+	jobCheckerAdd, doToast, speakerId, config}){
+	const sentenceItemTaskRefs_ = useRef(null)
+	sentenceItemTaskRefs_.current = sentenceItemTaskRefs;
+	const loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
+
 	const buildItems = ()=>{
 
 		const textList = content.split('.');
@@ -78,10 +87,130 @@ export default function SentenceItemTaskQueueToolbar({content, items, setItems, 
 		// setSentenceItems(newSentenceItems);
 	}
 
-	const onSynthesizeTask = evt => {
-		console.log('queue Synthesize event handler clicked')
-	}
+	const onSynthesizeTask = async(evt) => {
+		const lastConfig = sentenceItemTaskRefs_.current;
+		// console.log(lastConfig)
+		if(!lastConfig.queuSynthesizeTask){
+			// task not executed
+			const config = { 
+				queuSynthesizeTask:true, 
+				currentQueueSynthesizeIndex : -1,
+				status : -1,
+				running : true,
+				nextIndex : 0
+			}
 
+			setSentenceItemTaskRefs(config)
+
+		}
+		// task already executed
+		else{
+			const lastIndex  = lastConfig.currentQueueSynthesizeIndex
+			const lastStatus = lastConfig.status
+			// init
+			if(lastStatus == 0){
+
+			}
+			// onProcess
+			else if(lastStatus == 1){
+				
+			}
+			// onComplete
+			else if(lastStatus == 2){
+				
+			}
+		}
+	
+
+
+		
+	}
+	const synthesizeTask = async()=>{
+		let taskCfg = sentenceItemTaskRefs_.current
+		if(!taskCfg.running){
+			return;
+		}
+		if(taskCfg.currentQueueSynthesizeIndex == -1){
+			console.log(`First Timer`)
+			taskCfg.currentQueueSynthesizeIndex = 0;
+			taskCfg.nextIndex = 1;
+			taskCfg.status = 1;
+			taskCfg.job = null;
+		}
+		console.log(taskCfg);
+
+		if(taskCfg.job != null){
+			taskCfg.currentQueueSynthesizeIndex += 1;
+			taskCfg.nextIndex += 1;
+			taskCfg.status = 1;
+			taskCfg.job = {last_job:true};
+		}else{
+
+		}
+
+		/*****************************************************************/
+		let sentenceItemRefs_tmp;
+		const index = taskCfg.currentQueueSynthesizeIndex
+		const maxLength = $('.sentence-item-ttf').length;
+		console.log(index)
+		console.log(maxLength)
+		if(index >= maxLength){
+			console.log(`Task item reach the end of index`)
+			const nTaskCfg = Object.assign({},sentenceItemTaskRefs_.current);
+			nTaskCfg.running = false
+			nTaskCfg.nextIndex = -1
+			nTaskCfg.queuSynthesizeTask = false
+			nTaskCfg.status = -1
+			nTaskCfg.job = null
+
+			setSentenceItemTaskRefs(nTaskCfg)
+			return
+		}
+
+		sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
+		sentenceItemRefs_tmp[index].loadingTtf = true;
+		setSentenceItemRefs(sentenceItemRefs_tmp);
+		const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
+
+		const text = ttfRefCurrent.value
+		
+		const subscriber_id = ws.getSubcriberId();
+
+		
+		const speaker_id = speakerId;
+		let url = `${config.getApiEndpoint()}/api/tts/job?subscriber_id=${subscriber_id}&job_name=tts&speaker_id=${speaker_id}`;
+
+		let chunkMode = true;
+
+		if(chunkMode){
+			url += `&chunkMode=true&index=${index}`	
+		}
+			
+		const params = new URLSearchParams({ });
+		params.append('sentence_id', pk);
+		params.append('text',encodeURI(text));
+
+		const res = await axios.post(url, params);
+		// setLoading(false)
+
+		const data = res.data;
+		const job = data.job;
+		const success = data.success;
+		if(success){
+			jobCheckerAdd(job)
+			doToast(`job created with id ${job.id}`, success)
+		}else{
+			doToast(`job created failed`, false)
+		}
+		console.log(res)
+		/*****************************************************************/
+	}
+	useEffect(()=>{
+
+		synthesizeTask();
+
+	},[sentenceItemTaskRefs])
+	
 	const btnCls = "py-1 px-1 mx-2 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
 
 	return(<div className="absolute z-10 right-1">
@@ -91,10 +220,22 @@ export default function SentenceItemTaskQueueToolbar({content, items, setItems, 
 				<i className="bi bi-list-check"></i>
 			</button>
 			<button title="Translate All" type="button" onClick={ evt => onConvertTask(evt) } className={btnCls}>
-				<i className="bi bi-translate"></i>
+			{
+				false ? (<span className={loadingCls} role="status" aria-label="loading">
+												    	<span className="sr-only">Loading...</span>
+												  	</span>) : (<i className="bi bi-translate"></i>)
+			}
+				
+				
 			</button>
-			<button title="Synthesize All" type="button" onClick={ evt => onSynthesizeTask(evt) } className={btnCls}>
-				<i className="bi bi-soundwave"></i>
+			<button disabled={sentenceItemTaskRefs_.current.queuSynthesizeTask} title="Synthesize All" type="button" onClick={ evt => onSynthesizeTask(evt) } className={btnCls}>
+			
+			{
+				sentenceItemTaskRefs_.current.queuSynthesizeTask ? (<span className={loadingCls} role="status" aria-label="loading">
+												    	<span className="sr-only">Loading...</span>
+												  	</span>) : (<i className="bi bi-soundwave"></i>)
+			}
+				
 			</button>
 		</div>
 	</div>)

@@ -32,9 +32,17 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	const [projectId, setProjectId] = useState("[]")
 	const [pk, setPk] = useState("")
 	const [sentenceItemRefs, setSentenceItemRefs] = useState([])
+	const [sentenceItemTaskRefs, setSentenceItemTaskRefs] = useState({
+		queuSynthesizeTask:false,
+		currentQueueSynthesizeIndex : 0,
+		running : false,
+		nextIndex : 0,
+		status : 0
+	})
 	const sentenceItemRefs_ = useRef(null)
+	const sentenceItemTaskRefs_ = useRef(null)
 	sentenceItemRefs_.current = sentenceItemRefs;
-	
+	sentenceItemTaskRefs_.current = sentenceItemTaskRefs;
 	const jobCheckerRef = useRef(null)
 	// lastSentenceRef.current = lastSentenceId
 	const getSentence = async() =>{
@@ -125,7 +133,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 	useEffect(()=>{
 		if(sentence){
-			console.log(sentence)
+			// console.log(sentence)
 
 			setTitle(sentence.title)
 			setProjectId(sentence.project_id)
@@ -198,7 +206,22 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 						sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs_.current);
 						sentenceItemRefs_tmp[index].loadingTtf = false;
 						setSentenceItemRefs(sentenceItemRefs_tmp);
-						/*****************************************/	
+						/******************** Task Item related **************************/
+						const taskCfg = sentenceItemTaskRefs_.current
+						console.log(taskCfg);
+						if(taskCfg.queuSynthesizeTask){
+							console.log(`task is running`);
+							const newTaskCfg = Object.assign({}, taskCfg);
+
+							newTaskCfg.currentQueueSynthesizeIndex = parseInt(index)
+							newTaskCfg.status = 2
+							newTaskCfg.nextIndex = parseInt(index) + 1
+							newTaskCfg.job = data.job
+							
+							setSentenceItemTaskRefs(newTaskCfg)
+						}
+
+						/*****************************************************************/	
 
 						console.log(ausource)
 						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
@@ -215,7 +238,9 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 			} /* end of job.name == tts */
 		} /*end of typeof data == object */
 	}
-
+	//useEffect(()=>{
+		// console.log(sentenceItemTaskRefs)
+	// },[sentenceItemTaskRefs])
 	return(<>	
 		<SelectSpeaker speakerId={speakerId} setSpeakerId={setSpeakerId}/>
 		<FormMessages toastMessage={toastMessage}
@@ -238,6 +263,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 				   doToast={doToast}
 				   jobCheckerAdd={jobCheckerAdd}
 				   sentenceItemRefs={sentenceItemRefs} 
-				   setSentenceItemRefs={setSentenceItemRefs}/>							
+				   setSentenceItemRefs={setSentenceItemRefs}
+				   sentenceItemTaskRefs={sentenceItemTaskRefs} setSentenceItemTaskRefs={setSentenceItemTaskRefs}/>							
 	</>)
 }

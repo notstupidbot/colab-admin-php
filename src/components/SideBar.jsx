@@ -31,7 +31,7 @@ export default function SideBar(){
       const status = localStorage.hideSidebar=='true'
       _setHideSidebar(status)
       hideSidebar_(status)
-      console.log(runTwice)
+      // console.log(runTwice)
       dontRunTwice(false)
     }
     
