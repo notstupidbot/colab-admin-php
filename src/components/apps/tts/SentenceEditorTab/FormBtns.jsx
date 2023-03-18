@@ -1,11 +1,15 @@
 import {createRef, useState} from "react"
+import axios from "axios"
 
 export default function FormBtns({socketConnected, title,
 								   content,				   
 								   contentTtf,
 								   projectId,
 								   items,
-								   pk}){
+								   pk,
+								   jobCheckerAdd,
+									speakerId,
+									ws,config,doToast}){
 	const [onProcess, setOnProcess] = useState(false)
 	const btnCls = "py-3 px-4 py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
 	const loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
@@ -20,28 +24,36 @@ export default function FormBtns({socketConnected, title,
 								   projectId,
 								   items,
 								   pk})
-		// this.setState({onProcess:true});
-		// const ttfText = this.stInputTtfRef.current.value;
-		// const job_res = await this.model.runTtsJob(ttfText);
-		// const data = job_res.data;
-		// const status = data.status;
-		// const message = data.message;
-		// const emitedSocketLength = data.emitedSocketLength;
-		// if(typeof data.job == 'object'){
-		// 	const {id,job_name} = data.job;
-		// 	const job_id = id;
-		// 	const {pid,project_id,uuid} = data.job.params;
-		// }
+		setOnProcess(true)
+		// console.log(contentTtf)
 
-		// const toastMessage = `${message}`;
-		// this.doToast(toastMessage,status);
+		const text = contentTtf
+		
+		const subscriber_id = ws.getSubcriberId();
 
-		// if(!status){
-		// 	this.setState({onProcess:false});
+		
+		const speaker_id = speakerId;
+		let url = `${config.getApiEndpoint()}/api/tts/job?subscriber_id=${subscriber_id}&job_name=tts&speaker_id=${speaker_id}`;
+			
+		const params = new URLSearchParams({ });
+		params.append('sentence_id', pk);
+		params.append('text',encodeURI(text));
 
-		// }
+		const res = await axios.post(url, params);
+		// setLoading(false)
 
-		// console.log(data)
+		const data = res.data;
+		const job = data.job;
+		const success = data.success;
+		if(success){
+			jobCheckerAdd(job)
+			doToast(`job created with id ${job.id}`, success)
+		}else{
+			doToast(`job created failed`, false)
+		}
+		setOnProcess(false)
+
+		console.log(res)
 	}
 
 	

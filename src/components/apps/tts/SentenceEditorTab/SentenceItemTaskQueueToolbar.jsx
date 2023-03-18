@@ -137,7 +137,7 @@ export default function SentenceItemTaskQueueToolbar({content,
 			taskCfg.status = 1;
 			taskCfg.job = null;
 		}
-		console.log(taskCfg);
+		// console.log(taskCfg);
 
 		if(taskCfg.job != null){
 			taskCfg.currentQueueSynthesizeIndex += 1;

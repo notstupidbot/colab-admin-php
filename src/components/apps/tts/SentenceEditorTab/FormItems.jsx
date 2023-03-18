@@ -1,6 +1,5 @@
 import {createRef, useState, useEffect} from "react"
 
-
 import TitleEditor from "./TitleEditor"
 import SentenceItemTaskQueueToolbar from "./SentenceItemTaskQueueToolbar"
 import ContentEditor from "./ContentEditor"
@@ -18,7 +17,8 @@ export default function FormItems({socketConnected,
 								   pk, speakerId, config, ws,
 								   doToast,hideToast,jobCheckerAdd,
 								   sentenceItemRefs, setSentenceItemRefs,
-								   sentenceItemTaskRefs, setSentenceItemTaskRefs}){
+								   sentenceItemTaskRefs, setSentenceItemTaskRefs,
+								audioOutput, setAudioOutput}){
 	const [sentenceItems, setSentenceItems] = useState([]);
 	const onConvertTask = evt =>{
 		console.log(`FormItems.onConvertTask`)
@@ -34,7 +34,7 @@ export default function FormItems({socketConnected,
 				   sentenceItemTaskRefs={sentenceItemTaskRefs} 
 				   setSentenceItemTaskRefs={setSentenceItemTaskRefs}
 				   jobCheckerAdd={jobCheckerAdd} doToast={doToast}
-				   speakerId={speakerId} config={config}/>
+				    config={config}/>
 				<ContentEditor content={content} setContent={setContent} pk={pk}/>
 			</div>
 			<SentenceItemEditor pk={pk} 
@@ -53,13 +53,15 @@ export default function FormItems({socketConnected,
 			<ContentTtfEditor pk={pk}  contentTtf={contentTtf} setContentTtf={setContentTtf}/>
 
 			<div className="columns-2 my-3">
-				<SentenceAudioPreview pk={pk}/>
+				<SentenceAudioPreview pk={pk} config={config} audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>
 				<FormBtns   socketConnected={socketConnected} 
 							title={title} setTitle={setTitle}
 							content={content} setContent={setContent}
 							contentTtf={contentTtf} setContentTtf={setContentTtf}
 							items={items} setItems={setItems}
-							projectId={projectId}/>
+							projectId={projectId}
+							jobCheckerAdd={jobCheckerAdd} doToast={doToast}
+				   speakerId={speakerId} config={config} ws={ws} pk={pk}/>
 			</div>
 		</div>
 	</>)

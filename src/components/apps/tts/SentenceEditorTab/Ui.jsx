@@ -23,6 +23,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	const [toastMessage, setToastMessage] = useState("")
 	const [toastStatus, setToastStatus] = useState(true)
 	const [showToast, setShowToast] = useState(false)
+	const [audioOutput, setAudioOutput] = useState("")
 
 	/* Form Data Object*/
 	const [title, setTitle] = useState("")
@@ -225,6 +226,9 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 						console.log(ausource)
 						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
+						const audioSrcCurrent = $(audioRefCurrent).find('source:first').get(0)
+						audioSrcCurrent.src = ausource;
+						
 						if(audioRefCurrent){
 							audioRefCurrent.load()
 							audioRefCurrent.play()
@@ -232,7 +236,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 					/* NOT chunkMode */
 					}else{
 						const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}.wav?uuid=${v4()}`;
-						
+						console.log(ausource)
+						setAudioOutput(ausource)
 					} /* end of if chunkMode */
 				} /* end of data.at == run_process */
 			} /* end of job.name == tts */
@@ -264,6 +269,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 				   jobCheckerAdd={jobCheckerAdd}
 				   sentenceItemRefs={sentenceItemRefs} 
 				   setSentenceItemRefs={setSentenceItemRefs}
-				   sentenceItemTaskRefs={sentenceItemTaskRefs} setSentenceItemTaskRefs={setSentenceItemTaskRefs}/>							
+				   sentenceItemTaskRefs={sentenceItemTaskRefs} 
+				   setSentenceItemTaskRefs={setSentenceItemTaskRefs}
+				   audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>							
 	</>)
 }
