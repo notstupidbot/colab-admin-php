@@ -31,8 +31,7 @@ export default function Pager({limit,total_pages,page, gotoPage, path=""}){
 		  	return isActive ? (<Link key={`${name}-num-${index}`} 
 		  		className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"  
 		  		aria-current="page"
-		  		to={`${path}/page/${page_number}`}
-		  		onClick={total_pages > 1? evt=>gotoPage(page_number):null}>{page_number}</Link>):(<Link key={`${name}-num-${index}`} 
+		  		to={`${path}/page/${page_number}`}>{page_number}</Link>):(<Link key={`${name}-num-${index}`} 
 		  		to={`${path}/page/${page_number}`}
 		  		className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full">{page_number}</Link>
 		  )

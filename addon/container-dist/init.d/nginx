@@ -1,11 +1,5 @@
 #!/bin/sh
 
-### BEGIN INIT INFO
-# Provides:   php-fpm
-
-#     for security.
-### END INIT INFO
-
 set -e
 
 DAEMON="/container/dist/sbin/nginx"

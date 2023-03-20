@@ -41,7 +41,7 @@ class Job extends React.Component {
 
 	render(){
 		return(<>
-			{this.state.inc}
+			<span className="dark:text-white">{this.state.inc}</span>
 		</>)
 	}
 }

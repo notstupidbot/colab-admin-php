@@ -77,28 +77,28 @@ export default function SentenceItemText({index,item,config,ws, items, type, set
 	},[])
 	
 	return(<div className={"sentence-text relative"}>
-					<div className="absolute z-10 right-1">
-							<div className="inline-flex shadow-sm">
-							  <button title="Translate this line" 
-							  		  disabled={isLoading(index)} 
-							  		  type="button" 
-							  		  onClick = { evt => onConvertItem(evt, index) } 
-							  		  className={lcls}>
-							    {
-							    	isLoading(index) ? (<span className={loadingCls} role="status" aria-label="loading">
-													    	<span className="sr-only">Loading...</span>
-													  	</span>)
-							    					 : (<i className="bi bi-translate"></i>)
-							    }
-							  </button>
-							</div>
-					</div>
-					<div className="grow-wrap">
-						<textarea ref={inputRef} 
-								  onChange={ evt=> onChangeTextItem(evt,index)} 
-								  className={`${item.type=='dot'?'dot':'comma'} sentence-item-text sentence-item-text-${index} `+cls}
-								  placeholder="Text item">
-						</textarea>
-					</div>	
-				</div>)
+		<div className="absolute z-10 right-1">
+				<div className="inline-flex shadow-sm">
+				  <button title="Translate this line" 
+				  		  disabled={isLoading(index)} 
+				  		  type="button" 
+				  		  onClick = { evt => onConvertItem(evt, index) } 
+				  		  className={lcls}>
+				    {
+				    	isLoading(index) ? (<span className={loadingCls} role="status" aria-label="loading">
+										    	<span className="sr-only">Loading...</span>
+										  	</span>)
+				    					 : (<i className="bi bi-translate"></i>)
+				    }
+				  </button>
+				</div>
+		</div>
+		<div className="grow-wrap">
+			<textarea ref={inputRef} 
+					  onChange={ evt=> onChangeTextItem(evt,index)} 
+					  className={`${item.type=='dot'?'dot':'comma'} sentence-item-text sentence-item-text-${index} `+cls}
+					  placeholder="Text item">
+			</textarea>
+		</div>	
+	</div>)
 }

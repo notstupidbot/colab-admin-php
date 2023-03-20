@@ -54,7 +54,7 @@ const linkCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactive
       </div>
       <nav className="hs-accordion-group p-6 w-full flex flex-col flex-wrap">
         <div style={{zIndex:15}} className="relative">
-          <button className="absolute -right-4 my-32" onClick={toggle}><i className="bi bi-chevron-left"></i></button>
+          <button className="dark:text-white absolute -right-4 my-32" onClick={toggle}><i className="bi bi-chevron-left"></i></button>
         </div>
         <ul className="space-y-1.5">
           <li>

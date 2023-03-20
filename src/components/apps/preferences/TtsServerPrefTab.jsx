@@ -3,7 +3,11 @@ import axios from "axios"
 
 import { Link, useLoaderData } from 'react-router-dom';
 
- 
+import {PrefEditorBoolean,
+	PrefEditorInteger,
+	PrefEditorObject,
+	PrefEditorString} from "./PreferenceEditor";
+
 import Pager from "../tts/Pager"
 import AppConfig from "../../lib/AppConfig"
 import Helper from "../../lib/Helper"
@@ -70,7 +74,17 @@ export default function TtsServerPrefTab(){
 	// const editProject=(project)=>{
 	// 	console.log(project)
 	// }
+	const editorFactory = (item) => {
+		const components = {
+			boolean : <PrefEditorBoolean item={item}/>,
+			string : <PrefEditorString item={item}/>,
+			object : <PrefEditorObject item={item}/>,
+			integer : <PrefEditorInteger item={item}/>
+		}
 
+		const component = components[item.editor];
+		return component
+	}
 	return(<>
 <div className="border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">		
 <div className="flex flex-col">
@@ -81,8 +95,8 @@ export default function TtsServerPrefTab(){
           <thead>
             <tr>
               <th scope="col"  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
-              <th scope="col"  className="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Key</th>
-              <th scope="col"  className="w-3/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
+              <th scope="col"  className="w-3/8 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Setting</th>
+              <th scope="col"  className="w-5/8 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
             </tr>
           </thead>
@@ -92,8 +106,8 @@ export default function TtsServerPrefTab(){
           		Array(parseInt(grid.limit)).fill(1).map((a,r)=>{return(
           		<tr className="animate-pulse" key={r}>
           			<td className=""><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-1/4 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-3/4 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          			<td><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			<td className=""><span className=" my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			
           		</tr>
@@ -107,8 +121,8 @@ export default function TtsServerPrefTab(){
 		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
 		              	{ pageNumber(index)}
 		              </td>
-		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.key}</td>
-		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.val}</td>
+		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.desc.length==0?Helper.titleCase(item.key):item.desc}</td>
+		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{editorFactory(item)}</td>
 
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 		                <Link className="text-blue-500 hover:text-blue-700" to={`/preferences/tts-server/${item.id}`}><i className="bi bi-pencil-square"></i></Link>

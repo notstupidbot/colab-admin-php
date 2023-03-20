@@ -134,6 +134,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 	useEffect(()=>{
 		if(sentence){
+		document.title = "TTS Sentence Edit "+sentence.title
+
 			// console.log(sentence)
 
 			setTitle(sentence.title)
@@ -142,6 +144,9 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 			setContentTtf(sentence.content_ttf)
 			setItems(sentence.sentences)
 			setPk(sentence.id)
+
+			$('#sentence-editor-tab').removeClass('hidden')
+
 		}
 	},[sentence])
 
@@ -228,7 +233,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
 						const audioSrcCurrent = $(audioRefCurrent).find('source:first').get(0)
 						audioSrcCurrent.src = ausource;
-						
+
 						if(audioRefCurrent){
 							audioRefCurrent.load()
 							audioRefCurrent.play()

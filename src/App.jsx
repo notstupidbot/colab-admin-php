@@ -11,7 +11,7 @@ import AppConfig from "./components/lib/AppConfig"
 
 const ws = Ws.getInstance();
 const config = AppConfig.getInstance();
-
+import "./App.css"
 function App() {
 
     const [socketConnected,setSocketConnected] = useState(false);

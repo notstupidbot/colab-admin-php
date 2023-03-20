@@ -18,7 +18,7 @@
 /*  resize: none;*/
 
   /* Firefox shows scrollbar on growth, you can hide like this. */
-/*  overflow: hidden;*/
+  overflow: hidden;
 }
 .grow-wrap > textarea,
 .grow-wrap::after {

@@ -235,3 +235,7 @@ function load_db_dump($backup_dir){
 function underscore($str){
 	return preg_replace('/\W+/','_',strtolower($str));
 }
+
+function slug($str){
+	return preg_replace('/\W+/','-',strtolower($str));
+}

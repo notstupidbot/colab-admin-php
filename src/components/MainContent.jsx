@@ -36,11 +36,12 @@ export default function MainContent({hideSidebar,setHideSidebar, config, socketC
 							element={<ProjectTab />} 
 							loader={projectTabLoader}/>
 					<Route exac path="/tts/project/page/:pageNumber" loader={projectTabLoader} element={<ProjectTab />}/>
-					<Route exac path="/tts/project-editor/:projectId" loader={projectEditorTabLoader} element={<ProjectEditorTab/>}/>
+					<Route exac path="/tts/project-editor/:projectId/:slug" loader={projectEditorTabLoader} element={<ProjectEditorTab/>}/>
+					<Route exac path="/tts/project-editor/:projectId/:slug/page/:pageNumber" loader={projectEditorTabLoader} element={<ProjectEditorTab/>}/>
 					<Route exac path="/tts/project-editor" element={<ProjectEditorTab/>}/>
 					<Route exac path="/tts/sentence" element={<SentenceTab/>}/>
 					<Route exac path="/tts/sentence-editor" loader={sentenceEditorTabLoader} element={<SentenceEditorTab config={config} socketConnected={socketConnected} ws={ws}/>}/>
-					<Route exac path="/tts/sentence-editor/:pk" loader={sentenceEditorTabLoader} element={<SentenceEditorTab config={config} socketConnected={socketConnected} ws={ws}/>}/>
+					<Route exac path="/tts/sentence-editor/:pk/:slug" loader={sentenceEditorTabLoader} element={<SentenceEditorTab config={config} socketConnected={socketConnected} ws={ws}/>}/>
 
 				</Route>
 				<Route  path="/dashboard" element={<Dashboard/>}>

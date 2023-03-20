@@ -33,7 +33,7 @@ function get_output_file($sentence_id, $index_number){
     return [$chunkMode, $output_file, $output_url];
 }
 
-function pre_main($ci, $url, $output_file, $proxy="socks5://127.0.0.1:1081"){
+function pre_main($ci, $url, $output_file, $proxy=""){
     $ci->benchmark->mark('code_start');
 
     $client = new \GuzzleHttp\Client();
@@ -91,7 +91,7 @@ function main(){
 
     
 
-    list($tts_server_endpoint, $tts_server_proxy) = $ci->m_pref->getTtsServerPrefs();
+    list($tts_server_endpoint, $tts_server_proxy, $tts_enable_proxy) = $ci->m_pref->getTtsServerPrefs();
     if(empty($tts_server_endpoint)){
         echo json_encode(['error'=>'tts_server_endpoint not configured'],JSON_PRETTY_PRINT);
         exit(1);

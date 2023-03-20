@@ -26,8 +26,8 @@ export default function ProjectTab(){
 			page : 1,
 			total_pages : 0,
 			total_records : 0,
-			order_by:'create_date',
-			order_dir:'desc'
+			order_by:'order',
+			order_dir:'asc'
 		});
  
 
@@ -47,15 +47,17 @@ export default function ProjectTab(){
 
 	}
 	useEffect(()=>{
-		// if(activeTab == 'project'){
-			// updateProjectList();
-		// 	dontRunTwice = false
-		// }
+		document.title = "TTS::Projects"
 		delay(()=>{
 			console.log(page)
 			updateProjectList();
 		})
-		
+		$('#project-editor-tab').addClass('hidden')
+		$('#sentence-editor-tab').addClass('hidden')
+		$('#project-tab').prop('href',`#/tts/project/page/${page}`).unbind('click').click((evt)=>{
+			document.location.href = evt.target.href
+			evt.preventDefault()
+		})
 	},[page]);
 
 	const pageNumber=(index)=>{
@@ -107,7 +109,7 @@ export default function ProjectTab(){
 		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.title}</td>
 
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/project-editor/${item.id}`}><i className="bi bi-pencil-square"></i></Link>
+		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/project-editor/${item.id}/${item.slug}`}><i className="bi bi-pencil-square"></i></Link>
 		              </td>
 		            </tr>
           		)

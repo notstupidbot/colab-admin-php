@@ -13,7 +13,7 @@ let lastProjectId = null
 let lastFetch = null
 import { Link, NavLink } from 'react-router-dom';
 
-export default function ProjectItem({project}){
+export default function ProjectItem({project, page}){
 	const [gridLoading,setGridLoading] = useState(false)
 	const [grid, setGrid] = useState({
 			records : [],
@@ -22,21 +22,22 @@ export default function ProjectItem({project}){
 			loading : false,
 			total_pages : 0,
 			total_records : 0,
-			order_by:'create_date',
-			order_dir:'desc'
+			order_by:'order',
+			order_dir:'asc'
 		})
 
 	useEffect(()=>{
-		// console.log(grid)
+		console.log(grid)
 	},[grid])
 	useEffect(()=>{
+		console.log(page)
 		// delay(async()=>{
 			
 		// })
 		if(project){
 			
 			
-			 updateList();
+			 updateList(page);
 
 		}	
 		
@@ -58,7 +59,7 @@ export default function ProjectItem({project}){
 		grid.records = [];
 		setGrid(Object.assign({},grid))
 		const project_id = project.id;
-		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?page=${page_number}&order_by=${grid.order_by}&order_dir=${grid.order_dir}&project_id=${project_id}`);
+		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?page=${page_number}&limit=${grid.limit}&order_by=${grid.order_by}&order_dir=${grid.order_dir}&project_id=${project_id}`);
 		setGrid(res.data)
 		setGridLoading(false)
 
@@ -96,7 +97,7 @@ return(<>
 			<i className="bi bi-file-plus"></i>
 		</button>
 </div>
-<h2 className="px-2 py-2 font-extrabold text-2xl text-center">Items</h2>
+<h2 className="dark:text-white px-2 py-2 font-extrabold text-2xl text-center">Items</h2>
 <div className="border rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">		
 
 <div className="flex flex-col">
@@ -142,7 +143,7 @@ return(<>
           	grid.records.map((item,index)=>{
           		return(
           			<tr key={index} className="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700">
-		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+		              <td className="dark:text-white px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 		              { (parseInt(index) + 1) + ((parseInt(grid.page)-1) * parseInt(grid.limit))}
 		              </td>
 
@@ -150,7 +151,7 @@ return(<>
 </td>
 		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{item.content.substr(0,225)}</td>
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/sentence-editor/${item.id}`}>View in Editor</Link>
+		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/sentence-editor/${item.id}/${item.slug}`}>View in Editor</Link>
 		              </td>
 		            </tr>
           		)
@@ -164,7 +165,7 @@ return(<>
       </div>
       <div className="mt-3">
 
-      <Pager page={grid.page} total_pages={grid.total_pages} path={`/project-editor/${project.id}`}/>
+      <Pager page={grid.page} total_pages={grid.total_pages} path={`/tts/project-editor/${project.id}/${project.slug}`}/>
     </div>
     </div>
   </div>

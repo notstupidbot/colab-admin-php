@@ -18,6 +18,7 @@ class Restore extends MX_Controller {
 		$this->word_list();
 		$this->word_list_ttf();
 		$this->socket_session();
+		$this->messaging();
 		$this->jobs();
 		$this->user();
 		$this->group();
@@ -33,10 +34,22 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
+	       'order' => array(
+                'type' => 'int4'
+	        ),
+	       'project_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100'
+	        ),
 	        'title' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '100',
                 'unique' => TRUE,
+	        ),
+	        'slug' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '225',
+                // 'unique' => TRUE,
 	        ),
 	        'content' => array(
                 'type' =>'TEXT',
@@ -85,10 +98,18 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
+	       'order' => array(
+                'type' => 'int4'
+	        ),
 	        'title' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '225',
                 'unique' => TRUE,
+	        ),
+	        'slug' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '225',
+                // 'unique' => TRUE,
 	        ),
 	        'items' => array(
                 'type' =>'JSON',
@@ -131,7 +152,27 @@ class Restore extends MX_Controller {
 	        'last_updated' => [
 	        	'type' => 'TIMESTAMP',
 	        	'default' => 'NOW()'
-	        ]
+	        ],
+	        'type' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '25'
+	        ),
+	        'group' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '25'
+	        ),
+	        'editor' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '25'
+	        ),
+	        'prop' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100'
+	        ),
+	        'desc' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50'
+	        ),
 
 		);
 		
@@ -287,7 +328,30 @@ class Restore extends MX_Controller {
 
 		load_db_dump($backup_dir);
 	}
-
+	function messaging(){
+		$fields = array(
+	       'subscriber_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'unique' => TRUE,
+	        ),
+	        'ip_addr' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+	        ),
+	        
+	        'create_date' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ],
+	        'last_updated' => [
+	        	'type' => 'TIMESTAMP',
+	        	'default' => 'NOW()'
+	        ]
+		);
+		$table = 'messaging';
+		init_db_table($fields, $table);
+	}
 	function socket_session(){
 		$fields = array(
 	       'id' => array(
@@ -327,19 +391,18 @@ class Restore extends MX_Controller {
                 'constraint' => '100',
                 'unique' => TRUE,
 	        ),
-	        'job_name' => array(
+	        'name' => array(
                 'type' => 'VARCHAR',
                 'constraint' => '50',
 	        ),
 	        'cmdline' => array(
                 'type' => 'TEXT',
 	        ),
-	        'params' => array(
+	        'ps_output' => array(
                 'type' => 'JSON',
 	        ),
-	        'status' => array(
-                'type' => 'INT',
-                'constraint' => '1',
+	        'pid' => array(
+                'type' => 'INT'
 	        ),
 	        'create_date' => [
 	        	'type' => 'TIMESTAMP',
@@ -348,7 +411,12 @@ class Restore extends MX_Controller {
 	        'last_updated' => [
 	        	'type' => 'TIMESTAMP',
 	        	'default' => 'NOW()'
-	        ]
+	        ],
+	        'user_id' => array(
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+                'default' => NULL
+	        ),
 		);
 		$table = "jobs";
 

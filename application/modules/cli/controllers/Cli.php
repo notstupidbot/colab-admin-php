@@ -19,6 +19,7 @@ class Cli extends MX_Controller {
 		$this->load->model('api/PreferenceMdl', 'm_preference');
 		$this->load->model('api/MessagingMdl', 'm_messaging');
 		$this->load->model('api/ZmqMdl', 'm_zmq');
+		$this->load->model('api/SentenceMdl', 'm_sentence');
 
 		$this->m_zmq->connect();
 		$subscribers = $this->m_messaging->getAll();
@@ -76,4 +77,48 @@ class Cli extends MX_Controller {
 
 		echo $this->benchmark->elapsed_time('code_start', 'code_end');
 	}
+
+	function fix_slug(){
+		// $projects = $this->db->get('tts_project')->result_array();
+
+		// foreach($projects as $project){
+		// 	echo $project['id'] . slug($project['title']). "\n";
+		// 	$this->db->where('id', $project['id'])->update('tts_project',['slug'=>slug($project['title'])]);
+		// }
+
+		$sentences = $this->db->get('tts_sentence')->result_array();
+
+		foreach($sentences as $sentence){
+			echo $sentence['id'] . slug($sentence['title']). "\n";
+			$this->db->where('id', $sentence['id'])->update('tts_sentence',['slug'=>slug($sentence['title'])]);
+		}
+	}
+
+	function fix_order(){
+		$projects = $this->db->order_by('create_date','asc')->get('tts_project')->result_array();
+
+		foreach($projects as $index => $project){
+			echo $project['id'] . slug($project['title']). "\n";
+			$this->db->where('id', $project['id'])->update('tts_project',['order'=>$index]);
+
+			$sentences = $this->db->where('project_id', $project['id'])->order_by('create_date','asc')->get('tts_sentence')->result_array();
+
+			foreach($sentences as $index_s => $sentence){
+				echo $sentence['id'] . slug($sentence['title']). "\n";
+				$this->db->where('id', $sentence['id'])->update('tts_sentence',['order'=>$index_s]);
+			}
+		}
+
+	}
+
+	function set_order(){
+		$this->load->model('api/SentenceMdl', 'm_sentence');
+
+		$sentence = $this->m_sentence->getById('d043b5008ba0486fbac1bde347f7933e');
+		// print_r($sentence);
+		$this->m_sentence->set_order($sentence['id'],$sentence['project_id']);
+
+
+	}
+
 }

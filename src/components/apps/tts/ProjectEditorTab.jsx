@@ -19,11 +19,11 @@ export async function loader({ params }) {
     });
   }
 
-  return { project };
+  return { project, page: params.pageNumber };
 }
 
 export default function ProjectEditorTab(){
-	const {project} = useLoaderData()
+	const {project, page} = useLoaderData()
 
 	const titleInputRef = createRef(null)
 
@@ -34,10 +34,21 @@ export default function ProjectEditorTab(){
 
 
 	useEffect(()=>{
+		document.title = "TTS Project Edit "+project.title
+
 		delay(()=>{
-			// console.log(project)
+			console.log(page)
 			if(project){
 				loadFormData()
+				$('#project-editor-tab').removeClass('hidden')
+				$('#sentence-editor-tab').addClass('hidden')
+
+				$('#project-editor-tab').unbind('click').click((evt)=>{
+					document.location.href = evt.target.href;
+					evt.preventDefault()
+				})
+				$('#project-editor-tab').prop('href',	`#/tts/project-editor/${project.id}/${project.slug}`)
+
 			}	
 		})
 		
@@ -73,7 +84,7 @@ export default function ProjectEditorTab(){
 		</div>
 			 
 
-			<ProjectItem project={project}/>
+			<ProjectItem project={project} page={page}/>
 
 			
 		</div>	

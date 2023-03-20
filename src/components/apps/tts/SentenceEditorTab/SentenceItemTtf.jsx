@@ -147,8 +147,6 @@ export default function SentenceItemTtf({index,item,config,ws, items,
 				<textarea  ref={inputRef} 
 						   onChange={ evt => onChangeTtfItem(evt, index)} 
 						   className={`${item.type=='dot'?'dot':'comma'} sentence-item-ttf sentence-item-ttf-${index} `+cls}
-						  
-
 						   placeholder="Ttf Text">
 				</textarea>	
 				</div>

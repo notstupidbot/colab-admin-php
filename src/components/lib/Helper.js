@@ -1,4 +1,18 @@
 export default class Helper{
+	static titleCase(str){
+		let newStr = str.replace(/\W+/g,' ').replace(/_/g,' ');
+		newStr = newStr.split(' ')
+	   .map(w => w[0].toUpperCase() + w.substring(1).toLowerCase())
+	   .join(' ');
+		return newStr;
+	}
+	static slugify(str){
+		let newStr = str.replace(/\W+/g,' ').replace(/_/g,' ');
+		newStr = newStr.split(' ')
+	   .map(w => w[0].toUpperCase() + w.substring(1).toLowerCase())
+	   .join('-');
+		return newStr;
+	}
 	static timeout(ms) {
 	    return new Promise(resolve => setTimeout(resolve, ms));
 	}

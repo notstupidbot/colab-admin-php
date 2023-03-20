@@ -110,6 +110,7 @@ class Tts extends REST_Controller {
         $content_ttf = $this->input->post('content_ttf');
         $sentences = $this->input->post('sentences');
         $project_id = $this->input->post('project_id');
+        $order = $this->input->post('order');
         
         
 
@@ -124,6 +125,10 @@ class Tts extends REST_Controller {
 
             ];
             $this->m_sentence->update($id, $sentence);
+
+            if(!empty($order)){
+                $this->m_sentence->move_order($id, $order);
+            }
             $this->response($sentence, 200);
         }else{
             $sentence = $this->m_sentence->create($title, $content, $content_ttf, $sentences, '-',$project_id);
