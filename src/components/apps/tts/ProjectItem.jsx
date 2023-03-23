@@ -12,6 +12,7 @@ const delay = Helper.makeDelay(750)
 let lastProjectId = null
 let lastFetch = null
 import { Link, NavLink } from 'react-router-dom';
+import Prx from "../../lib/Prx"
 
 export default function ProjectItem({project, page}){
 	const [gridLoading,setGridLoading] = useState(false)
@@ -27,21 +28,15 @@ export default function ProjectItem({project, page}){
 		})
 
 	useEffect(()=>{
-		console.log(grid)
+		// console.log(grid)
 	},[grid])
-	useEffect(()=>{
-		console.log(page)
-		// delay(async()=>{
-			
-		// })
-		if(project){
-			
-			
-			 updateList(page);
 
+	useEffect(()=>{
+		if(project){
+			 updateList(page);
 		}	
 		
-	},[project])
+	},[page])
 
 	const updateListWithOrder = async(order_by)=>{
 		const order_dir = grid.order_by == order_by ? (grid.order_dir == 'asc' ? 'desc' : 'asc') : 'asc';
@@ -59,9 +54,14 @@ export default function ProjectItem({project, page}){
 		grid.records = [];
 		setGrid(Object.assign({},grid))
 		const project_id = project.id;
-		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?page=${page_number}&limit=${grid.limit}&order_by=${grid.order_by}&order_dir=${grid.order_dir}&project_id=${project_id}`);
-		setGrid(res.data)
-		setGridLoading(false)
+		const res = await Prx.get(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?page=${page_number}&limit=${grid.limit}&order_by=${grid.order_by}&order_dir=${grid.order_dir}&project_id=${project_id}`);
+		try{
+			setGrid(res.data)
+		}catch(e){
+
+		}
+			setGridLoading(false)
+			
 
 	}
 	const addSentenceHandler = async(evt)=>{
@@ -89,7 +89,7 @@ export default function ProjectItem({project, page}){
 	}
 
 
-		const dummyRow= [1,2,3,4,5,6,7,8,9]
+		const dummyRow= Array(parseInt(grid.limit)).fill(1)
 return(<>
 <div className="pager">
 <button onClick={evt=>addSentenceHandler(evt)} style={{zIndex:15}} title="Add Sentence"
@@ -122,7 +122,7 @@ return(<>
           {
           	gridLoading ?
           		dummyRow.map(r=>{return(
-          		<tr className="animate-pulse" key={r}>
+          		<tr className="animate-pulse" key={`${r}-${v4()}`}>
           			<td className=""><span className="my-2 h-4 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			<td className="w-1/3 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
           			<td className="w-2/3 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
@@ -141,10 +141,11 @@ return(<>
           }
           {
           	grid.records.map((item,index)=>{
+          		const pageNumber = (parseInt(index) + 1) + ((parseInt(grid.page)-1) * parseInt(grid.limit))
           		return(
-          			<tr key={index} className="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700">
+          			<tr key={pageNumber} className="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700">
 		              <td className="dark:text-white px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-		              { (parseInt(index) + 1) + ((parseInt(grid.page)-1) * parseInt(grid.limit))}
+		              { pageNumber }
 		              </td>
 
 		              <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200">{item.title} <span className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{moment(item.create_date).format('MMMM Do YYYY, h:mm:ss a')}</span>

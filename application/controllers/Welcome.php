@@ -9,7 +9,8 @@ class Welcome extends MY_Controller {
     }
 	public function index()
 	{
-		$data = $this->db->list_tables();
-		echo json_encode($data);
+		// $data = $this->db->list_tables();
+		// echo json_encode($data);
+		$this->load->view('vite');
 	}
 }

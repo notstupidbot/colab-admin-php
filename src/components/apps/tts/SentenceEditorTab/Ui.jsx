@@ -10,6 +10,8 @@ import { Link, NavLink, useLoaderData } from 'react-router-dom';
 import axios from "axios"
 import {v4} from "uuid"
 let lastSentenceId = null
+import Prx from "../../../lib/Prx"
+
 export async function loader({ params }) {
 
   return { sentenceId:params.pk };
@@ -50,8 +52,9 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 	  const config = AppConfig.getInstance()	
 
-	  const res = await axios(`${config.getApiEndpoint()}/api/tts/sentence?id=${sentenceId}`);
-	  setSentence( res.data);
+	  const res = await Prx.get(`${config.getApiEndpoint()}/api/tts/sentence?id=${sentenceId}`);
+	  if(res)
+	  	setSentence( res.data);
 
 
 	}
@@ -204,8 +207,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 					if(chunkMode){
 						const index = data.index;
-
-						const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}-${index}.wav?uuid=${v4()}`;
+						const ausourceFilename = `${data.sentence_id}-${index}.wav`;
+						const ausource = `${config.getApiEndpoint()}/public/tts-output/${ausourceFilename}?uuid=${v4()}`;
 							
 						/*****************************************/
 						let sentenceItemRefs_tmp;
@@ -228,7 +231,9 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 						}
 
 						/*****************************************************************/	
-
+						Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${ausourceFilename}&uuid=${v4()}`).then(r=>{
+							console.log(r)
+						})
 						console.log(ausource)
 						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
 						const audioSrcCurrent = $(audioRefCurrent).find('source:first').get(0)

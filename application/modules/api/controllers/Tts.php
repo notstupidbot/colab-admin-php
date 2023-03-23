@@ -65,7 +65,7 @@ class Tts extends REST_Controller {
             $paged_list = $this->m_project->getAllPaged($page,$limit, $order_by, $order_dir);
             $this->response($paged_list, 200);
         }
- 
+        
     }
     function sentence_get() {
         
@@ -218,6 +218,18 @@ class Tts extends REST_Controller {
 
     }
 
+    function auexist_get(){
+        $filename = $this->input->get("filename");
+        $path = APPPATH. "/../public/tts-output/${filename}";
+
+        $result = [
+            'path' => $path,
+            'exist' => file_exists($path)
+        ];
+        $this->response($result,200);
+
+    }
+
     function job_post(){
         $subscriber_id = $this->input->get('subscriber_id');
         $chunkMode = $this->input->get('chunkMode');
@@ -269,6 +281,8 @@ class Tts extends REST_Controller {
         ];
         $this->response($result,200);
 
-    }        
+    }
+
+
 
 }

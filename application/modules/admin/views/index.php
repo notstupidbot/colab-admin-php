@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Admin Panel</title>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-migrate-1.4.0.min.js"></script>
 	<script type="text/javascript" src="/public/autobahn.js" crossorigin></script>
 	<script type="text/javascript" src="/node_modules/preline/dist/preline.js" crossorigin></script>

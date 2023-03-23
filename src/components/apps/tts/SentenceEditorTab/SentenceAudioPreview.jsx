@@ -1,6 +1,7 @@
 import {createRef, useState, useEffect, useRef} from "react"
 import Helper from "../../../lib/Helper"
-
+import Prx from "../../../lib/Prx"
+import {v4} from "uuid"
 export default function SentenceAudioPreview({config, audioOutput, setAudioOutput, pk}){
 	const audioRef = createRef(null)
 	// const pkRef = useRef(null)
@@ -26,9 +27,18 @@ export default function SentenceAudioPreview({config, audioOutput, setAudioOutpu
 		// 	}
 		// })
 		if(pk){
-			console.log(pk)
-			const audioOutput_ = `${config.getApiEndpoint()}/public/tts-output/${pk}.wav`
-			setAudioOutput(audioOutput_)
+			// console.log(pk)
+			const asourceFilename = `${pk}.wav`
+			const asource = `${config.getApiEndpoint()}/public/tts-output/${asourceFilename}?uuid=${v4()}`;
+
+			Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${asourceFilename}`).then(r=>{
+				try{
+					if(r.data.exist){
+						setAudioOutput(asource)
+
+					}
+				}catch(e){}
+			})
 		}
 	},[pk])
 

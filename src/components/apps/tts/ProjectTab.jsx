@@ -3,6 +3,7 @@ import axios from "axios"
 
 import { Link, useLoaderData } from 'react-router-dom';
 
+import Prx from "../../lib/Prx"
  
 import Pager from "./Pager"
 import AppConfig from "../../lib/AppConfig"
@@ -36,7 +37,8 @@ export default function ProjectTab(){
 		grid.page = page_number;
 		grid.records = [];
 		setGrid(Object.assign({},grid))
-		const res = await axios(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/project?page=${page}&limit=${grid.limit}`);
+		const res = await Prx.get(`${AppConfig.getInstance().getApiEndpoint()}/api/tts/project?page=${page}&limit=${grid.limit}`);
+		if(res)
 		setGrid(res.data)
 		
 	}
@@ -49,7 +51,7 @@ export default function ProjectTab(){
 	useEffect(()=>{
 		document.title = "TTS::Projects"
 		delay(()=>{
-			console.log(page)
+			// console.log(page)
 			updateProjectList();
 		})
 		$('#project-editor-tab').addClass('hidden')

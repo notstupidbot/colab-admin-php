@@ -72,6 +72,11 @@ const linkCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactive
               <i className="bi bi-sliders2"></i> Preferences
             </NavLink>
           </li>
+          <li>
+            <NavLink className={linkCls} to="/book">
+              <i className="bi bi-code"></i> Book
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </div>

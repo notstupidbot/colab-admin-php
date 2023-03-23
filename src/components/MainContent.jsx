@@ -5,6 +5,7 @@ import {  RouterProvider,
   createBrowserRouter,Route,Routes ,createHashRouter} from 'react-router-dom';
 
 import Dashboard from "./apps/Dashboard"
+import Book from "./apps/Book"
 import Preferences from "./apps/preferences"
 import DashboardItem1 from "./apps/dashboard/DashboardItem1"
 import DashboardItem2 from "./apps/dashboard/DashboardItem2"
@@ -45,6 +46,9 @@ export default function MainContent({hideSidebar,setHideSidebar, config, socketC
 
 				</Route>
 				<Route  path="/dashboard" element={<Dashboard/>}>
+					
+				</Route>
+				<Route  path="/book" element={<Book/>}>
 					
 				</Route>
 				<Route  path="/preferences" element={<Preferences/>}>

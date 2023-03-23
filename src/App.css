@@ -4,7 +4,7 @@ html[class="dark"] #docs-sidebar {
 }
 
 html, body {
-    font-family: monospace !important;
+/*    font-family: monospace !important;*/
     font-size: 1rem;
 }
 

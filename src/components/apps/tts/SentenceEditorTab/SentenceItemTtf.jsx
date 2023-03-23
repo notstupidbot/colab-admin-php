@@ -7,9 +7,11 @@ import {
 } from "./deps/inputCls"
 import axios from "axios"
 import Helper from "../../../lib/Helper"
+import Prx from "../../../lib/Prx"
 import AppConfig from "../../../lib/AppConfig"
+import {v4} from "uuid"
 
-export default function SentenceItemTtf({index,item,config,ws, items,
+export default function SentenceItemTtf({onResizeItemArea,index,item,config,ws, items,
 	setSentenceItems, pk, speakerId, doToast,jobCheckerAdd,sentenceItemRefs, setSentenceItemRefs}){
 	const ocls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
 	const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
@@ -86,10 +88,18 @@ export default function SentenceItemTtf({index,item,config,ws, items,
 
 	useEffect(()=>{
 		// setHideAudio(true)
+		const asourceFilename = `${pk}-${index}.wav`
+		const asource = `${config.getApiEndpoint()}/public/tts-output/${asourceFilename}?uuid=${v4()}`;
 
-		const asource = `${config.getApiEndpoint()}/public/tts-output/${pk}-${index}.wav`;
+		Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${asourceFilename}`).then(r=>{
+			try{
+				if(r.data.exist){
+					setAudioSource(asource)
+				}
+			}catch(e){}
+		})
+
 		// console.log(asource)
-		setAudioSource(asource)
 		loadFormData()
 		// console.log(item)
 
@@ -144,7 +154,10 @@ export default function SentenceItemTtf({index,item,config,ws, items,
 							</div>
 				</div>
 				<div className="grow-wrap">
-				<textarea  ref={inputRef} 
+				<textarea  ref={inputRef} style={{minHeight:40}}
+						   onMouseUp={evt => onResizeItemArea(evt)}
+						   onMouseLeave={evt => onResizeItemArea(evt)}
+						   onMouseDown={evt => onResizeItemArea(evt)}
 						   onChange={ evt => onChangeTtfItem(evt, index)} 
 						   className={`${item.type=='dot'?'dot':'comma'} sentence-item-ttf sentence-item-ttf-${index} `+cls}
 						   placeholder="Ttf Text">

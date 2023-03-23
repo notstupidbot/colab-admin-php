@@ -1,5 +1,6 @@
 import {createRef, useState, useEffect} from "react"
 
+import Helper from "../../../lib/Helper"
 
 import SentenceItemText from "./SentenceItemText"
 import SentenceItemTtf from "./SentenceItemTtf"
@@ -44,7 +45,22 @@ export default function SentenceItemEditor({items, config, ws, pk,
 		// console.log(sentenceItemRefs)
 	},[sentenceItemRefs])
 
+	const onResizeItemArea = evt => {
+		// console.log(`resizing`)
+		const $target = $(evt.target)
+		let $anchestor = null
+		const $parent = $target.closest('.sentence-item-editor')
+		if( $target.hasClass('sentence-item-ttf') ){
+			// console.log('A')
+			$anchestor = $parent.find('.sentence-item-text')
+		}else{
+			$anchestor = $parent.find('.sentence-item-ttf')
+		}
 
+		Helper.delay(()=>{
+			$anchestor.height($target.height())
+		})
+	}
 	return(<>
 		{
 		sentenceItems.map((item,index)=>{
@@ -52,13 +68,15 @@ export default function SentenceItemEditor({items, config, ws, pk,
 				return ""
 			}
 			return(
-				<div className="columns-2 my-1"  key={index}>
+				<div className="sentence-item-editor columns-2 my-1"  key={index}>
 				<SentenceItemText config={config} ws={ws} pk={pk} setSentenceItems={setSentenceItems}  index={index} item={item} items={sentenceItems} sentenceItemRefs={sentenceItemRefs} 
-				   setSentenceItemRefs={setSentenceItemRefs}/>
+				   setSentenceItemRefs={setSentenceItemRefs}
+				   onResizeItemArea={onResizeItemArea}/>
 				<SentenceItemTtf hideToast={hideToast}
 				   doToast={doToast}
 				   jobCheckerAdd={jobCheckerAdd} config={config} ws={ws} pk={pk} speakerId={speakerId} setSentenceItems={setSentenceItems} index={index} item={item} items={sentenceItems} sentenceItemRefs={sentenceItemRefs} 
-				   setSentenceItemRefs={setSentenceItemRefs}/>
+				   setSentenceItemRefs={setSentenceItemRefs}
+				   onResizeItemArea={onResizeItemArea}/>
 				</div>
 			)
 		})
