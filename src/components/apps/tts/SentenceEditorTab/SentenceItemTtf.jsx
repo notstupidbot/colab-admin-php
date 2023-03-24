@@ -69,12 +69,14 @@ export default function SentenceItemTtf({onResizeItemArea,index,item,config,ws, 
 		const data = res.data;
 		const job = data.job;
 		const success = data.success;
+		/*
 		if(success){
 			jobCheckerAdd(job)
 			doToast(`job created with id ${job.id}`, success)
 		}else{
 			doToast(`job created failed`, false)
 		}
+		*/
 		console.log(res)
 
 	}
@@ -91,13 +93,13 @@ export default function SentenceItemTtf({onResizeItemArea,index,item,config,ws, 
 		const asourceFilename = `${pk}-${index}.wav`
 		const asource = `${config.getApiEndpoint()}/public/tts-output/${asourceFilename}?uuid=${v4()}`;
 
-		Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${asourceFilename}`).then(r=>{
-			try{
-				if(r.data.exist){
+		// Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${asourceFilename}`).then(r=>{
+		// 	try{
+		// 		if(r.data.exist){
 					setAudioSource(asource)
-				}
-			}catch(e){}
-		})
+		// 		}
+		// 	}catch(e){}
+		// })
 
 		// console.log(asource)
 		loadFormData()
@@ -147,7 +149,7 @@ export default function SentenceItemTtf({onResizeItemArea,index,item,config,ws, 
 								       onCanPlayThrough={e=>onCanPlaytrough(e)}
 								       onLoadedData={e=>onLoaded(e)}
 									   style={{width:100,marginLeft:-17,marginTop:-16}}
-									   className="">
+									   className="bg-transparent">
 				          			<source src={audioSource} />
 				        		</audio>
 							</div>

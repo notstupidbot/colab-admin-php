@@ -244,23 +244,46 @@ class Tts extends REST_Controller {
         // $script = APPPATH . 'bin/tts-job.sh';
 
         // if($use_server){
-        $script = APPPATH . 'bin/tts-job-server.php';
+        $script = APPPATH . '/bin/tts-job-server.php';
             // $text = urlencode($text);
         // }
         if(empty($speaker_id)){
             $speaker_id =  'SU-03712';
         }
         $pidfile = sys_get_temp_dir() . "/tts-$sentence_id-$index_number.pid";
+        
+
         $job_id = gen_uuid();
         $index = is_numeric($index_number) ? $index_number : -1; 
-       
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $shell_cmd = sprintf('C:\nginx\RunHiddenConsole.exe php %s %s %s "%s" "%s" %s > NUL 2>&1', 
+
+        // $argvJson = sys_get_temp_dir() .$job_id .'.json';
+        $params  = [
+            'job_id' => $job_id,
+            'sentence_id' => $sentence_id,
+            'text' => $text,
+            'speaker_id' => $speaker_id,
+            'index' => $index,
+            'chunkMode' => $chunkMode,
+
+        ]; 
+        
+        // file_put_contents($argvJson, json_encode($argvObj));
+        // $argvJson64 = base64_encode($argvJson);
+        /*
+        $shell_cmd = sprintf('C:\nginx\RunHiddenConsole.exe php %s %s %s "%s" "%s" %s > NUL 2>&1', 
                               $script, $job_id, $sentence_id, $text, $speaker_id, $index);
             pclose( popen( $shell_cmd, 'r' ) );
-
+        */
+        $stdout = "";
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $pid = 0;
-            $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $pid);
+            $shell_cmd = sprintf('php %s %s > NUL 2>&1', $script, $job_id);
+            $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $params,$pid);
+
+            // $stdout = ">". shell_exec($shell_cmd);
+            pclose( popen( $shell_cmd, 'r' ) );
+            
+            
         } else {
             $shell_cmd = sprintf('php %s %s %s "%s" "%s" %s > /dev/null 2>&1 & echo $! > %s', 
                               $script, $job_id, $sentence_id, $text, $speaker_id, $index, $pidfile);
@@ -277,7 +300,8 @@ class Tts extends REST_Controller {
             'index' => $index,
             'sentence_id' => $sentence_id,
             'success' => true,
-            'at' => 'create_job'
+            'at' => 'create_job',
+            'stdout' => $stdout
         ];
         $this->response($result,200);
 

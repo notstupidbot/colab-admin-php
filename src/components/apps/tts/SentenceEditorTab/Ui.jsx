@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, createRef} from "react"
+import {useState, useEffect, useRef, createRef, PropTypes} from "react"
 import SelectSpeaker from "./SelectSpeaker"
 import FormMessages from "./FormMessages"
 import FormItems from "./FormItems"
@@ -17,6 +17,7 @@ export async function loader({ params }) {
   return { sentenceId:params.pk };
 }
 export default function SentenceEditorTab({socketConnected, ws, config}){
+
 	const {sentenceId} = useLoaderData()
 	const [sentence,setSentence]= useState(null)
 	// const [lastSentenceId,setLastSentenceId]= useState("")
@@ -185,73 +186,155 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 		setToastStatus(status)
 		setShowToast(true)
 	}
+	const jobCheckerAdded = job =>{
+		const jobChecker = jobCheckerRef.current;
+		const jobList = jobChecker.state.jobList;
+		const job_id = job.id;
+
+		return typeof jobList[job_id] === 'object'
+	}
+	const onJobCreate = (message, job, data) =>{
+		doToast(message, true)
+		if(!jobCheckerAdded(job)){
+			jobCheckerAdd(job);
+		}
+	}
+
+	const onJobInit = (message, job, data) =>{
+		doToast(message, true)
+		if(!jobCheckerAdded(job)){
+			jobCheckerAdd(job);
+		}
+	}
+
+	const onJobSuccess = (message, job, data) => {
+		message += ` done in ${data.elapsed_time} seconds`
+		doToast(message, true)
+		if(jobCheckerAdded(job)){
+			jobCheckerRemove(job);
+		}
+		const chunkMode = data.chunkMode
+		const index = data.index
+
+		if(chunkMode){
+			const index = data.index;
+			const ausourceFilename = `${data.sentence_id}-${index}.wav`;
+			const ausource = `${config.getApiEndpoint()}/public/tts-output/${ausourceFilename}?uuid=${v4()}`;
+				
+			/*****************************************/
+			let sentenceItemRefs_tmp;
+			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs_.current);
+			sentenceItemRefs_tmp[index].loadingTtf = false;
+			setSentenceItemRefs(sentenceItemRefs_tmp);
+			/******************** Task Item related **************************/
+			const taskCfg = sentenceItemTaskRefs_.current
+			console.log(taskCfg);
+			if(taskCfg.queuSynthesizeTask){
+				console.log(`task is running`);
+				const newTaskCfg = Object.assign({}, taskCfg);
+
+				newTaskCfg.currentQueueSynthesizeIndex = parseInt(index)
+				newTaskCfg.status = 2
+				newTaskCfg.nextIndex = parseInt(index) + 1
+				newTaskCfg.job = data.job
+				
+				setSentenceItemTaskRefs(newTaskCfg)
+			}
+
+			/*****************************************************************/	
+			// Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${ausourceFilename}`).then(r=>{
+			// 	console.log(r)
+			// })
+			console.log(ausource)
+			const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
+			const audioSrcCurrent = $(audioRefCurrent).find('source:first').get(0)
+			audioSrcCurrent.src = ausource;
+
+			if(audioRefCurrent){
+				audioRefCurrent.load()
+				audioRefCurrent.play()
+			}
+		/* NOT chunkMode */
+		}else{
+			const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}.wav?uuid=${v4()}`;
+			console.log(ausource)
+			setAudioOutput(ausource)
+		}
+	}
+
+	const onJobFail = (message, job, data) =>{
+		// for(let i in data.errors){
+		// 	if(data.errors[i] == 'curl_error_code_0'){
+		// 		data.errors[i] = `could not get to ${config.getTtsEndpoint()}`
+		// 	}
+		// }
+		message += ` ${data.errors.join(', ')}`;
+		doToast(message, false)
+
+		if(jobCheckerAdded(job)){
+			jobCheckerRemove(job);
+		}
+
+		const chunkMode = data.chunkMode
+		const index = data.index
+
+		if(chunkMode){
+			let sentenceItemRefs_tmp;
+			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs_.current);
+			sentenceItemRefs_tmp[index].loadingTtf = false;
+			setSentenceItemRefs(sentenceItemRefs_tmp);
+
+			/******************** Task Item related **************************/
+			const taskCfg = sentenceItemTaskRefs_.current
+			console.log(taskCfg);
+			if(taskCfg.queuSynthesizeTask){
+				console.log(`task is running`);
+				const newTaskCfg = Object.assign({}, taskCfg);
+
+				newTaskCfg.currentQueueSynthesizeIndex = -1
+				newTaskCfg.status = 0
+				newTaskCfg.nextIndex = -1
+				newTaskCfg.job = null
+				newTaskCfg.queuSynthesizeTask = false
+				newTaskCfg.running = false
+				setSentenceItemTaskRefs(newTaskCfg)
+			}
+
+			/*****************************************************************/	
+		}
+	}
+
 	const onSocketLog = (message, data, ws_) => {
-		if(typeof data.job == 'object'){
-			jobCheckerRemove(data.job);
+		console.log(message)
+		console.log(data)
 
-			if(data.job.name == 'tts'){
-				let success = data.success;
-				success == true ? true : (success == -1 ? false : (success== 1? true : false))
-				const chunkMode = data.chunkMode;
+		if(typeof data.job !== 'object'){
+			console.log(`Ws skip data.job is not object`)
+			return
+		}
 
-				try{
-					message += ` done in ${data.elapsed_time} seconds`
-				}catch(e){
+		if(data.job.name !== 'tts'){
+			console.log(`Ws skip data.job.name is not tts`)
+			return
+		}
 
+		const success = data.success
+		const at = data.at
+		const job = data.job
+		switch(at){
+			case 'init_process':
+				return onJobInit(message, job, data)
+			break;
+
+			case 'run_process':
+				if(success){
+					return onJobSuccess(message, job, data)
+				}else{
+					return onJobFail(message, job, data)
 				}
+			break; 
+		}
 
-				doToast(message, success)
-
-				if(data.at == 'run_process'){
-					/* chunkMode */
-
-					if(chunkMode){
-						const index = data.index;
-						const ausourceFilename = `${data.sentence_id}-${index}.wav`;
-						const ausource = `${config.getApiEndpoint()}/public/tts-output/${ausourceFilename}?uuid=${v4()}`;
-							
-						/*****************************************/
-						let sentenceItemRefs_tmp;
-						sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs_.current);
-						sentenceItemRefs_tmp[index].loadingTtf = false;
-						setSentenceItemRefs(sentenceItemRefs_tmp);
-						/******************** Task Item related **************************/
-						const taskCfg = sentenceItemTaskRefs_.current
-						console.log(taskCfg);
-						if(taskCfg.queuSynthesizeTask){
-							console.log(`task is running`);
-							const newTaskCfg = Object.assign({}, taskCfg);
-
-							newTaskCfg.currentQueueSynthesizeIndex = parseInt(index)
-							newTaskCfg.status = 2
-							newTaskCfg.nextIndex = parseInt(index) + 1
-							newTaskCfg.job = data.job
-							
-							setSentenceItemTaskRefs(newTaskCfg)
-						}
-
-						/*****************************************************************/	
-						Prx.get(`${config.getApiEndpoint()}/api/tts/auexist?filename=${ausourceFilename}&uuid=${v4()}`).then(r=>{
-							console.log(r)
-						})
-						console.log(ausource)
-						const audioRefCurrent = $(`.sentence-item-ttf-${index}`).parent().prev().find('audio:first').get(0)
-						const audioSrcCurrent = $(audioRefCurrent).find('source:first').get(0)
-						audioSrcCurrent.src = ausource;
-
-						if(audioRefCurrent){
-							audioRefCurrent.load()
-							audioRefCurrent.play()
-						}
-					/* NOT chunkMode */
-					}else{
-						const ausource = `${config.getApiEndpoint()}/public/tts-output/${data.sentence_id}.wav?uuid=${v4()}`;
-						console.log(ausource)
-						setAudioOutput(ausource)
-					} /* end of if chunkMode */
-				} /* end of data.at == run_process */
-			} /* end of job.name == tts */
-		} /*end of typeof data == object */
 	}
 	//useEffect(()=>{
 		// console.log(sentenceItemTaskRefs)

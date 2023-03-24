@@ -10,7 +10,7 @@ class JobMdl extends BaseMdl{
 		parent::__construct();
 	}
 
-	function create($id, $name, $cmdline, $subscriber_id, $pid){
+	function create($id, $name, $cmdline, $subscriber_id, $params, $pid){
 		$row = [
 			'id' => $id,
 			'name' => $name,
@@ -20,7 +20,8 @@ class JobMdl extends BaseMdl{
 			'ps_output' => '[]',
 			'create_date' => date('Y-m-d H:i:s'),
 			'last_updated' => date('Y-m-d H:i:s'),
-			'user_id' => NULL
+			'user_id' => NULL,
+			'params' => json_encode($params)
 		];
 		$this->db->insert($this->table,$row);
 		return $row;

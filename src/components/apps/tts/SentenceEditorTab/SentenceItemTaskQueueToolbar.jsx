@@ -196,12 +196,14 @@ export default function SentenceItemTaskQueueToolbar({content,
 		const data = res.data;
 		const job = data.job;
 		const success = data.success;
+		/*
 		if(success){
 			jobCheckerAdd(job)
 			doToast(`job created with id ${job.id}`, success)
 		}else{
 			doToast(`job created failed`, false)
 		}
+		*/
 		console.log(res)
 		/*****************************************************************/
 	}

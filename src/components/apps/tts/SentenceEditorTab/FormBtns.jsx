@@ -45,12 +45,14 @@ export default function FormBtns({socketConnected, title,
 		const data = res.data;
 		const job = data.job;
 		const success = data.success;
+		/*
 		if(success){
 			jobCheckerAdd(job)
 			doToast(`job created with id ${job.id}`, success)
 		}else{
 			doToast(`job created failed`, false)
 		}
+		*/
 		setOnProcess(false)
 
 		console.log(res)
