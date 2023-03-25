@@ -17,13 +17,13 @@ export default function FormBtns({socketConnected, title,
 	const runBtnRef = createRef(null)
 
 	const onRunBtnClicked = async (evt) => {
-		console.log(`onRunBtnClicked`)
-		console.log({socketConnected, title,
-								   content,				   
-								   contentTtf,
-								   projectId,
-								   items,
-								   pk})
+		// console.log(`onRunBtnClicked`)
+		// console.log({socketConnected, title,
+		// 						   content,				   
+		// 						   contentTtf,
+		// 						   projectId,
+		// 						   items,
+		// 						   pk})
 		setOnProcess(true)
 		// console.log(contentTtf)
 
@@ -78,7 +78,7 @@ export default function FormBtns({socketConnected, title,
 			<button disabled={onProcess || !socketConnected} 
 					ref={runBtnRef} 
 					onClick={evt=> onRunBtnClicked(evt)} 
-					className={btnCls}>
+					className={'btn-blue'}>
 					{
 						onProcess ? (<span className={loadingCls} role="status" aria-label="loading">
 									<span className="sr-only">Loading...</span>

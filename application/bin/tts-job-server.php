@@ -38,7 +38,7 @@ function fetch_tts_server(&$ci, &$job, $url, $output_file, $proxy="", &$errors, 
     }
     $response = "";
     try {
-        $client->get($url, $options);
+        $response = $client->get($url, $options);
 
         // echo "Here" . "\n";
 
@@ -56,7 +56,7 @@ function fetch_tts_server(&$ci, &$job, $url, $output_file, $proxy="", &$errors, 
 
         return [
             'elapsed_time' => floatval($elapsed_time),
-            'output_file' => $output_file
+            'output_file' => basename($output_file)
         ];
     }
     return false;
@@ -66,8 +66,9 @@ function zmq_log_success(&$ci, &$job, $output_file, $chunkMode, $index_number, $
     // $job = $ci->m_job->getById($job_id);
     if(!empty($job)){
         $subscriber_id = $job['subscriber_id'];
+        $job_id = $job['id'];
+        
         $message = "job id $job_id success";
-
         $data = [ 'ps_output'=> json_encode($orig_result)];
         $ci->m_job->update($job_id, $data);
         unset($job['params']);
@@ -137,7 +138,8 @@ function entry_point(&$ci, &$job, $text, $speaker_id, $chunkMode, $index_number,
 
     $url = sprintf('%s/api/tts?text=%s&speaker_id=%s&style_wav=&language_id=',
                          $tts_server_endpoint, $text, $speaker_id);
-    $output_file = get_output_file($sentence_id, $index_number);
+    list($chunkMode, $output_file, $output_url) = get_output_file($sentence_id, $index_number);
+
     $result = fetch_tts_server($ci, $job, $url, $output_file, $tts_server_proxy, $errors, $warnings,$chunkMode, $index_number, $sentence_id);
 
     if(is_array($result)){
@@ -200,9 +202,9 @@ if(count($errors) > 0 ){
     }
     if(!empty($job))
         zmq_log($ci, $job, "run_process", "job ${job_id} fails", $errors, $chunkMode, $index_number, $sentence_id, false);
-    echo json_encode(['errors' => $errors, 'success' => false]);
+    echo json_encode(['errors' => $errors, 'success' => false],JSON_PRETTY_PRINT);
     exit(1);
 }
 
-echo json_encode(['errors' => $errors,'warnings' => $warnings, 'success' => true, 'result' => $result]);
+echo json_encode(['errors' => $errors,'warnings' => $warnings, 'success' => true, 'result' => $result],JSON_PRETTY_PRINT);
 exit(0);

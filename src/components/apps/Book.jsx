@@ -29,23 +29,28 @@ const AddColorForm = ({onNewColor=f=>f}) => {
 		<input ref={input => _color = input}
 			type="color" 
 			required/>
-		<button className={btnCls}>ADD</button>
+		<button className="btn btn-gray">ADD</button>
 	</form>)
 }
 export default function Book(){
 	const hideSidebar = false
 	const cls = "dark:text-white"
 	return(<>
-<div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>
-
-		<h2>This is AsyncJs</h2>
-
-		<div className="book-item-container">
-		<div className="container">
-			<Star selected={false} onClick={f=>f}/>
-		</div>
-			<Outlet/>
-		</div>
+		<div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>
+			<h2>This is AsyncJs</h2>
+			<span className="text-primary">Importante</span>
+			<span className="text-red leading-tight">Importante</span>
+			<span className="text-lg md:text-xl hover:text-red md:hover:text-blue">
+				Importante
+			</span>
+			<div className="book-item-container">
+				<div className="container">
+					<input type="text" className="tw-input"/>
+					<AddColorForm/>
+					<Star selected={false} onClick={f=>f}/>
+				</div>
+				<Outlet/>
+			</div>
 		</div>
 	</>)
 }

@@ -20,4 +20,33 @@
     }
     .star.selected {
     background-color: red;
-    }
+}
+
+.btn{
+    @apply font-bold py-2 px-4 rounded;
+}
+
+.btn-blue{
+    @apply bg-blue-500 text-white;
+}
+
+.btn-blue:hover{
+    @apply bg-blue-700;
+}
+
+.btn-gray{
+    @apply bg-gray-400 text-gray-800;
+}
+
+.btn-gray:hover{
+    @apply bg-gray-500;
+}
+
+.text-primary{
+    color: red;
+    line-height: 1.25;
+}
+
+.tw-input{
+    @apply px-4 py-3 border border-gray-400 appearance-none;
+}

@@ -16,6 +16,9 @@ export async function loader({ params }) {
 
   return { sentenceId:params.pk };
 }
+
+import "./deps/sentence-editor-tab.css"
+
 export default function SentenceEditorTab({socketConnected, ws, config}){
 
 	const {sentenceId} = useLoaderData()
@@ -48,6 +51,14 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	sentenceItemRefs_.current = sentenceItemRefs;
 	sentenceItemTaskRefs_.current = sentenceItemTaskRefs;
 	const jobCheckerRef = useRef(null)
+	const pkRef = useRef(null)
+	const titleRef = useRef(null)
+	const contentRef = useRef(null)
+	const contentTtfRef = useRef(null)
+	pkRef.current = pk
+	titleRef.current = title
+	contentRef.current = content
+	contentTtfRef.current = contentTtf
 	// lastSentenceRef.current = lastSentenceId
 	const getSentence = async() =>{
 
@@ -87,15 +98,15 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 		}
 		formData.append('sentences', JSON.stringify(frmItems));
 
-		formData.append('title', title);
-		formData.append('content', content);
-		formData.append('content_ttf', contentTtf);
+		formData.append('title', titleRef.current);
+		formData.append('content', contentRef.current);
+		formData.append('content_ttf', contentTtfRef.current);
 
 		// console.log(formData.entries());
 		// return
 		const res = await axios({
 			method: "post",
-			url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?id=${pk}`,
+			url: `${AppConfig.getInstance().getApiEndpoint()}/api/tts/sentence?id=${pkRef.current}`,
 			data: formData,
 			headers: { "Content-Type": "multipart/form-data" },
 		});
@@ -120,7 +131,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 		}
 		for(let index in tmpItems){
 			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
-			console.log(ttfRefCurrent)
+			// console.log(ttfRefCurrent)
 			if(ttfRefCurrent){
 				const isComma = ttfRefCurrent.className.match(/comma/);
 				let ttf = ttfRefCurrent.value.trim()
@@ -174,7 +185,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	}
 	const jobCheckerAdd = (job) => {
 		const jobChecker = jobCheckerRef.current;
-		console.log(jobChecker)
+		// console.log(jobChecker)
 		const jobList = jobChecker.state.jobList;
 		const job_id = job.id;
 		jobList[job_id] = job;
@@ -305,8 +316,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	}
 
 	const onSocketLog = (message, data, ws_) => {
-		console.log(message)
-		console.log(data)
+		// console.log(message)
+		// console.log(data)
 
 		if(typeof data.job !== 'object'){
 			console.log(`Ws skip data.job is not object`)
@@ -364,6 +375,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 				   setSentenceItemRefs={setSentenceItemRefs}
 				   sentenceItemTaskRefs={sentenceItemTaskRefs} 
 				   setSentenceItemTaskRefs={setSentenceItemTaskRefs}
-				   audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>							
+				   audioOutput={audioOutput} setAudioOutput={setAudioOutput}
+				   saveRecord={onSave_clicked}/>							
 	</>)
 }

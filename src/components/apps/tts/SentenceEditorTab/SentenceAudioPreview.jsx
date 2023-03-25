@@ -45,21 +45,25 @@ export default function SentenceAudioPreview({config, audioOutput, setAudioOutpu
 	useEffect(()=>{
 		if(audioOutput){
 			try{
+				let player  = videojs(`aplayer-${pk}`);
 				audioRef.current.load()
 				// audioRef.current.play()
-			}catch(e){}
+			}catch(e){
+				console.log(e)
+			}
 			
 		}
 	},[audioOutput])
  
 	return(<>
-		<div className="audio-container">
-			<audio style={{visibility:showAudio?'visible':'hidden'}} controls ref={audioRef} 
+		<div className="audio-container mt-4" id={"audioPlayer-"+pk}>
+		{/* style={{display:!showAudio?'none':'block'}}*/}
+			<audio id={"aplayer-"+pk} controls="controls" preload="auto" data-setup='{"autoplay":false}' ref={audioRef} 
 				   onCanPlay={e=>onCanPlay(e)}
 			       onCanPlayThrough={e=>onCanPlaytrough(e)}
-			       onLoadedData={e=>onLoaded(e)}
-			       className="-mt-2 -ml-3">
-				<source src={audioOutput} />
+			       onLoadedData={e=>onLoaded(e)} width="300" height="50"
+			       className={"-mt-2 h-[30px] video-js vjs-default-skin "}>
+				<source src={audioOutput} type="audio/x-wav"/>
 			</audio>
 		</div>
 	</>)

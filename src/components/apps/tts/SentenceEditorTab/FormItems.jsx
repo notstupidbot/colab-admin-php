@@ -7,7 +7,7 @@ import SentenceItemEditor from "./SentenceItemEditor"
 import ContentTtfEditor from "./ContentTtfEditor"
 import SentenceAudioPreview from "./SentenceAudioPreview"
 import FormBtns from "./FormBtns"
-
+import AutosaveBehavior from "./AutosaveBehavior"
 export default function FormItems({socketConnected,
 								   title, setTitle,
 								   content, setContent,				   
@@ -18,7 +18,7 @@ export default function FormItems({socketConnected,
 								   doToast,hideToast,jobCheckerAdd,
 								   sentenceItemRefs, setSentenceItemRefs,
 								   sentenceItemTaskRefs, setSentenceItemTaskRefs,
-								audioOutput, setAudioOutput}){
+								audioOutput, setAudioOutput,saveRecord}){
 	const [sentenceItems, setSentenceItems] = useState([]);
 	const onConvertTask = evt =>{
 		console.log(`FormItems.onConvertTask`)
@@ -52,8 +52,9 @@ export default function FormItems({socketConnected,
 				   				setSentenceItemRefs={setSentenceItemRefs}/>
 			<ContentTtfEditor pk={pk}  contentTtf={contentTtf} setContentTtf={setContentTtf}/>
 
-			<div className="columns-2 my-3">
+			<div className="columns-3 my-3">
 				<SentenceAudioPreview pk={pk} config={config} audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>
+				<AutosaveBehavior saveRecord={saveRecord}/>
 				<FormBtns   socketConnected={socketConnected} 
 							title={title} setTitle={setTitle}
 							content={content} setContent={setContent}

@@ -121,4 +121,15 @@ class Cli extends MX_Controller {
 
 	}
 
+	function alive(){
+		$host = $this->input->get('host');
+		if(!empty($host)){
+			$current = $this->db->where('host', $host)->get('alive_host')->row_array();
+			if(empty($current)){
+				$this->db->insert('alive_host',['host'=>$host]);
+			}
+		}
+		echo $host;
+	}
+
 }
