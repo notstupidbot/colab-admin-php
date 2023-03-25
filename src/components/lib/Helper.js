@@ -63,7 +63,9 @@ export default class Helper{
 	    return function(callback){
 	        clearTimeout (timer);
 	        timer = setTimeout(callback, ms);
+	        return timer
 	    };
+
 	}
 	static delay = Helper.makeDelay(250)
 	static terbilang(x)

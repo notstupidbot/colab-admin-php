@@ -11,6 +11,7 @@ import DashboardItem1 from "./apps/dashboard/DashboardItem1"
 import DashboardItem2 from "./apps/dashboard/DashboardItem2"
 import DashboardItem3 from "./apps/dashboard/DashboardItem3"
 import DashboardItem4 from "./apps/dashboard/DashboardItem4"
+import BootstrapIcons from "./apps/BootstrapIcons"
 
 
 import ProjectTab, {loader as projectTabLoader} from "./apps/tts/ProjectTab";
@@ -49,6 +50,9 @@ export default function MainContent({hideSidebar,setHideSidebar, config, socketC
 					
 				</Route>
 				<Route  path="/book" element={<Book/>}>
+					
+				</Route>
+				<Route  path="/bootstrap-icons" element={<BootstrapIcons/>}>
 					
 				</Route>
 				<Route  path="/preferences" element={<Preferences/>}>

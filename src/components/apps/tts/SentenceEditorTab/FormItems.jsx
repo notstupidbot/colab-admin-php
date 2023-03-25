@@ -54,7 +54,7 @@ export default function FormItems({socketConnected,
 
 			<div className="columns-3 my-3">
 				<SentenceAudioPreview pk={pk} config={config} audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>
-				<AutosaveBehavior saveRecord={saveRecord}/>
+				<AutosaveBehavior saveRecord={saveRecord} pk={pk}/>
 				<FormBtns   socketConnected={socketConnected} 
 							title={title} setTitle={setTitle}
 							content={content} setContent={setContent}
