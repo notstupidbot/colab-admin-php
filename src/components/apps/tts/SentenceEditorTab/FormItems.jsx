@@ -20,10 +20,13 @@ export default function FormItems({socketConnected,
 								   sentenceItemTaskRefs, setSentenceItemTaskRefs,
 								audioOutput, setAudioOutput,saveRecord}){
 	const [sentenceItems, setSentenceItems] = useState([]);
+	const autoSaveRef = createRef(null)
 	const onConvertTask = evt =>{
 		console.log(`FormItems.onConvertTask`)
 	}
-
+	useEffect(()=>{
+		autoSaveRef.current.initTimer()
+	},[pk])
 	return(<>
 		<div className="container">
 			<TitleEditor title={title} setTitle={setTitle} pk={pk}/>
@@ -54,7 +57,7 @@ export default function FormItems({socketConnected,
 
 			<div className="columns-2 my-3">
 				<SentenceAudioPreview pk={pk} config={config} audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>
-				<AutosaveBehavior saveRecord={saveRecord} pk={pk}/>
+				<AutosaveBehavior ref={autoSaveRef} saveRecord={saveRecord} pk={pk}/>
 				<FormBtns   socketConnected={socketConnected} 
 							title={title} setTitle={setTitle}
 							content={content} setContent={setContent}

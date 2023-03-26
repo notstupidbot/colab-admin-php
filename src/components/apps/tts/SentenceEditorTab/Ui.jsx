@@ -92,7 +92,7 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 		
 		const checkUrlRegex = new RegExp(`tts\/sentence-editor\/${pkRef.current}`)
 		if(!document.location.hash.match(checkUrlRegex)){
-			console.log(`invalid routes`)
+			console.log(`cancel saving because invalid routes`)
 			return
 		}
 
@@ -119,7 +119,8 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 				frmItems[index].type = ttfRefCurrent.className.match(/comma/) ?'comma':'dot';
 			}
 		}
-		formData.append('sentences', JSON.stringify(frmItems));
+		if(frmItems.length > 0)
+			formData.append('sentences', JSON.stringify(frmItems));
 
 		formData.append('title', titleRef.current);
 		formData.append('content', contentRef.current);

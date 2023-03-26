@@ -279,7 +279,7 @@ class Tts extends REST_Controller {
         $stdout = "";
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $pid = 0;
-            $shell_cmd = sprintf('php %s %s > NUL 2>&1', $script, $job_id);
+            $shell_cmd = sprintf('start RunHiddenConsole php %s %s > NUL 2>&1', $script, $job_id);
             $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $params,$pid);
 
             // $stdout = ">". shell_exec($shell_cmd);

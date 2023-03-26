@@ -7,6 +7,10 @@ export default function Pager({limit,total_pages,page, gotoPage, path=""}){
 	total_pages = parseInt(total_pages)
 	limit = parseInt(limit)
 	const hasPrev = (page_number)=>{
+		if(!total_pages)
+			return false
+		if(page_number > total_pages)
+			return false
 		return page_number > 1;
 	}
 	const hasNext = (page_number)=>{
