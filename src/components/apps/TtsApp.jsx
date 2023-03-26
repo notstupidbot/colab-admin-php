@@ -1,7 +1,7 @@
 
 import React ,{useEffect,useState,useRef}from "react"
 import { Outlet , NavLink } from 'react-router-dom';
-import "bootstrap-icons/font/bootstrap-icons.css"
+
 
 export default function TtsApp({hideSidebar}){
   const [runTwice,dontRunTwice] = useState(true)

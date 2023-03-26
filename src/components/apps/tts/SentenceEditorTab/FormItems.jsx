@@ -52,7 +52,7 @@ export default function FormItems({socketConnected,
 				   				setSentenceItemRefs={setSentenceItemRefs}/>
 			<ContentTtfEditor pk={pk}  contentTtf={contentTtf} setContentTtf={setContentTtf}/>
 
-			<div className="columns-3 my-3">
+			<div className="columns-2 my-3">
 				<SentenceAudioPreview pk={pk} config={config} audioOutput={audioOutput} setAudioOutput={setAudioOutput}/>
 				<AutosaveBehavior saveRecord={saveRecord} pk={pk}/>
 				<FormBtns   socketConnected={socketConnected} 

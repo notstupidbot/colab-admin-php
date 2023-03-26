@@ -30,6 +30,10 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 	const [toastStatus, setToastStatus] = useState(true)
 	const [showToast, setShowToast] = useState(false)
 	const [audioOutput, setAudioOutput] = useState("")
+	const [lastFormData, setLastFormData] = useState("base64FormData")
+	const lastFormDataRef = useRef(null)
+	lastFormDataRef.current = lastFormData
+	// const [prevRowSum, setPrevRowSum] = useState("")
 
 	/* Form Data Object*/
 	const [title, setTitle] = useState("")
@@ -70,9 +74,28 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 
 
 	}
+	const isDirtyRow = (newFormData) =>{
+		const newFormDataStr = formData64(newFormData)
+		console.log(newFormDataStr != lastFormDataRef.current)
+		return newFormDataStr != lastFormDataRef.current
+	}
+	const formData64 = (formData) =>{
+		let buffer = ''
+		formData.forEach((val,prop)=>{
+			buffer+=`${prop}${encodeURI(val)}`
+		})
+		return btoa(buffer)
+	}
 	const hideToast = () => setShowToast(false)
 	const onSave_clicked = async() => {
 		console.log(`SentenceEditorTab.onSave_clicked`)
+		
+		const checkUrlRegex = new RegExp(`tts\/sentence-editor\/${pkRef.current}`)
+		if(!document.location.hash.match(checkUrlRegex)){
+			console.log(`invalid routes`)
+			return
+		}
+
 		const formData = new FormData();
 		let tmpItems = []; 
 		if(typeof items === 'string'){
@@ -102,6 +125,12 @@ export default function SentenceEditorTab({socketConnected, ws, config}){
 		formData.append('content', contentRef.current);
 		formData.append('content_ttf', contentTtfRef.current);
 
+		if(!isDirtyRow(formData) ){
+			console.log(`formData is fresh canceling saveRecord`)
+			return
+		}
+		
+		setLastFormData(formData64(formData))
 		// console.log(formData.entries());
 		// return
 		const res = await axios({

@@ -2,7 +2,7 @@ import {createRef, useState, useEffect} from "react"
 import axios from "axios"
 import Helper from "../../../lib/Helper"
 import AppConfig from "../../../lib/AppConfig"
-const delay = Helper.makeDelay(500)
+const delay = Helper.makeDelay(1000)
 
 export default function TitleEditor({title, setTitle, pk}){
 	const titleInputRef = createRef(null)

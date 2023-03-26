@@ -28,11 +28,13 @@ export default function SentenceItemTaskQueueToolbar({content,
 					const text = commaSentence[j].replace(/^\s+/,'');
 					const type = j == lastIndex ? 'dot':'comma';
 					if(text.length){
-						tmpSentences.push({
+						const si = {
 							text : Helper.fixTttsText(text), 
 							type,
 							ttf:''
-						})
+						};
+						if(si.text != '')
+							tmpSentences.push(si)
 						source_index += 1;
 					}
 					
@@ -40,12 +42,13 @@ export default function SentenceItemTaskQueueToolbar({content,
 			}else{
 				const text = commaSentence[0].replace(/^\s+/,'');
 				if(text.length){
-
-					tmpSentences.push({
+					const si = {
 						text : Helper.fixTttsText(text), 
 						type : 'dot',
 						ttf : '',
-					})
+					}
+					if(si.text != '')
+						tmpSentences.push(si)
 					source_index += 1;
 				}
 			}

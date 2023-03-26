@@ -1,6 +1,5 @@
 import React ,{useState,useEffect}from "react"
 import axios from "axios"
-import "bootstrap-icons/font/bootstrap-icons.css"
 import Pager from "./Pager"
 import {v4} from "uuid"
 import moment from "moment"

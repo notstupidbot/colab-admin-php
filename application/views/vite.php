@@ -44,6 +44,8 @@ window.__vite_plugin_react_preamble_installed__ = true
     <div id="root"></div>
 
     <script type="module" src="http://localhost:3000/src/main.jsx?t=1679543648473"></script> 
+    <script src="public/clipboard.min.js"></script>
+    <script src="public/hs.clipboard.js"></script>
     <script src="node_modules/preline/dist/preline.js"></script>
     <script src="public/autobahn.js"></script>
 </body>

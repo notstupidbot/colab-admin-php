@@ -79,7 +79,7 @@ const linkCls = ({ isActive, isPending }) => isActive ? activeTabCls :  inactive
           </li>
           <li>
             <NavLink className={linkCls} to="/bootstrap-icons">
-              <i className="bi bi-code"></i> Bootstrap Icons
+              <i className="bi bi-bootstrap"></i> Bootstrap Icons
             </NavLink>
           </li>
         </ul>
