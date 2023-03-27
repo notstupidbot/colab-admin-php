@@ -1,2 +1,4 @@
+cd frontend
 start npm run dev
-start push-server.cmd
+cd ..\backend
+start php-zmq.cmd

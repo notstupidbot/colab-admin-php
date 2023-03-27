@@ -1,0 +1,6 @@
+1. Ability to move up text content SentenceEditorText 
+2. Ability to remove current Row Sentence Editor
+3. Ability to convert extracted Content to original content
+4. Adding autosave for period of time for example very 1 minutes
+5. Ability to preview playlist based on SentenceEditor item wav files
+6. Adding small toolbar for clearing textarea content

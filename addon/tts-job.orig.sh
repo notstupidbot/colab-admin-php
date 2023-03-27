@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 export PATH=/container/dist/sbin:/container/dist/bin:$PATH
 TTS_DIR=/container/dist/tts-indonesia
-WWW_DIR=/container/dist/www/html
+WWW_DIR=/container/dist/www/html/www-dist
 PWD=`pwd`
 cd $TTS_DIR
 # source bin/activate
