@@ -1,4 +1,4 @@
-import {useEffect} from "react"
+import {useEffect, useState, useRef} from "react"
 import {  RouterProvider,
   createRoutesFromElements,
   createBrowserRouter,Route,Routes ,createHashRouter} from 'react-router-dom';
@@ -26,12 +26,14 @@ import Template from "./Template"
 
 import TtsServerPrefTab, {loader as ttsServerPrefTabLoader} from "./apps/preferences/TtsServerPrefTab"
 
+
 export default function Router({config}){
+	
 	const router = createHashRouter(
 		  createRoutesFromElements(
 		   <Route path="/" element={<Template config={config}/>}>
 
-		      <Route exac path="/tts" element={<Tts config={config}/>}>
+		      <Route exac path="/tts" element={<Tts config={config} />}>
 
 					<Route  path="/tts/project" element={<ProjectTab  config={config}/>} loader={projectTabLoader}/>
 					<Route exac path="/tts/project/page/:pageNumber" loader={projectTabLoader} element={<ProjectTab  config={config}/>}/>

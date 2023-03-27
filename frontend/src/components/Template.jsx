@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import SideBar from "./SideBar"
-export default function Template({}){
+export default function Template({config}){
 		 
 	return(<>
-		<SideBar/>
+		<SideBar config={config}/>
 		<Outlet/>
 	</>)	
 }

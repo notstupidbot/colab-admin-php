@@ -1,27 +1,36 @@
 class UiConfig {
-	dontRunTwice = false
-	hidenSidebarStatus = false
-	setHideSidebar = (status) => {}
+	callback_keys = []
 	constructor(){
-		this.dontRunTwice = true
 	}
 
-	hideSidebar(status = true){
-		this.hidenSidebarStatus = status;
-		this.setHideSidebar(status)
-		localStorage.hideSidebar = status;
+	setHiddenSidebarStatus(status = true){
+		const $main_content = $('#main-content')
+		
+		$main_content.prop('hideSidebar',status)
+		$main_content.trigger('hideSidebar')
+
+		localStorage.hideSidebar = status ? '1' : '';
 	}
 
-	setHideSidebarState(setHideSidebar){
-		this.setHideSidebar = setHideSidebar
-		// if(this.dontRunTwice){
-		// 	this.hidenSidebarStatus = localStorage.hideSidebar || false;
-		// 	this.setHideSidebar(this.hidenSidebarStatus )
-		// 	this.dontRunTwice = false
-		// }
+	getHiddenSidebarStatus(){
+		if(!localStorage.hideSidebar){
+			return false
+		}
+		return localStorage.hideSidebar === '1'
 	}
 
-
+	applyHiddenSidebarStatus(setHideSidebar, callback, callback_key){
+		setHideSidebar(this.getHiddenSidebarStatus())
+		if(typeof callback === 'function' ){
+			if(!this.callback_keys.includes(callback_key)){
+				const $main_content = $('#main-content')
+				$main_content.on('hideSidebar', ()=>{
+					callback($main_content.prop('hideSidebar'))
+				})
+			}
+			
+		}
+	}
 }
 
 export default class AppConfig {
