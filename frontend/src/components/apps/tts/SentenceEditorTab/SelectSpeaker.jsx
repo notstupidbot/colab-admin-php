@@ -14,7 +14,7 @@ export default function SelectSpeaker({speakerId, setSpeakerId}){
 	}
 
 	useEffect(()=>{
-		setSpeakerId(localStorage.lastSpeakerId||wibowo)
+		setSpeakerId(localStorage.lastSpeakerId||'wibowo')
 	},[])
 	
 	const formatSpeakerName = (speaker) => {

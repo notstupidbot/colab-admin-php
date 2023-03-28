@@ -111,6 +111,16 @@ export default class Prx {
 	}
 
 	static async post(url, data){
-
+		const formData = new FormData();
+		for(let key in data){
+			const value = data[key]
+			formData.append(key, value)
+		}
+		const res = await axios({
+			method: "post",
+			url,
+			data: formData,
+			headers: { "Content-Type": "multipart/form-data" },
+		});
 	}
 }

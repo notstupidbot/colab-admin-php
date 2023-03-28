@@ -1,28 +1,76 @@
-class UiConfig {
-	callback_keys = []
-	constructor(){
+import {v4} from "uuid"
+/**
+ * localStorage Config
+ * */
+class LsConfig {
+	config_key = null
+	data = null
+
+	constructor(config_key){
+		this.config_key = config_key
+		this.init()
 	}
 
+	init(){
+		if(!this.config_key){
+			config_key = `ls_config_${v4()}`
+		}
+		this.getData()
+	}
+
+	setConfigKey(key){
+		this.config_key = key
+	}
+	getData(key){
+		try{
+			this.data = JSON.parse(localStorage[this.config_key])
+		}catch(e){
+			if(!this.data){
+				this.data = {}
+			}
+		}
+		if(!key)
+			return this.data
+
+		if(!this.data[key])
+			return null
+
+		return this.data[key]
+	}
+
+	setData(key, value){
+		this.data[key] = value
+		localStorage[this.config_key] = JSON.stringify(this.data)
+	}
+}
+class UiConfig extends LsConfig{
+	defaultTheme = 'default-theme.css';
+
+	hiddenSidebar_callback_keys = []
+	
+	constructor(){
+		const config_key = 'uiTtsConfig'
+		super(config_key)
+		this.setData('defaultTheme', this.defaultTheme)
+	}
+	
 	setHiddenSidebarStatus(status = true){
 		const $main_content = $('#main-content')
 		
 		$main_content.prop('hideSidebar',status)
 		$main_content.trigger('hideSidebar')
 
-		localStorage.hideSidebar = status ? '1' : '';
+		this.setData('hideSidebar', status)
 	}
 
 	getHiddenSidebarStatus(){
-		if(!localStorage.hideSidebar){
-			return false
-		}
-		return localStorage.hideSidebar === '1'
+		return this.getData('hideSidebar')
 	}
 
 	applyHiddenSidebarStatus(setHideSidebar, callback, callback_key){
 		setHideSidebar(this.getHiddenSidebarStatus())
 		if(typeof callback === 'function' ){
-			if(!this.callback_keys.includes(callback_key)){
+			if(!this.hiddenSidebar_callback_keys.includes(callback_key)){
 				const $main_content = $('#main-content')
 				$main_content.on('hideSidebar', ()=>{
 					callback($main_content.prop('hideSidebar'))

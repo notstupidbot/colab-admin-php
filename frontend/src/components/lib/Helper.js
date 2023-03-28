@@ -67,7 +67,7 @@ export default class Helper{
 	    };
 
 	}
-	static delay = Helper.makeDelay(250)
+	static delay = Helper.makeDelay(1000)
 	static terbilang(x)
 	{
 		var ambil =new Array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");

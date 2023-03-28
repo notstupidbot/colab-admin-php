@@ -71,7 +71,7 @@ const BootstrapIcons = ({}) => {
 		})
 	}
 	return(<>
-		<div id="main-content"  className={cls +" pl-4 "+ (hideSidebar?"":"lg:pl-72")}>
+		<main>
 		<div className={"search-container py-3 mb-4"}>
 		<div className="sm:inline-flex sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full">
 		  <label htmlFor="inline-input-label-with-helper-text" className="block text-sm font-medium mb-2 dark:text-white">Filter</label>
@@ -126,7 +126,7 @@ const BootstrapIcons = ({}) => {
 				}
 
 			</div>
-		</div>
+		</main>
 	</>)
 }
 

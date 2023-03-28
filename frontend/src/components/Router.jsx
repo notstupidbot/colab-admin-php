@@ -20,18 +20,18 @@ import SentenceTab from "./apps/tts/SentenceTab";
 import ProjectEditorTab,{loader as projectEditorTabLoader} from "./apps/tts/ProjectEditorTab";
 
 import Explorer from "./apps/tts/ExplorerTab";
-import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTab/Ui"; 
+import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTabV2/SentenceEditorTab"; 
 import SideBar from "./SideBar"
 import Template from "./Template"
 
 import TtsServerPrefTab, {loader as ttsServerPrefTabLoader} from "./apps/preferences/TtsServerPrefTab"
 
-
+import ErrorPage from "./ErrorPage"
 export default function Router({config}){
 	
 	const router = createHashRouter(
 		  createRoutesFromElements(
-		   <Route path="/" element={<Template config={config}/>}>
+		   <Route path="/" errorElement={<ErrorPage />} element={<Template config={config}/>}>
 
 		      <Route exac path="/tts" element={<Tts config={config} />}>
 
@@ -55,6 +55,7 @@ export default function Router({config}){
 				<Route  path="/bootstrap-icons/page/:pageNumber" loader={bootstrapIconLoader} element={<BootstrapIcons/>}></Route>
 				<Route  path="/preferences" element={<Preferences config={config}/>}>
 					<Route exac path="/preferences/tts-server" loader={ttsServerPrefTabLoader} element={<TtsServerPrefTab config={config}/>}/>
+					<Route index exac path="/preferences/tts-server/page/:pageNumber" loader={ttsServerPrefTabLoader} element={<TtsServerPrefTab config={config}/>}/>
 					
 				</Route>
 			</Route>

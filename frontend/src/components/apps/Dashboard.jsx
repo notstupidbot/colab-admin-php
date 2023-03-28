@@ -4,13 +4,12 @@ export default function Dashboard(){
 	const hideSidebar = false
 	const cls = ""
 	return(<>
-<div id="main-content" className={cls +" "+ (hideSidebar?"":"lg:pl-72")}>
+		<main className="dark:text-white">
+			<h2>This is Dashboard</h2>
 
-		<h2>This is Dashboard</h2>
-
-		<div className="dashboard-item-container">
-			<Outlet/>
-		</div>
-		</div>
+			<div className="dashboard-item-container">
+				<Outlet/>
+			</div>
+		</main>
 	</>)
 }

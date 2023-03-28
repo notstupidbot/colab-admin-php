@@ -19,6 +19,9 @@ export async function loader({ params }) {
   return { sentenceId:params.pk };
 }
 
+import Store from "./deps/Store"
+
+
 export default function SentenceEditorTab({config}){
   const [socketConnected,setSocketConnected] = useState(false);
   

@@ -2,8 +2,14 @@ import React, {useState, useEffect, useRef} from "react"
 let firstTimer = true
 import Helper from "../../../lib/Helper"
 const delay = Helper.makeDelay(500)
-let lastTimer = 0;
+if(!window.__AUTOSAVE_BEHAVIOR_TIMER__){
+	window.__AUTOSAVE_BEHAVIOR_TIMER__ = []	
+}
+let ivs = window.__AUTOSAVE_BEHAVIOR_TIMER__;
+
+
 class AutosaveBehavior extends React.Component{
+	pk = null
 	state = {
 		time : '',
 		timer : 0,
@@ -17,92 +23,43 @@ class AutosaveBehavior extends React.Component{
 		prefSaveTimeout : 5,
 		prefSaveTimeoutDevider : 3,
 	}
-
-	/* Reference object */
-	project = null
 	saveRecord = () => console.log('dummy saveRecord()')
 
-	constructor(){
-		super()
-		
-	}
-
-	componentDidUpdate(){
-		
-		// console.log('updated')
-		// this.initTimer()
-
-	}
-	// shouldComponentUpdate(){
-	// 	console.log('should updated')
-	// 	return false
-	// }
-	initTimer(){
-		const {saveRecord,project, pk} = this.props 
+	constructor(props){
+		super(props)
+		const {saveRecord, pk} = props 
 		this.saveRecord = saveRecord
-		this.project = project
 		this.pk = pk
-		if(this.pk){
-			if(!this.state.timerStarted){
-				// clearTimeout(timerRef.current)
-				// clearTimeout(lastTimer)
 
-				const tm = setTimeout(()=>{
-					this.createClock()
-					this.setState({timerStarted :true})
-				},500)
+		this.initTimer()
+	}
 
-				this.setState({timer :tm})
-				
-				
-			}
-		}else{
-			// this.setState({timerStarted : false})
-			// clearTimeout(timerRef.current)
-			// clearTimeout(lastTimer)
+	componentWillUnmount(){
+		this.saveRecord = () => console.log('dummy saveRecord()')
+		this.setState({timerStarted :false})
+
+		this.clearTimer()
+	}
+	clearTimer(){
+		ivs.map(iv => clearTimeout(iv))
+
+
+	}
+	initTimer(){
+		this.clearTimer();
+
+		// if(this.pk){
+		if(!this.state.timerStarted){
+
+			const tm = setInterval(()=>{
+				this.createClock()
+			},500)
+			ivs.push(tm)
+			this.setState({timerStarted :true,timer :tm})
 		}
+		// }
 	}
-	componentDidMount(){
-		// const {saveRecord,project, pk} = this.props 
-		// this.saveRecord = saveRecord
-		// this.project = project
-		// this.pk = pk
-		// this.initTimer()
-
-		
-	}
-	/*const [time,setTime] = useState("")
-	const [timer,setTimer] = useState(null)	
-	const [timerStarted,setTimerStarted] = useState(false)
-	const [lastSaveDate,setLastSaveDate] = useState(new Date)
-	const [infoText,setInfoText] = useState("")
-	const [dotCount,setDotCount] = useState(0)
-	const [tick,setTick] = useState(0)
-	const [loading,setLoading] = useState(0)
-	const [enableAutoSave,setEnableAutoSave] = useState(true)
-	const prefSaveTimeout = 70
-	const prefSaveTimeoutDevider = 3
-	let saveTimeout = prefSaveTimeout; //seconds
-	saveTimeout = saveTimeout / prefSaveTimeoutDevider;
-	*/
-
-	/*
-	const lastSaveDateRef = useRef(null)
-	const timerRef = useRef(null)
-	lastSaveDateRef.current = lastSaveDate
-	timerRef.current = timer
-	const dotCountRef = useRef(null)
-	dotCountRef.current = dotCount
-
-	const tickRef = useRef(null)
-	tickRef.current = tick
-
-	const timerStartedRef = useRef(null)
-	timerStartedRef.current = timer
-
-	const enableAutoSaveRef = useRef(null)
-	enableAutoSaveRef.current = enableAutoSave
-	*/
+	 
 	createClock(){
 		console.log(`createClock is running`)
 		const today = new Date
@@ -127,9 +84,7 @@ class AutosaveBehavior extends React.Component{
 		// console.log(timeBetween)
 		
 		if(timeBetween > this.state.prefSaveTimeout && this.state.enableAutoSave){
-			// setDotCount(0)
-			// setLoading(true)
-			// setLastSaveDate(new Date)
+
 			this.setState({
 				dotCount : 0,
 				loading : true,
@@ -137,44 +92,18 @@ class AutosaveBehavior extends React.Component{
 				infoText : "Saving record"
 			})
 			
-			// setInfoText()
-			console.log(this.state.timer)
-
-			if(lastTimer == this.state.timer){
-				console.log(`lastTimer`)
-				return
-			}
-			lastTimer = this.state.timer
-
-			clearTimeout(lastTimer)
-			
 			this.saveRecord()
 			
 			setTimeout(()=>{
-				// setInfoText()
-				// setDotCount(0)
-				// setLoading(false)
 				this.setState({
 					dotCount : 0,
 					loading : false,
 					lastSaveDate : new Date,
 					infoText : `Last saved at ${clock}`
 				})
-			},3000)
+			},1000)
 			
 		}
-		// clearTimeout(timer)
-		// clearTimeout(timerRef.current)
-
-		const tm = setTimeout(()=>{
-			if(this.state.timerStarted)
-				this.createClock()
-			else{
-				clearTimeout(this.state.timer)
-			}
-		},500);
-		
-		this.setState({timer:tm})
 
 	}
 	clockCheckTime(i){
@@ -202,20 +131,30 @@ class AutosaveBehavior extends React.Component{
 			<div className="dark:bg-slate-900 dark:text-slate-400 mb-4 px-2 rounded-md border-amber-400  flex">
 				<div className="col-1">
 				<span className={badgeCls}>
-					<input className="checkbox -mt-1 mr-1" type="checkbox" onChange={f=>f} onClick={evt => this.onCkAutoSave_clicked(evt)} checked={this.state.enableAutoSave}/>
+					<input className="checkbox -mt-1 mr-1" type="checkbox" 
+						   onChange={f=>f} 
+						   onClick={evt => this.onCkAutoSave_clicked(evt)} 
+						   checked={this.state.enableAutoSave}/>
 					{this.state.enableAutoSave && this.state.dotCount > 5  ? ` Autosave in ${autoSaveIn} s` : ""}
 				</span>
 				</div>			
 				<div className="col-2">
 				
 				<span className={badgeCls}>
-				{this.state.loading?(<div className={loadingCls} role="status" aria-label="loading">
-	  <span className="sr-only">Loading...</span>
-	</div>):""} {this.state.infoText} {tmbLastSaved <1 ? dotText : ""}
+				{
+					this.state.loading ? (<div className={loadingCls} role="status" aria-label="loading">
+											  <span className="sr-only">Loading...</span>
+										  </div>):""
+				} 
+				{this.state.infoText} {tmbLastSaved <1 ? dotText : ""}
 				</span>
 				</div>
 				<div className="col-3 mt-2 mx-2 text-blue-500">
-					{this.state.enableAutoSave ? (this.state.tick == 0 ? (<i className="bi bi-cup-hot"/> ) : (<i className="bi bi-cup-hot-fill"/> ))  :""}
+					{
+						this.state.enableAutoSave ? (this.state.tick == 0 ? (<i className="bi bi-cup-hot"/> ) 
+																		  : (<i className="bi bi-cup-hot-fill"/> ))  
+												  :""
+					}
 				</div>
 			</div>
 			</div>	

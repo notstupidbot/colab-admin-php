@@ -24,9 +24,7 @@ export default function FormItems({socketConnected,
 	const onConvertTask = evt =>{
 		console.log(`FormItems.onConvertTask`)
 	}
-	useEffect(()=>{
-		autoSaveRef.current.initTimer()
-	},[pk])
+
 	return(<>
 		<div className="container">
 			<TitleEditor title={title} setTitle={setTitle} pk={pk} config={config}/>
