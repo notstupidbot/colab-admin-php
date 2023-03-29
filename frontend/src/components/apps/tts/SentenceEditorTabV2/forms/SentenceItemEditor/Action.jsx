@@ -20,6 +20,20 @@ export default class Action extends React.Component {
         this.buildItems()
 
 	}
+    applyTexItemRefState(srcState, index){
+        try {
+            this.textItemRefs[index].current.setState(srcState)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    applyTtfItemRefState(srcState, index){
+        try {
+            this.ttfItemRefs[index].current.setState(srcState)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     onTaskConvert(evt){
         const activeIndex = 0
         this.setState({
@@ -33,17 +47,67 @@ export default class Action extends React.Component {
         })
         
     }
-    onTaskExtract(evt){
-        const activeIndex = 0
-        this.setState({
-            taskModeExtract : true,
-            taskConvertConfig : {
-                run : true,
-                index : activeIndex,
-                next : activeIndex + 1,
-                result : -1
-            }
-        })
+    async onTaskExtract(evt){
+        let confirmed = true
+        if(this.items.length > 0){
+            confirmed = confirm("sei.items is not empty, whould you like to proceed?")
+        }
+        console.log(confirmed)
+        if(!confirmed){
+            console.log(`SentenceItemEditor.onExtract() : canceled caused of false confirmed`)
+            return
+        }
+        const row =  this.parent.getRow()
+        const content = row.content   
+
+        /*============================================================================== */
+		this.items = [];
+		const dotSentences = content.split('.');
+		let sourceIndex = 0;
+        this.setState({taskModeExtract : true})
+		for(let i in dotSentences){
+			const commaSentence = dotSentences[i].split(',');
+
+			if(commaSentence.length > 1){
+				const lastIndex = commaSentence.length - 1;
+				for(let j in commaSentence){
+					const text = commaSentence[j].replace(/^\s+/,'');
+					const type = j == lastIndex ? 'dot':'comma';
+					if(text.length){
+						const si = {
+							text : Helper.fixTttsText(text), 
+							type,
+							ttf:''
+						}
+						if(si.text != ''){
+                            this.items.push(si)
+                        }
+						sourceIndex += 1;
+					}
+					
+				}
+			}else{
+				const text = commaSentence[0].replace(/^\s+/,'');
+				if(text.length){
+					const si = {
+						text : Helper.fixTttsText(text), 
+						type : 'dot',
+						ttf : '',
+					}
+					if(si.text != ''){
+                        this.items.push(si)
+                    }
+                    
+                    sourceIndex += 1;
+				}
+			}
+            this.setState({items : this.items})
+            await Helper.timeout(150)
+		}
+        // console.log(this.items)
+        this.setState({taskModeExtract : false})
+        this.initSentenceItemRefs()
+        /*==============================================================================*/
     }
     onTaskSynthesize(evt){
         const activeIndex = 0
@@ -100,7 +164,9 @@ export default class Action extends React.Component {
             this.ttfItemRefs.push(ttfRef)
         })
     }
+    
     componentDidMount(){
         this.setState({items : this.items})
+
     }
 }

@@ -13,7 +13,6 @@ class Toolbar extends React.Component{
     }
     onConvertItem(evt, index){
 
-		delay(async()=>{
 			const text = evt.target.value;
 			this.setState({loadingConvert:true})
 			const sie = this.parent.parent
@@ -36,7 +35,6 @@ class Toolbar extends React.Component{
 			setSentenceItemRefs(sentenceItemRefs_tmp);
 			
             */
-		});
 		
 	}
     

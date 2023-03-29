@@ -11,10 +11,11 @@ export default class SentenceItemEditor extends Action{
     }
     componentDidUpdate(){
         console.log('SentenceItemEditor.componentDidUpdate()')
-        this.tqtRef.current.syncParentTaskState()
+        if(this.tqtRef.current)
+            this.tqtRef.current.applyState(this.state)
 
     }
-
+    
     async onItemChange(ref){
         console.log(ref.type)
         const items = this.state.items

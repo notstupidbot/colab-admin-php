@@ -14,9 +14,15 @@ export default class Ui extends Action {
 		super(props)
 		this.seiRef = React.createRef(null)
 		this.tqtRef = React.createRef(null)
-	}
 
+		this.state = {
+			// seiRefLoaded : false
+		}
+	}
+	
+	
 	render(){
+		// console.log()
 		const fieldEditorProps = {
 			pk : this.pk,
 			config : this.config,
@@ -29,10 +35,18 @@ export default class Ui extends Action {
 					<SelectSpeaker {...fieldEditorProps}/>
 					<TitleEditor {...fieldEditorProps} title={this.row.title}/> 
 					<div className="relative">
-						<TaskQueueToolbar {...fieldEditorProps} parent={this.seiRef} ref={this.tqtRef}/>
+						<TaskQueueToolbar {...fieldEditorProps} 
+								ref={this.tqtRef} 
+								onExtractTask={e=>this.seiRef.current.onTaskExtract(e)}
+								onConvertTask={e=>this.seiRef.current.onTaskConvert(e)}
+								onSynthesizeTask={e=>this.seiRef.current.onTaskSynthesize(e)}/>
+						
 						<ContentEditor {...fieldEditorProps} content={this.row.content}/> 
 					</div>
-					<SentenceItemEditor {...fieldEditorProps} sentences={this.row.sentences} ref={this.seiRef}  tqtRef={this.tqtRef}/> 
+					<SentenceItemEditor {...fieldEditorProps} 
+						sentences={this.row.sentences} 
+						ref={this.seiRef}  
+						tqtRef={this.tqtRef}/> 
 					<ContentTtfEditor {...fieldEditorProps} contentTtf={this.row.content_ttf}/> 
 				</>) : ""
 			}

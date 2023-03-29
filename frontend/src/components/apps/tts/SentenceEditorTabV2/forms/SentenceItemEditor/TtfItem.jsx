@@ -19,12 +19,10 @@ class Toolbar extends React.Component{
     onSynthesizeItem(evt, index){
         const text = evt.target.value;
 
-		delay(async()=>{
 			this.setState({loadingSynthesize:true})
             const sie = this.parent.parent
             const inTaskMode = sie.state.taskModeSynthesize
             console.log(inTaskMode)
-        })
     }
 
     render(){

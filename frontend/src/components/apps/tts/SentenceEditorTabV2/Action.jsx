@@ -20,7 +20,7 @@ export default class Action extends State {
 		}
 		// console.log(this.row)
 	}
-
+	
 	async componentDidMount(){
 		this.loadSentence()
 	}
