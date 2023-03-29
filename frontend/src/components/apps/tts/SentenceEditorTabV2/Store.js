@@ -1,5 +1,5 @@
 import Prx from "../../../lib/Prx"
-
+import {v4} from "uuid"
 export default class Store {
 	config = null
 	constructor(config){
@@ -13,7 +13,13 @@ export default class Store {
 	}
 	async getSentence(pk){
 	  	const res = await Prx.get(`${this.config.getApiEndpoint()}/api/tts/sentence?id=${pk}`);
-	  	return this.validateResult(res)
+	  	if(res){
+			let data = res.data
+			data.unique_id = v4()
+
+			return data
+		}
+		return null
 	}
 
 	async updateSentenceField(key, value, pk){

@@ -9,6 +9,7 @@ export default class Action extends React.Component {
 		super(props)
         this.state = {
             items : [],
+            sentences : '[]',
             taskModeExtract : false,
             taskModeConvert : false,
             taskModeSynthesize : false,
@@ -17,7 +18,7 @@ export default class Action extends React.Component {
             taskExtractConfig : {run : false, index : -1, next : -1, result : -1},
         }
 
-        this.buildItems()
+        
 
 	}
     applyTexItemRefState(srcState, index){
@@ -86,6 +87,9 @@ export default class Action extends React.Component {
             console.log(`SentenceItemEditor.onExtract() : canceled caused of false confirmed`)
             return
         }
+        this.setState({items:[]})
+        await Helper.timeout(150)
+
         const row =  this.parent.getRow()
         const content = row.content   
 
@@ -131,7 +135,6 @@ export default class Action extends React.Component {
 				}
 			}
             this.setState({items : this.items})
-            await Helper.timeout(150)
 		}
         // console.log(this.items)
         this.setState({taskModeExtract : false})
@@ -152,9 +155,9 @@ export default class Action extends React.Component {
         })
     }
     /* Build items from props.sentences */
-    buildItems(){
+    buildItems(setState){
         let items;
-        
+        this.setState({sentences:this.props.sentences})
         try {
             items = JSON.parse(this.props.sentences)
         } catch (error) {
@@ -177,10 +180,12 @@ export default class Action extends React.Component {
                 return ok
             })
         }
-        // console.log(items)
+        console.log(items)
         this.items = items
         this.initSentenceItemRefs()
-        
+
+        if(setState)
+            this.triggerUpdateItems()
     }
     initSentenceItemRefs(){
         this.textItemRefs = []
@@ -194,9 +199,17 @@ export default class Action extends React.Component {
             this.ttfItemRefs.push(ttfRef)
         })
     }
-    
+    triggerUpdateItems(){
+        this.setState({items:[]})
+        setTimeout(()=>{
+            this.setState({items : Object.assign([],this.items)})
+
+        },1000)
+
+    }
     componentDidMount(){
-        this.setState({items : this.items})
+        this.triggerUpdateItems()
+
 
     }
 }

@@ -49,6 +49,8 @@ export default class SentenceItem extends React.Component{
         this.inputRef.current.value = content
 
     }
+   
+   
     componentDidUpdate(){
         this.applyToolbarState(this.state)
     }
@@ -86,6 +88,10 @@ export default class SentenceItem extends React.Component{
     setToolbar(toolbar){
         this.toolbar = toolbar
     }
+    componentDidMount(){
+        console.log(this.inputRef)
+        this.inputRef.current.value = this.props.item[this.type]
+    }
     render(){
 	    const cls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 focus:dark:bg-slate-800";
 
@@ -96,7 +102,7 @@ export default class SentenceItem extends React.Component{
         {this.toolbar}
         <textarea ref={this.inputRef} className={`${this.type=='dot'?'dot':'comma'} sentence-item-${this.type} sentence-item-${this.type}-${this.index} `+cls} 
         onChange={evt=>{this.onChangeContent(evt)} }
-        defaultValue={this.props.item[this.type]}
+        
         >
             
         </textarea>

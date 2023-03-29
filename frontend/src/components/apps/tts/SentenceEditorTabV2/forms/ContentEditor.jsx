@@ -4,9 +4,10 @@ import Helper from "../../../../lib/Helper"
 
 export default class ContentEditor extends React.Component{
     contentInputRef = null
+	parent = null
     constructor(props){
         super(props)
-
+		this.parent = props.parent
         this.contentInputRef = React.createRef(null)
         this.state = {
             inputStatus : 0
@@ -19,7 +20,23 @@ export default class ContentEditor extends React.Component{
                 return;
             }
 			await this.props.store.updateSentenceField('content', content, this.props.pk)
+			this.parent.updateRow('content', content)
 		})
+	}
+	loadFormData(){
+		setTimeout(()=>{
+			try {
+				this.contentInputRef.current.value = this.props.content
+
+			} catch (error) {
+				console.log(error)
+				this.loadFormData()
+			}
+		},500)
+	}
+	componentDidMount(){
+		this.loadFormData()
+
 	}
     render(){
         const inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
@@ -29,7 +46,7 @@ export default class ContentEditor extends React.Component{
         return(<>
             
 			<div className="grow-wrap my-2">
-				<TextareaAutosize cacheMeasurements={false} ref={this.inputContentRef} 
+				<TextareaAutosize cacheMeasurements={false} ref={this.contentInputRef} 
 						   onChange={ evt => this.onChangeContent(evt) } 
 						   className={this.state.inputStatus == 0 ? inputDefaultCls 
 						   							   : (this.state.inputStatus == 1 ? inputOkCls : inputErrorCls)} 

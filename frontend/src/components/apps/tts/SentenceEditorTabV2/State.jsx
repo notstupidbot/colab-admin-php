@@ -12,15 +12,38 @@ export default class State extends React.Component {
 		this.config = props.config
 		this.store = new Store(this.config)
 		this.state = {
-			row : null
+			content : '',
+			title : '',
+			content_ttf : '',
+			sentences : '[]',
+			unique_id:''
 		}
 	}
 	/* return actual row from database result */
 	getRow(){
 		return this.row
 	}
-
+	updateRow(key, value){
+		this.row[key] = value
+		let state = {}
+		state[key] = value
+		console.log(state)
+		this.setState(state)
+	}
 	setRow(row){
 		this.row = row
+		const {title, content, sentences, content_ttf, unique_id } = row
+		this.setState({title, content, sentences, content_ttf, row, unique_id},()=>{
+			this.seiRef.current.buildItems(true)
+		})
+
+		// this.setState({sentences:'[]'},()=>{
+		// 	setTimeout(()=>{
+		// 		this.setState({sentences},()=>{
+		// 			console.log('B')
+		// 			this.seiRef.current.buildItems(true)
+		// 		})
+		// 	},5000)
+		// })
 	}
 }

@@ -3,8 +3,10 @@ import Helper from "../../../../lib/Helper"
 
 export default class TitleEditor extends React.Component {
 	titleInputRef = null
-	constructor(props){
-		super(props)
+	parent = null
+    constructor(props){
+        super(props)
+		this.parent = props.parent
 
 		this.titleInputRef = React.createRef(null)
 	}
@@ -19,7 +21,25 @@ export default class TitleEditor extends React.Component {
 			}
 
 			await this.props.store.updateSentenceField('title', title, this.props.pk)
+			this.parent.updateRow('title', title)
+			
 		})
+	}
+	
+	loadFormData(){
+		setTimeout(()=>{
+			try {
+				this.titleInputRef.current.value = this.props.title
+
+
+			} catch (error) {
+				console.log(error)
+				this.loadFormData()
+			}
+		},500)
+	}
+	componentDidMount(){
+		this.loadFormData()
 	}
 	render(){
 		const cls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"

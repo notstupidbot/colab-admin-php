@@ -8,7 +8,7 @@ export async function loader({ params }) {
 }
 const SentenceEditorTab = ({config}) => {
 	const {sentenceId} = useLoaderData()
-
+	
 	return(<>
 		<div className="SentenceEditorTabV2 dark:text-slate-500">
 			<Ui pk={sentenceId} config={config}/>

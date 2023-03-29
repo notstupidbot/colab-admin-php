@@ -25,9 +25,9 @@ export default class SentenceItemEditor extends Action{
         items[ref.index][ref.type] = ref.content
 
         this.setState({items})
-		
-        await this.props.store.updateSentenceField('sentences', JSON.stringify(items), this.props.pk)
-
+		const sentences = JSON.stringify(items)
+        await this.props.store.updateSentenceField('sentences', sentences, this.props.pk)
+        this.parent.updateRow('sentences', sentences)
     }
     getItems(stringify){
         if(stringify){
@@ -35,13 +35,18 @@ export default class SentenceItemEditor extends Action{
         }
         return this.state.items
     }
-    
+    componentDidMount(){
+        // this.buildItems(true)
+        // this.triggerUpdateItems()
+    }
     render(){
         const items = this.state.items
         if(!items)
             return ""
         return(<><div className="sentence-item-editor my-2 rounded-md border-gray-200 text-sm  dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
+            {/* <code>{this.state.sentences}</code> */}
             {
+
                 items.map((item, index)=>{
                     const itemProps = {item, index, parent: this}
                     return(<div className="sentence-item-row flex my-0 py-3 px-4"  key={index}>

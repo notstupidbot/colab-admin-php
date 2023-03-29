@@ -115,7 +115,7 @@ class Tts extends REST_Controller {
         
 
         if($id){
-            $sentence = $this->m_sentence->getById($id);
+            $sentence_current = $this->m_sentence->getById($id);
             $sentence = [
                 'title' => $title,
                 'content' => $content,
@@ -124,12 +124,19 @@ class Tts extends REST_Controller {
                 'last_updated' => date('Y-m-d H:i:s'),
 
             ];
+            if(!empty($title) ){
+                $sentence['slug'] = slug($title);
+            }
+            
             $this->m_sentence->update($id, $sentence);
 
             if(!empty($order)){
                 $this->m_sentence->move_order($id, $order);
             }
-            $this->response($sentence, 200);
+            foreach($sentence as $k => $v){
+                $sentence_current[$k]=$v;
+            }
+            $this->response($sentence_current, 200);
         }else{
             $sentence = $this->m_sentence->create($title, $content, $content_ttf, $sentences, '-',$project_id);
             $this->response($sentence, 200);

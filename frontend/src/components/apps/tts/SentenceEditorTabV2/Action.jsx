@@ -13,10 +13,10 @@ export default class Action extends State {
 	}
 
 	async loadSentence(){
-		this.row = await this.store.getSentence(this.pk)
+		const row = await this.store.getSentence(this.pk)
 
-		if(this.row){
-			this.setState({row : this.row})
+		if(row){
+			this.setRow(row)
 		}
 		// console.log(this.row)
 	}

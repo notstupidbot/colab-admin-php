@@ -20,20 +20,24 @@ export default class Ui extends Action {
 		}
 	}
 	
-	
+	componentWillUnmount(){
+		
+	}
 	render(){
-		// console.log()
+		console.log(this.state.unique_id)
 		const fieldEditorProps = {
 			pk : this.pk,
 			config : this.config,
 			store : this.store,
-			parent : this
+			parent : this,
+			unique_id : this.state.unique_id
+		
 		}
 		return (<div className="SentenceTabEditorUi">
 			{
 				this.state.row ? (<>
 					<SelectSpeaker {...fieldEditorProps}/>
-					<TitleEditor {...fieldEditorProps} title={this.row.title}/> 
+					<TitleEditor {...fieldEditorProps} title={this.state.title}/> 
 					<div className="relative">
 						<TaskQueueToolbar {...fieldEditorProps} 
 								ref={this.tqtRef} 
@@ -41,13 +45,13 @@ export default class Ui extends Action {
 								onConvertTask={e=>this.seiRef.current.onTaskConvert(e)}
 								onSynthesizeTask={e=>this.seiRef.current.onTaskSynthesize(e)}/>
 						
-						<ContentEditor {...fieldEditorProps} content={this.row.content}/> 
+						<ContentEditor {...fieldEditorProps} content={this.state.content}/> 
 					</div>
 					<SentenceItemEditor {...fieldEditorProps} 
-						sentences={this.row.sentences} 
+						sentences={this.state.sentences} 
 						ref={this.seiRef}  
 						tqtRef={this.tqtRef}/> 
-					<ContentTtfEditor {...fieldEditorProps} contentTtf={this.row.content_ttf}/> 
+					<ContentTtfEditor {...fieldEditorProps} contentTtf={this.state.content_ttf}/> 
 				</>) : ""
 			}
 			

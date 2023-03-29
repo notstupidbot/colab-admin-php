@@ -140,6 +140,7 @@ return(<>
           }
           {
           	grid.records.map((item,index)=>{
+				item.unique_id = v4()
           		const pageNumber = (parseInt(index) + 1) + ((parseInt(grid.page)-1) * parseInt(grid.limit))
           		return(
           			<tr key={pageNumber} className="odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700">
@@ -151,7 +152,7 @@ return(<>
 </td>
 		              <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">{item.content.substr(0,225)}</td>
 		              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/sentence-editor/${item.id}/${item.slug}`}>View in Editor</Link>
+		                <Link className="text-blue-500 hover:text-blue-700" to={`/tts/sentence-editor/${item.id}/${item.slug}?uuid=${item.unique_id}`}>View in Editor</Link>
 		              </td>
 		            </tr>
           		)
