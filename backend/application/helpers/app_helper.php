@@ -145,7 +145,7 @@ function convert_ttf_server($text){
 	$ci->load->model('api/PreferenceMdl', 'm_pref');
     
     list($tts_server_endpoint, $tts_server_proxy) = $ci->m_pref->getTtsServerPrefs();
-
+	
     $client = new \GuzzleHttp\Client();
     $options = [
         'timeout' => 60*60*60, // 1 hour

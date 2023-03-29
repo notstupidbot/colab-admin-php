@@ -15,13 +15,34 @@ class Toolbar extends React.Component{
             loadingSynthesize : false
         }
     }
+    applyState(srcState){
+        const {
+            hideAudio,audioSource,loadingSynthesize
+        } = srcState
 
+        const appliedState = {
+            hideAudio,audioSource,loadingSynthesize
+        }
+
+        Object.keys(this.state).map(key=>{
+            if(typeof appliedState[key] != 'undefined' ){
+                let state = {}
+				state[key] = appliedState[key]
+				this.setState(state)
+            }
+        })
+    }
     onSynthesizeItem(evt, index){
         const text = evt.target.value;
 
 			this.setState({loadingSynthesize:true})
             const sie = this.parent.parent
             const inTaskMode = sie.state.taskModeSynthesize
+
+            if(inTaskMode){
+                console.log(`TtfItem.onSynthesizeItem() canceled because taskModeSynthesize is true`)
+                return
+            }
             console.log(inTaskMode)
     }
 

@@ -94,9 +94,9 @@ class PreferenceMdl extends BaseMdl{
 	}
 
 	function getTtsServerPrefs(){
-		$tts_server_endpoint = $this->getByGroup('tts_server', 'endpoint', true);
-	    $tts_server_proxy = $this->getByGroup('tts_server', 'proxy', true);
-	    $tts_enable_proxy = $this->getByGroup('tts_server', 'enable_proxy', true);
+		$tts_server_endpoint = $this->getByGroup('tts_server', 'tts_server.endpoint', true);
+	    $tts_server_proxy = $this->getByGroup('tts_server', 'tts_server.proxy', true);
+	    $tts_enable_proxy = $this->getByGroup('tts_server', 'tts_server.enable_proxy', true);
 
 	    if(is_object($tts_server_endpoint)){
 	        $tts_server_endpoint = !empty($tts_server_endpoint->url) ? $tts_server_endpoint->url : "";

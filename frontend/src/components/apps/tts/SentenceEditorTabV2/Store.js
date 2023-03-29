@@ -30,4 +30,16 @@ export default class Store {
 		return this.validateResult(res)
 
 	}
+
+	async convertTtf(text){
+		let ttf = [];
+		const res = await Prx.get(`${this.config.getApiEndpoint()}/api/tts/convert?text=${encodeURI(text)}`);
+		if(res){
+			if(res.data){
+				ttf = res.data.map(item=>item.ttf)
+			}
+		}
+		 
+		return ttf.join(' ')
+	}
 }

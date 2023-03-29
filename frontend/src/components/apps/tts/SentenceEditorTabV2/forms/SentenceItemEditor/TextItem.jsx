@@ -8,33 +8,49 @@ class Toolbar extends React.Component{
         super(props)
         this.parent = props.parent
         this.state = {
-            loadingConvert : false
+            loadingConvert : false,
+			inTaskMode : false
         }
     }
-    onConvertItem(evt, index){
+	applyState(srcState){
+        const {
+            loadingConvert,inTaskMode
+        } = srcState
 
-			const text = evt.target.value;
-			this.setState({loadingConvert:true})
+        const appliedState = {
+            loadingConvert,inTaskMode
+        }
+        Object.keys(this.state).map(key=>{
+            if(typeof appliedState[key] != 'undefined' ){
+                let state = {}
+				state[key] = appliedState[key]
+				this.setState(state)
+            }
+        })
+
+    }
+    async onConvertItem(evt, index){
 			const sie = this.parent.parent
 			const inTaskMode = sie.state.taskModeConvert
-            console.log(inTaskMode)
-			/*sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
-			sentenceItemRefs_tmp[index].loading = true;
-			setSentenceItemRefs(sentenceItemRefs_tmp);
+			if(inTaskMode){
+                console.log(`TextItem.onConvertItem() canceled because taskModeConvert is true`)
+                return
+            }
 
-			const res = await axios(`${config.getApiEndpoint()}/api/tts/convert?text=${encodeURI(text)}`);
-			let ttf = ''; 
-			for(let k in res.data){
-				ttf += res.data[k].ttf + ' '
-			}
+			this.setState({loadingConvert:true})
+			const inputText = this.parent.getInputText()
+			const ttf = await sie.props.store.convertTtf(inputText) 
 
-			const ttfRefCurrent = document.querySelector(`.sentence-item-ttf-${index}`)
-			ttfRefCurrent.value = ttf.trim()
-			sentenceItemRefs_tmp = Object.assign([], sentenceItemRefs);
-			sentenceItemRefs_tmp[index].loading = false;
-			setSentenceItemRefs(sentenceItemRefs_tmp);
-			
-            */
+            const refTtf = sie.ttfItemRefs[index]
+            refTtf.current.setContent(ttf)
+
+            sie.items[index].ttf = ttf
+			const sentences = sie.getItems(true)
+        	sie.props.store.updateSentenceField('sentences', sentences, sie.props.pk)
+			// console.log(sie.items[index])
+			// const textInput = this.getTextInput()
+			// console.log(ttf)
+			this.setState({loadingConvert:false})
 		
 	}
     
@@ -47,7 +63,7 @@ class Toolbar extends React.Component{
         <div className="absolute z-10 right-2">
 				<div className="inline-flex shadow-sm">
 				  <button title="Translate this line" 
-				  		  disabled={this.state.loadingConvert} 
+				  		  disabled={this.state.loadingConvert || this.state.inTaskMode} 
 				  		  type="button" 
 				  		  onClick = { evt => this.onConvertItem(evt, index) } 
 				  		  className={lcls}>
@@ -64,11 +80,12 @@ class Toolbar extends React.Component{
     }
 }
 export default class TextItem extends SentenceItem{
-
+	toolbarRef = null
     constructor(props){
         super(props)
+		this.toolbarRef = React.createRef(null)
         this.setType('text', props)
-        this.setToolbar(<Toolbar index={props.index} parent={this}/>)
+        this.setToolbar(<Toolbar index={props.index} parent={this} ref={this.toolbarRef}/>)
 
     }
     

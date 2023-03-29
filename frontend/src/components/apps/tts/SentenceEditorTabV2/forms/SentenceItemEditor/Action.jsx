@@ -22,37 +22,66 @@ export default class Action extends React.Component {
 	}
     applyTexItemRefState(srcState, index){
         try {
-            this.textItemRefs[index].current.setState(srcState)
+            this.textItemRefs[index].current.applyState(srcState)
         } catch (error) {
             console.log(error)
         }
     }
     applyTtfItemRefState(srcState, index){
         try {
-            this.ttfItemRefs[index].current.setState(srcState)
+            this.ttfItemRefs[index].current.applyState(srcState)
         } catch (error) {
             console.log(error)
         }
     }
-    onTaskConvert(evt){
-        const activeIndex = 0
-        this.setState({
-            taskModeConvert : true,
-            taskConvertConfig : {
-                run : true,
-                index : activeIndex,
-                next : activeIndex + 1,
-                result : -1
-            }
+    applyTexItemRefStateBatch(srcState){
+        this.textItemRefs.map((ref, index)=>{
+            ref.current.applyState(srcState)
+            // console.log(ref)
+
         })
+    }
+    applyTtfItemRefStateBatch(srcState){
+        this.ttfItemRefs.map((ref, index)=>{
+            ref.current.applyState(srcState)
+            
+            // console.log(ref)
+            
+        })
+    }
+    async onTaskConvert(evt){
+        this.applyTexItemRefStateBatch({inTaskMode : true})
+        this.setState({taskModeConvert : true})
+
+        for(let index in this.textItemRefs){
+            const ref = this.textItemRefs[index]
+            ref.current.applyToolbarState({loadingConvert : true})
+            const inputText = ref.current.getInputText()
+
+            const ttf = await this.parent.store.convertTtf(inputText)
+            // await Helper.timeout(1000)
+            const refTtf = this.ttfItemRefs[index]
+            refTtf.current.setContent(ttf)
+            this.items[index].ttf = ttf
+            // console.log(ttf)
+            ref.current.applyToolbarState({loadingConvert : false})
+
+        }
+
+        const sentences = this.getItems(true)
+        this.parent.store.updateSentenceField('sentences', sentences, this.parent.pk)
+        this.setState({taskModeConvert : false})
+        this.applyTexItemRefStateBatch({inTaskMode : false})
+
         
     }
+    /* Build items from parent.row.content */
     async onTaskExtract(evt){
         let confirmed = true
         if(this.items.length > 0){
             confirmed = confirm("sei.items is not empty, whould you like to proceed?")
         }
-        console.log(confirmed)
+        // console.log(confirmed)
         if(!confirmed){
             console.log(`SentenceItemEditor.onExtract() : canceled caused of false confirmed`)
             return
@@ -122,6 +151,7 @@ export default class Action extends React.Component {
             }
         })
     }
+    /* Build items from props.sentences */
     buildItems(){
         let items;
         

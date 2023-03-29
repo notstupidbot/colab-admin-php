@@ -13,6 +13,11 @@ export default class SentenceItem extends React.Component{
         this.inputRef = React.createRef(null)
         this.parent = props.parent
         this.index = props.index
+
+        this.state = {
+            inTaskMode : false,
+            content : ''
+        }
     }
     setType(type, props){
         this.content = props.item[type]
@@ -21,8 +26,34 @@ export default class SentenceItem extends React.Component{
     onItemFocus(evt){
 
     }
+    applyState(srcState){
+        const {
+            inTaskMode, content
+        } = srcState
 
+        const appliedState = {
+            inTaskMode, content
+        }
+        Object.keys(this.state).map(key=>{
+            if(typeof appliedState[key] != 'undefined' ){
+                let state = {}
+				state[key] = appliedState[key]
+				this.setState(state)
+            }
+        })
+
+    }
+    setContent(content){
+        this.content = content
+        this.setState({content})
+        this.inputRef.current.value = content
+
+    }
+    componentDidUpdate(){
+        this.applyToolbarState(this.state)
+    }
     onChangeContent(evt){
+        console.log(evt)
         Helper.delay(()=>{
             const content = this.getInputText()
             // console.log(this.content)
@@ -31,13 +62,19 @@ export default class SentenceItem extends React.Component{
             }
             console.log(content)
             this.content = content
-
+            this.setState({ content })
             this.parent.onItemChange(this)
         })
     }
-
+    applyToolbarState(newState){
+        if(this.toolbarRef){
+            if(this.toolbarRef.current){
+                this.toolbarRef.current.applyState(newState)
+            }
+        }
+    }
     getInputText(){
-        return this.inputRef.current.textContent
+        return this.inputRef.current.value
     }
     onItemClick(evt){
         // $(this.inputRef.current).prop('contentEditable',true)
