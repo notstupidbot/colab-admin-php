@@ -28,7 +28,7 @@ export default class ContentEditor extends React.Component{
 
         return(<>
             
-			<div className="grow-wrap">
+			<div className="grow-wrap my-2">
 				<TextareaAutosize cacheMeasurements={false} ref={this.inputContentRef} 
 						   onChange={ evt => this.onChangeContent(evt) } 
 						   className={this.state.inputStatus == 0 ? inputDefaultCls 

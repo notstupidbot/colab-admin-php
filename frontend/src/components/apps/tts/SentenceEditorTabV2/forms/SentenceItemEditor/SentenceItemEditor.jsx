@@ -3,14 +3,16 @@ import TextItem from "./TextItem";
 import TtfItem from "./TtfItem";
 export default class SentenceItemEditor extends Action{
     parent = null
-    store = null
+    tqtRef = null
     constructor(props){
         super(props)
         this.parent = props.parent
-        this.store = props.store
+        this.tqtRef = props.tqtRef
     }
     componentDidUpdate(){
-        console.log('updated')
+        console.log('SentenceItemEditor.componentDidUpdate()')
+        this.tqtRef.current.syncParentTaskState()
+
     }
 
     async onItemChange(ref){
@@ -29,6 +31,7 @@ export default class SentenceItemEditor extends Action{
         }
         return this.state.items
     }
+    
     render(){
         const items = this.state.items
         if(!items)
@@ -37,9 +40,9 @@ export default class SentenceItemEditor extends Action{
             {
                 items.map((item, index)=>{
                     const itemProps = {item, index, parent: this}
-                    return(<div className="sentence-item-row flex my-0 py-3 px-4 "  key={index}>
-                    <TextItem {...itemProps}/>
-                    <TtfItem {...itemProps}/>
+                    return(<div className="sentence-item-row flex my-0 py-3 px-4"  key={index}>
+                    <div className="w-1/2 pr-1 relative"><TextItem {...itemProps} ref={this.textItemRefs[index]}/></div>
+                    <div className="w-1/2 relative"><TtfItem {...itemProps} ref={this.ttfItemRefs[index]}/></div>
                     </div>)
                 })
             }

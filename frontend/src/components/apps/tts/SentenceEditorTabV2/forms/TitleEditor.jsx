@@ -29,9 +29,7 @@ export default class TitleEditor extends React.Component {
 						<input onChange={evt=>this.onChangeTitle(evt)} ref={this.titleInputRef} type="text" 
 							   id="inline-input-label-with-helper-text" 
 							   defaultValue={this.props.title}
-						   className={cls} placeholder="Title" 
-						   aria-describedby="hs-inline-input-helper-text"/>
-					<p className="text-sm text-gray-500 mt-2" id="hs-inline-input-helper-text">{/*We'll never share your details.*/}</p>
+						   className={cls} placeholder="Title" />
 				</div>)
 	}
 }
