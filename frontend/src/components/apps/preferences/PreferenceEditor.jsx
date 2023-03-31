@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-
+import Prx from "../../lib/Prx"
 const inputCls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
 
 class PrefEditor extends React.Component {
@@ -11,6 +11,7 @@ class PrefEditor extends React.Component {
 	prop = null
 	// index = null
 	// pk = null
+	gridAction = null
 	constructor(props){
 		super(props)
 		this.item = props.item
@@ -33,12 +34,43 @@ class PrefEditor extends React.Component {
 
 	editRow(){
 		this.setState({editMode:true})
-	}
+		this.gridAction.setState({editMode:true})
 
-	saveRow(){
+	}
+	serializeObj(){
+		this.obj[this.prop] = this.state.value
+		this.item.val = JSON.stringify(this.obj)
+	}
+	async saveRow(){
+		console.log(this.item.val)
+		const postData = {
+			val : this.item.val
+		}
+		const params = {
+			key : this.item.key,
+			group : this.item.group
+		}
+		console.log(postData)
+		console.log(params)
+		if(this.gridAction){
+			const remoteUrl = typeof this.gridAction.props.options.remoteUrl == 'function' ? this.gridAction.props.options.remoteUrl(this.item) : this.gridAction.props.options.remoteUrl
+			const data = await Prx.post(remoteUrl, postData)
+			console.log(remoteUrl)
+		}
+		
+		this.cancelRow()
+
+	}
+	cancelRow(){
 		this.setState({editMode:false})
-
+		if(this.gridAction){
+			this.gridAction.setState({editMode:false})
+		}
 	}
+	setGridAction(gridAction){
+		this.gridAction = gridAction
+	}
+	
 }
 class PrefEditorBoolean extends PrefEditor{
 	
@@ -65,16 +97,32 @@ class PrefEditorString extends PrefEditor{
 		
 	}
  
- 
+ 	onKeyUp(e){
+ 		if(e.keyCode == 13){
+ 			console.log(`Enter Detected`)
+ 			this.saveRow()
+ 		}
+ 		else if(e.keyCode == 27){
+ 			console.log(`Esc Detected`)
+ 			this.cancelRow()
+
+ 		}
+ 		console.log(e.keyCode)
+ 	}
+ 	onChange(e){
+ 		const value = e.target.value
+ 		this.setState({value},()=>{
+ 			this.serializeObj()
+ 		})
+ 	}
 	render(){
 		if(this.item){
 			return(<>
 			{
 				this.state.editMode ? (<>
-					<input className={inputCls} type="text" defaultValue={this.state.value}/>
+					<input className={inputCls} type="text" defaultValue={this.state.value} onKeyUp={e=>this.onKeyUp(e)} onChange={e=>this.onChange(e)}/>
 				</>): (<>
-					{this.state.value} : 
-					{this.state.length}
+					{this.state.value}
 				</>)
 			}
 				

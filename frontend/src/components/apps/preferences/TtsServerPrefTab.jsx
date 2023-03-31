@@ -23,9 +23,7 @@ const delay = Helper.makeDelay(512)
 export default function TtsServerPrefTab({config}){
 	const {page} = useLoaderData()
 	const store = new Store(config)
-	const [projectList,setProjectList] = useState([
-		
-	]);
+	const [projectList,setProjectList] = useState([]);
 	const editorFactoryRefs = []
 	const [grid,setGrid] = useState({
 			records : [],
@@ -57,7 +55,7 @@ export default function TtsServerPrefTab({config}){
 	
 	const editorFactory = (item, index) => {
 		if(!editorFactoryRefs[index]){
-			editorFactoryRefs[index] = useRef(null)
+			editorFactoryRefs[index] = React.createRef(null)
 		}
 		const ref = editorFactoryRefs[index]
 		const components = {
@@ -66,15 +64,28 @@ export default function TtsServerPrefTab({config}){
 			object : <PrefEditorObject item={item} ref={ref}/>,
 			integer : <PrefEditorInteger item={item} ref={ref}/>
 		}
-
+		// setEditorFactoryRefs(editorFactoryRefs)
 		const component = components[item.editor];
 		return component
 	}
- 	const onEditRow = async(item, index, options, linkCls) => {
+ 	const onEditRow = async(item, index, options, linkCls, gridAction) => {
  		const editor = editorFactoryRefs[index].current
- 		console.log(editor)
- 		editor.editRow()
+ 		const editMode = gridAction.state.editMode
+ 		editor.setGridAction(gridAction)
+ 		if(!editMode){
+ 			editor.editRow()
+ 			console.log(editor)
+
+ 		}else{
+ 			editor.saveRow()
+
+ 		}
+ 		// gridAction.setState({editMode: !editMode})
  	}
+ 	const getLinkButton = ()=>{
+		return <button className={''} onClick={evt => onEditRow()}>
+    		<i className="bi bi-pencil-square"></i> Ubah</button>
+  }
 	const gridOptions = {
 		numberWidthCls : '',
 		actionWidthCls : '',
@@ -83,6 +94,7 @@ export default function TtsServerPrefTab({config}){
 		fields : ['key','value'],
 		enableEdit : true,
 		editUrl : (item) =>{ return `/preferences/tts-server/${item.key}`},
+		remoteUrl : (item) => `${config.getApiEndpoint()}/api/tts/preference?key=${item.key}&group=${item.group}`,
 		callbackFields : {
 			key : (field, value ,item) => {
 				return item.desc.length == 0 ? Helper.titleCase(value) : item.desc
@@ -93,15 +105,11 @@ export default function TtsServerPrefTab({config}){
 		},
 
 		callbackActions : {
-			edit : (item, index, options, linkCls) => {
-				/*
-					return <Link className={linkCls} to={typeof options.editUrl == 'function' ? options.editUrl(item) : options.editUrl}>
-					<i className="bi bi-pencil-square"></i> Ubah
-					</Link>
-				*/
-				return <button className={linkCls} onClick={evt => onEditRow(item, index, options, linkCls)}>
-	            	<i className="bi bi-pencil-square"></i> Ubah
+			edit : (item, index, options, linkCls, gridAction) => {
+				return <button className={linkCls} onClick={evt => onEditRow(item, index, options, linkCls, gridAction)}>
+	            	<i className="bi bi-pencil-square"></i> {gridAction.state.editMode ? 'Save' : 'Edit'}
 	               </button>
+	   
 			}
 		}
 	}

@@ -166,8 +166,9 @@ class Tts extends REST_Controller {
                    $this->m_preference->update($key,$val);
                 }else{
                     $this->m_preference->create($key, $val);
-                    $current = ['key'=>$key, 'val' => json_decode($val)];
                 }
+                $current = ['key'=>$key, 'val' => json_decode($val)];
+
                 $this->response($current, 200);
             }
             

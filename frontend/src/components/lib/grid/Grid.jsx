@@ -21,40 +21,63 @@ const GridItemEmpty = ({spanCls, limit}) => {
 const GridItemLoading = ({}) => {
 	
 }
-const GridActions = ({options, item, index, linkCls}) => {
-	if(options.enableEdit){
-		if(options.callbackActions){
-			if(options.callbackActions.edit){
-				return options.callbackActions.edit(item, index, options, linkCls)
+class GridActions extends React.Component{
+	constructor(props){
+		super(props)
+		this.state = {
+			editMode : false
+		}
+	}
+	getLinkButton(ref){
+		if(ref){
+			if(ref.current){
+				console.log(ref.current.getLinkButton())
+
 			}
 		}
-		return (<Link className={linkCls} to={typeof options.editUrl == 'function' ? options.editUrl(item) : options.editUrl}>
-            	<i className="bi bi-pencil-square"></i> Edit
-               </Link>)
 	}
 
-}
-const GridItems = ({empty, records, page, limit, options}) => {
-	const spanCls = "my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"
-	const tdCls  = "px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200"
-	const tdCls2 = "px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-	const trCls = "odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700"
-	const linkCls = "text-blue-500 hover:text-blue-700"
+	render(){
+		const {options, item, index, linkCls} = this.props
 
-	const recordNumber=(index)=>{
+		if(options.enableEdit){
+			if(options.callbackActions){
+				if(options.callbackActions.edit){
+					return options.callbackActions.edit(item, index, options, linkCls, this)
+				}
+			}
+			return (<Link className={linkCls} to={typeof options.editUrl == 'function' ? options.editUrl(item) : options.editUrl}>
+	            	<i className="bi bi-pencil-square"></i> Edit
+	               </Link>)
+		}
+	}
+	
+
+}
+class GridItems extends React.Component{
+	spanCls = "my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"
+	tdCls  = "px-6 py-4 text-sm font-medium text-gray-800 dark:text-gray-200"
+	tdCls2 = "px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+	trCls = "odd:bg-white even:bg-gray-100 hover:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700 dark:hover:bg-gray-700"
+	linkCls = "text-blue-500 hover:text-blue-700"
+	editorFactory = () => {console.log(`dummy editorFactory`) }
+
+	constructor(props){
+		super(props)
+	}
+	
+	recordNumber(index){
+		const {page, limit} = this.props
 		const p = (parseInt(index) + 1);
 		const gp = parseInt(page)-1;
 		const lim =   parseInt(limit||5)
 
-		index = p + (gp * lim)
-		return index
+		const recordNumber = p + (gp * lim)
+		return recordNumber
 	}
 
-	const editorFactory = () => {
-		console.log(`dummy editorFactory`)
-	}
-
-	const parseCustomAction = item => {
+	parseCustomAction(item){
+		const {options} = this.props
 		if(options.actions){
 			if(options.actions.edit){
 				return options.actions.edit(item)
@@ -62,36 +85,39 @@ const GridItems = ({empty, records, page, limit, options}) => {
 		}
 	}
 
+	render(){
+		const {empty, records, page, limit, options} = this.props
+		return (<>
+		{
+			empty ? (<GridItemEmpty spanCls={this.spanCls} limit={limit}/>) : records.map((item,index)=>{
+	      		return(
+	      			<tr key={index} className={this.trCls}>
+		              <td className={this.tdCls}>
+		              	{ this.recordNumber(index) }
+		              </td>
+		              {
+		              	options.fields.map((field, fieldIndex)=>{
+		              		const value = item[field]
+		              		let fieldText = value
+		              		if(options.callbackFields){
+		              			if(options.callbackFields[field]){
+		              				fieldText = options.callbackFields[field](field, value ,item, index)
+		              			}
+		              		}
+		              		return (<td key={fieldIndex} className={this.tdCls}>{fieldText}</td>)
+		              	})
+		              }
+		              
 
-	return (<>
-	{
-		empty ? (<GridItemEmpty spanCls={spanCls} limit={limit}/>) : records.map((item,index)=>{
-      		return(
-      			<tr key={index} className={trCls}>
-	              <td className={tdCls}>
-	              	{ recordNumber(index) }
-	              </td>
-	              {
-	              	options.fields.map((field, field_index)=>{
-	              		const value = item[field]
-	              		let field_text = value
-	              		if(options.callbackFields){
-	              			if(options.callbackFields[field]){
-	              				field_text = options.callbackFields[field](field, value ,item, index)
-	              			}
-	              		}
-	              		return (<td key={field_index} className={tdCls}>{field_text}</td>)
-	              	})
-	              }
-	              
-
-	              <td className={tdCls2}>
-	                <GridActions options={options} index={index} item={item} linkCls={linkCls}/>
-	              </td>
-	            </tr>
-      		)
-      	})
-    }</>)  	
+		              <td className={this.tdCls2}>
+		                <GridActions options={options} index={index} item={item} linkCls={this.linkCls}/>
+		              </td>
+		            </tr>
+	      		)
+	      	})
+	    }</>)	
+	}
+	  	
 }
 
 const GridHeaders = ({options}) => {
@@ -110,7 +136,7 @@ const GridHeaders = ({options}) => {
       <th scope="col" className={`${actionWidthCls} ${tableHeaderCls}`}>Action</th>
     </tr>)
 }
-const GridTable = ({records, page, limit, options}) => {
+const GridTable = ({records, page, limit, options, context}) => {
 	const tableCls = "min-w-full divide-y divide-gray-200 dark:divide-gray-700"
 	
 	const emptyRecords = records ? (records.length > 0 ? false : true) : true
@@ -119,7 +145,7 @@ const GridTable = ({records, page, limit, options}) => {
             <GridHeaders options={options}/>
           </thead>
           <tbody>
-          	<GridItems empty={emptyRecords} 
+          	<GridItems empty={emptyRecords}  context={context}
           			   records={records} 
           			   page={page} 
           			   limit={limit}
@@ -149,7 +175,7 @@ class Grid extends React.Component{
 	}
 	render(){
 		// const {records, page, limit} = this.props
-		return (<GridTable {...this.props}/>)
+		return (<GridTable {...this.props} context={this}/>)
 	}
 }
 
