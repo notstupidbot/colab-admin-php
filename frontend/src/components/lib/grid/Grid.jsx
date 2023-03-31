@@ -77,7 +77,7 @@ const GridItems = ({empty, records, page, limit, options}) => {
 	              		let field_text = value
 	              		if(options.callbackFields){
 	              			if(options.callbackFields[field]){
-	              				field_text = options.callbackFields[field](field, value ,item)
+	              				field_text = options.callbackFields[field](field, value ,item, index)
 	              			}
 	              		}
 	              		return (<td key={field_index} className={tdCls}>{field_text}</td>)
@@ -134,6 +134,18 @@ class Grid extends React.Component{
 		// this.state = {
 		// 	records : []
 		// }
+	}
+	shouldComponentUpdate(newProps, newState){
+		console.log('shouldComponentUpdate is triggered')
+		console.log('new props: ', newProps)
+		console.log('new state: ', newState)
+		return true
+	}
+
+	componentWillUpdate(newProps, newState) {
+		console.log('componentWillUpdate is triggered')
+		console.log('new props: ', newProps)
+		console.log('new state: ', newState)
 	}
 	render(){
 		// const {records, page, limit} = this.props

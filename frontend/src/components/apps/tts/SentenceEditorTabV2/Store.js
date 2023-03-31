@@ -1,16 +1,8 @@
 import Prx from "../../../lib/Prx"
+import PrxStore from "../../../lib/PrxStore"
 import {v4} from "uuid"
-export default class Store {
-	config = null
-	constructor(config){
-		this.config = config
-	}
-	validateResult(res){
-		if(res){
-	  		return res.data
-	  	}
-	  	return null
-	}
+export default class Store extends PrxStore{
+	
 	async getSentence(pk){
 	  	const res = await Prx.get(`${this.config.getApiEndpoint()}/api/tts/sentence?id=${pk}`);
 	  	if(res){

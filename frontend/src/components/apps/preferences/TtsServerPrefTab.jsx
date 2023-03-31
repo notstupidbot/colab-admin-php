@@ -9,6 +9,7 @@ import {PrefEditorBoolean,
 import Pager from "../tts/Pager"
 import AppConfig from "../../lib/AppConfig"
 import Helper from "../../lib/Helper"
+import Store from "./Store"
 import Grid from "../../lib/grid/Grid"
 
 export async function loader({ params }) {
@@ -21,9 +22,11 @@ const delay = Helper.makeDelay(512)
 
 export default function TtsServerPrefTab({config}){
 	const {page} = useLoaderData()
+	const store = new Store(config)
 	const [projectList,setProjectList] = useState([
 		
 	]);
+	const editorFactoryRefs = []
 	const [grid,setGrid] = useState({
 			records : [],
 			limit : 5,
@@ -40,51 +43,38 @@ export default function TtsServerPrefTab({config}){
 		grid.page = page_number;
 		grid.records = [];
 		setGrid(Object.assign({},grid))
-		const res = await axios(`${config.getApiEndpoint()}/api/tts/preferences?page=${page}&limit=${grid.limit}&group=tts_server`);
-		setGrid(res.data)
-		
-	}
-	const viewInEditor = (project)=>{
-		// console.log(project);
-		setActiveProject(project);
-		setActiveTab('project-editor');
 
-	}
-	useEffect(()=>{
-		// if(activeTab == 'project'){
-			// updateList();
-		// 	dontRunTwice = false
-		// }
-		delay(()=>{
-			console.log(page)
-			updateList(page);
-		})
+		const data = await store.getTtsPreferenceList(page_number, grid.limit)
+		if(data)
+			setGrid(data)
 		
+	}
+
+	useEffect(()=>{
+			updateList(page);		
 	},[page]);
 
-	const pageNumber=(index)=>{
-		const p = (parseInt(index) + 1);
-		const gp = parseInt(grid.page)-1;
-		const lim =   parseInt(grid.limit||10)
-
-		index = p + (gp * lim)
-		return index
-	}
-	// const editProject=(project)=>{
-	// 	console.log(project)
-	// }
-	const editorFactory = (item) => {
+	
+	const editorFactory = (item, index) => {
+		if(!editorFactoryRefs[index]){
+			editorFactoryRefs[index] = useRef(null)
+		}
+		const ref = editorFactoryRefs[index]
 		const components = {
-			boolean : <PrefEditorBoolean item={item}/>,
-			string : <PrefEditorString item={item}/>,
-			object : <PrefEditorObject item={item}/>,
-			integer : <PrefEditorInteger item={item}/>
+			boolean : <PrefEditorBoolean item={item} ref={ref}/>,
+			string : <PrefEditorString item={item} ref={ref}/>,
+			object : <PrefEditorObject item={item} ref={ref}/>,
+			integer : <PrefEditorInteger item={item} ref={ref}/>
 		}
 
 		const component = components[item.editor];
 		return component
 	}
- 
+ 	const onEditRow = async(item, index, options, linkCls) => {
+ 		const editor = editorFactoryRefs[index].current
+ 		console.log(editor)
+ 		editor.editRow()
+ 	}
 	const gridOptions = {
 		numberWidthCls : '',
 		actionWidthCls : '',
@@ -97,16 +87,21 @@ export default function TtsServerPrefTab({config}){
 			key : (field, value ,item) => {
 				return item.desc.length == 0 ? Helper.titleCase(value) : item.desc
 			}, 
-			value : (field, value, item) => {
-				return editorFactory(item)
+			value : (field, value, item, index) => {
+				return editorFactory(item, index)
 			}
 		},
 
 		callbackActions : {
 			edit : (item, index, options, linkCls) => {
-				return <Link className={linkCls} to={typeof options.editUrl == 'function' ? options.editUrl(item) : options.editUrl}>
+				/*
+					return <Link className={linkCls} to={typeof options.editUrl == 'function' ? options.editUrl(item) : options.editUrl}>
+					<i className="bi bi-pencil-square"></i> Ubah
+					</Link>
+				*/
+				return <button className={linkCls} onClick={evt => onEditRow(item, index, options, linkCls)}>
 	            	<i className="bi bi-pencil-square"></i> Ubah
-	               </Link>
+	               </button>
 			}
 		}
 	}
