@@ -1,4 +1,5 @@
 // import {v4} from "uuid"
+import {useState} from "react"
 import { Link } from 'react-router-dom';
 export class ArrayPager {
 	source = null
@@ -69,8 +70,9 @@ export class ArrayPager {
 
 
 }
-export default function Pager({limit,total_pages,page, gotoPage, path=""}){
+export default function Pager({limit,total_pages,page, gotoPage, path="",onRefresh}){
 	const name = 'pager' 
+	const [isLoading,setLoading] = useState(false)
 	page = parseInt(page)
 	total_pages = parseInt(total_pages)
 	limit = parseInt(limit)
@@ -119,6 +121,12 @@ export default function Pager({limit,total_pages,page, gotoPage, path=""}){
 		    <span>Selanjutnya</span>
 		    <span aria-hidden="true">»</span>
 		  </Link>):""}
+		  {
+		  	typeof onRefresh=='function' ? (<button key={`${name}-refresh-1`} className={"btn-blue pl-[14px] rounded-full " + (isLoading?'animate-spin':'')} onClick={e=>onRefresh(e, setLoading)}>
+		    <i className="bi bi-arrow-repeat"/>
+		  </button>):""
+		  }
+		  
 		  
 		</nav>)
 }

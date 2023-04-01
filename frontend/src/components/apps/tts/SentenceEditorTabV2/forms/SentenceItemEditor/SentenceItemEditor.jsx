@@ -10,7 +10,7 @@ export default class SentenceItemEditor extends Action{
         this.tqtRef = props.tqtRef
     }
     componentDidUpdate(){
-        console.log('SentenceItemEditor.componentDidUpdate()')
+        // console.log('SentenceItemEditor.componentDidUpdate()')
         if(this.tqtRef.current){
             const state = this.state
             state.itemCount = this.state.items.length

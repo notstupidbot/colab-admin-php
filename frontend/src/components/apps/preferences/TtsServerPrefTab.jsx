@@ -25,34 +25,44 @@ export default function TtsServerPrefTab({config}){
 	const store = new Store(config)
 	const [projectList,setProjectList] = useState([]);
 	const editorFactoryRefs = []
+	
 	const [grid,setGrid] = useState({
 			records : [],
 			limit : 5,
 			page : 1,
 			total_pages : 0,
 			total_records : 0,
-			order_by:'create_date',
-			order_dir:'desc'
+			order_by:'ord',
+			order_dir:'asc'
 		});
  
 
 	const updateList = async(page_number)=>{
 		page_number = page_number || 1;
 		grid.page = page_number;
+		grid.limit = grid.limit||5
 		grid.records = [];
 		setGrid(Object.assign({},grid))
 
-		const data = await store.getTtsPreferenceList(page_number, grid.limit)
-		if(data)
+		const data = await store.getTtsPreferenceList(page_number, grid.limit, grid.order_by, grid.order_dir)
+		if(data){
 			setGrid(data)
-		
+		}
 	}
 
 	useEffect(()=>{
-			updateList(page);		
+		updateList(page);		
 	},[page]);
 
+	// useEffect(()=>{
+	// 	updateList(1)
+	// },[])
 	
+	const onRefresh = async(e,setLoading)=>{
+		setLoading(true)	
+		await updateList(grid.page);
+		setLoading(false)
+	}
 	const editorFactory = (item, index) => {
 		if(!editorFactoryRefs[index]){
 			editorFactoryRefs[index] = React.createRef(null)
@@ -68,13 +78,19 @@ export default function TtsServerPrefTab({config}){
 		const component = components[item.editor];
 		return component
 	}
+ 	const onCancelRow = async(item, index, options, linkCls, gridAction) => {
+ 		const editor = editorFactoryRefs[index].current
+ 		
+ 		 editor.setGridAction(gridAction)
+ 		 editor.cancelRow(true)
+ 	}
  	const onEditRow = async(item, index, options, linkCls, gridAction) => {
  		const editor = editorFactoryRefs[index].current
  		const editMode = gridAction.state.editMode
  		editor.setGridAction(gridAction)
  		if(!editMode){
  			editor.editRow()
- 			console.log(editor)
+ 			// console.log(editor)
 
  		}else{
  			editor.saveRow()
@@ -94,7 +110,7 @@ export default function TtsServerPrefTab({config}){
 		fields : ['key','value'],
 		enableEdit : true,
 		editUrl : (item) =>{ return `/preferences/tts-server/${item.key}`},
-		remoteUrl : (item) => `${config.getApiEndpoint()}/api/tts/preference?key=${item.key}&group=${item.group}`,
+		remoteUrl : (item) => `${config.getApiEndpoint()}/api/tts/preference?key=${item.key}`,
 		callbackFields : {
 			key : (field, value ,item) => {
 				return item.desc.length == 0 ? Helper.titleCase(value) : item.desc
@@ -106,9 +122,14 @@ export default function TtsServerPrefTab({config}){
 
 		callbackActions : {
 			edit : (item, index, options, linkCls, gridAction) => {
-				return <button className={linkCls} onClick={evt => onEditRow(item, index, options, linkCls, gridAction)}>
-	            	<i className="bi bi-pencil-square"></i> {gridAction.state.editMode ? 'Save' : 'Edit'}
-	               </button>
+				return(<> <button className={linkCls} onClick={evt => onEditRow(item, index, options, linkCls, gridAction)}>
+					            	<i className="bi bi-pencil-square"></i> {gridAction.state.editMode ? 'Save' : 'Edit'}
+					               </button>
+					               {gridAction.state.editMode ? (<>
+					               	<button className={"ml-2 "+linkCls} onClick={evt => onCancelRow(item, index, options, linkCls, gridAction)}>
+					            	<i className="bi bi-x-circle"></i> Cancel 
+					               </button>
+					               </>) : ''}</>)
 	   
 			}
 		}
@@ -125,7 +146,9 @@ export default function TtsServerPrefTab({config}){
 	      						<Pager path="/preferences/tts-server" 
 	      							   page={grid.page} 
 	      							   total_pages={grid.total_pages} 
-	      							   limit={grid.limit}/>
+	      							   limit={grid.limit}
+	      							   onRefresh={onRefresh}/>
+
 	      					</div>
 	    				</div>
 	  				</div>

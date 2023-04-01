@@ -1,8 +1,10 @@
 import React from "react"
+import ReactDOM from "react-dom"
 import Helper from "../Helper"
 import {Link} from "react-router-dom"
 import {v4} from "uuid"
 const GridItemEmpty = ({spanCls, limit}) => {
+	// const arrLength = lastLength ? lastLength : limit
 	const dummyRecords =Array(limit).fill(0)
 	return(<>
 		{
@@ -84,7 +86,7 @@ class GridItems extends React.Component{
 			}
 		}
 	}
-
+	
 	render(){
 		const {empty, records, page, limit, options} = this.props
 		return (<>
@@ -136,22 +138,40 @@ const GridHeaders = ({options}) => {
       <th scope="col" className={`${actionWidthCls} ${tableHeaderCls}`}>Action</th>
     </tr>)
 }
-const GridTable = ({records, page, limit, options, context}) => {
-	const tableCls = "min-w-full divide-y divide-gray-200 dark:divide-gray-700"
+class GridTable extends React.Component{
+	constructor(props){
+		super(props)
+		this.state= {
+			records : this.props.records
+		}
+		
+	}
+
+	async componentWillReceiveProps(props){
+		const records = props.records
+		this.setState({records: []}, f => { this.setState({records}) })
+	}
+
+	render(){
+		const {page, limit, options, context} = this.props
+		const {records} = this.state
+		const tableCls = "min-w-full divide-y divide-gray-200 dark:divide-gray-700"
 	
-	const emptyRecords = records ? (records.length > 0 ? false : true) : true
-	return (<table className={tableCls}>
-          <thead>
-            <GridHeaders options={options}/>
-          </thead>
-          <tbody>
-          	<GridItems empty={emptyRecords}  context={context}
-          			   records={records} 
-          			   page={page} 
-          			   limit={limit}
-          			   options={options}/>
-          </tbody>
-        </table>)
+		const emptyRecords = records ? (records.length > 0 ? false : true) : false
+		return (<table className={tableCls}>
+	          <thead>
+	            <GridHeaders options={options}/>
+	          </thead>
+	          <tbody>
+	          	<GridItems empty={emptyRecords}  context={context}
+	          			   records={records} 
+	          			   page={page} 
+	          			   limit={limit}
+	          			   options={options}/>
+	          </tbody>
+	        </table>)
+	}
+	
 }
 class Grid extends React.Component{
 
@@ -161,18 +181,25 @@ class Grid extends React.Component{
 		// 	records : []
 		// }
 	}
-	shouldComponentUpdate(newProps, newState){
-		console.log('shouldComponentUpdate is triggered')
-		console.log('new props: ', newProps)
-		console.log('new state: ', newState)
-		return true
-	}
+	// shouldComponentUpdate(newProps, newState){
+	// 	console.log('shouldComponentUpdate is triggered')
+	// 	console.log('new props: ', newProps)
+	// 	console.log('new state: ', newState)
+	// 	return true
+	// }
 
-	componentWillUpdate(newProps, newState) {
-		console.log('componentWillUpdate is triggered')
-		console.log('new props: ', newProps)
-		console.log('new state: ', newState)
-	}
+	// componentWillUpdate(newProps, newState) {
+	// 	console.log('componentWillUpdate is triggered')
+	// 	console.log('new props: ', newProps)
+	// 	console.log('new state: ', newState)
+	// }
+	// componentWillMount() {
+	// 	console.log(ReactDOM.findDOMNode(this))
+	// }
+	// componentDidMount() {
+	// 	console.dir(ReactDOM.findDOMNode(this))
+	// }
+
 	render(){
 		// const {records, page, limit} = this.props
 		return (<GridTable {...this.props} context={this}/>)

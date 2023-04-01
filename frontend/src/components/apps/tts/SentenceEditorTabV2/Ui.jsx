@@ -24,7 +24,7 @@ export default class Ui extends Action {
 		
 	}
 	render(){
-		console.log(this.state.unique_id)
+		// console.log(this.state.unique_id)
 		const fieldEditorProps = {
 			pk : this.pk,
 			config : this.config,

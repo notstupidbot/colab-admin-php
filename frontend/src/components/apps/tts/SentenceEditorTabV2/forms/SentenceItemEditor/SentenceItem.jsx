@@ -89,7 +89,7 @@ export default class SentenceItem extends React.Component{
         this.toolbar = toolbar
     }
     componentDidMount(){
-        console.log(this.inputRef)
+        // console.log(this.inputRef)
         this.inputRef.current.value = this.props.item[this.type]
     }
     render(){

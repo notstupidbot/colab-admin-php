@@ -180,7 +180,7 @@ export default class Action extends React.Component {
                 return ok
             })
         }
-        console.log(items)
+        // console.log(items)
         this.items = items
         this.initSentenceItemRefs()
 
