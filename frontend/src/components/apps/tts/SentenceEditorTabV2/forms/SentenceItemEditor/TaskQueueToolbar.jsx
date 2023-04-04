@@ -2,14 +2,27 @@ import React from "react";
 import Helper from "../../../../../lib/Helper"
 
 const delay = Helper.makeDelay(250)
-/*
-* parent must be sei aka SentenceItemEditor
-*/
-export default class TaskQueueToolbar extends React.Component{
-    parent = null
+/**
+ * TaskQueueToolbar
+ * 
+ * state = {
+        itemCount: 0,
+        taskModeExtract : false,
+        taskModeConvert : false,
+        taskModeSynthesize : false,
+        taskConvertConfig : {run : false, index : -1, next : -1, result : -1},
+        taskSynthesizeConfig : {run : false, index : -1, next : -1, result : -1},
+        taskExtractConfig : {run : false, index : -1, next : -1, result : -1},
+    }
+ * @component
+ * @example
+ * <TaskQueueToolbar onExtractTask={} onConvertTask={} onSynthesizeTask={}>
+ * */
+class TaskQueueToolbar extends React.Component{
+    // parent = null
     constructor(props){
         super(props)
-        this.parent = props.parent
+        // this.parent = props.parent
         this.state = {
             itemCount: 0,
             taskModeExtract : false,
@@ -21,7 +34,12 @@ export default class TaskQueueToolbar extends React.Component{
         }
     }
 
-    
+    /**
+     * applyState
+     * @example 
+     * tqt.applyState({taskModeExtract,taskModeConvert,taskModeSynthesize ,
+            taskConvertConfig,taskSynthesizeConfig, taskExtractConfig ,itemCount})
+     * */
     applyState(srcState){
         const {
             taskModeExtract,taskModeConvert,taskModeSynthesize ,
@@ -35,15 +53,7 @@ export default class TaskQueueToolbar extends React.Component{
         this.setState(appliedState)
         // console.log(appliedState)
     }
-    componentDidMount(){
-        // console.log(this.parent)
-        
-    }
-
-    componentDidUpdate(){
-        // console.log(`TaskQueueToolbar.componentDidUpdate()`)
-
-    }
+    
     
     render(){
         const btnCls = "py-1 px-1 mx-2 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
@@ -89,3 +99,6 @@ export default class TaskQueueToolbar extends React.Component{
         </div>)
     }
 }
+
+
+export default TaskQueueToolbar

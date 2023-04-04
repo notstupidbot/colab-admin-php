@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "rimraf ../www-dist/assets && vite build ",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs" : "jsdoc -r --verbose -c jsdoc.conf.json"
   },
   "dependencies": {
     "@preline/overlay": "^1.4.0",
@@ -18,9 +19,11 @@
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "moment": "^2.29.4",
+    "puppeteer": "^19.8.2",
     "qs": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
     "react-textarea-autosize": "^8.4.0",
     "socket.io-client": "^4.6.1",

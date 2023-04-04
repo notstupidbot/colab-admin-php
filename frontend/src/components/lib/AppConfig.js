@@ -1,6 +1,7 @@
 import {v4} from "uuid"
 /**
- * localStorage Config
+ * localStorage 
+ * key value serialized Config
  * */
 class LsConfig {
 	config_key = null
@@ -17,10 +18,15 @@ class LsConfig {
 		}
 		this.getData()
 	}
-
+	/**
+	 * set unique config key for localStorage key
+	 * */
 	setConfigKey(key){
 		this.config_key = key
 	}
+	/**
+	 * get data by key
+	 * */
 	getData(key){
 		try{
 			this.data = JSON.parse(localStorage[this.config_key])
@@ -37,12 +43,17 @@ class LsConfig {
 
 		return this.data[key]
 	}
-
+	/**
+	 * set data by key
+	 * */
 	setData(key, value){
 		this.data[key] = value
 		localStorage[this.config_key] = JSON.stringify(this.data)
 	}
 }
+/**
+ * UiConfig
+ * */
 class UiConfig extends LsConfig{
 	defaultTheme = 'default-theme.css';
 
@@ -53,7 +64,9 @@ class UiConfig extends LsConfig{
 		super(config_key)
 		this.setData('defaultTheme', this.defaultTheme)
 	}
-	
+	/**
+	 * set sidebar hidden or shown
+	 * */
 	setHiddenSidebarStatus(status = true){
 		const $main_content = $('#main-content')
 		
@@ -62,11 +75,29 @@ class UiConfig extends LsConfig{
 
 		this.setData('hideSidebar', status)
 	}
-
+	/**
+	 * get sidebar hidden or shown status
+	 * */
 	getHiddenSidebarStatus(){
 		return this.getData('hideSidebar')
 	}
-
+	/**
+	 * apply callback handler on event sidebar hidden or shown change
+	 * @param {function} setHideSidebar hook state function
+	 * @param {function} callback function to run after event fired
+	 * @param {string} callback_key identifier for eliminate duplication
+	 * 
+	 * @example
+	 * function Component(){
+	 * 	const [hideSidebar,setHideSidebar] = useState(false)
+		useEffect(()=>{
+	    	config.getUiConfig().applyHiddenSidebarStatus(setHideSidebar,(status)=>{
+		      console.log(status)
+		      setHideSidebar(status)
+		    },'template')
+	  	},[])
+	 * }
+ 	 * */
 	applyHiddenSidebarStatus(setHideSidebar, callback, callback_key){
 		setHideSidebar(this.getHiddenSidebarStatus())
 		if(typeof callback === 'function' ){
@@ -80,8 +111,11 @@ class UiConfig extends LsConfig{
 		}
 	}
 }
-
-export default class AppConfig {
+/**
+ * AppConfig
+ * class for storing Application Config and state
+ * */
+class AppConfig {
 	mode 			= 'development'
 	host 			= null
 	api_endpoint	= null;
@@ -92,7 +126,8 @@ export default class AppConfig {
 	uiConfig = null
 
 	static instance = null
-
+	/**
+	 * get singleton instance */
 	static getInstance(){
 		if(AppConfig.instance instanceof AppConfig){
 		}else{
@@ -101,39 +136,58 @@ export default class AppConfig {
 
 		return AppConfig.instance;
 	}
-	
+	/**
+	 * singleton factory*/
 	static factory(){
 		return new AppConfig()
 	}
-
+	/**
+	 * @constructor
+	 * */
 	constructor(){
 		this.host = this.getClientHostName()
 		this.setDefultEndpoint()
 		this.uiConfig = new UiConfig();
 	}
-
+	/**
+	 * get UiConfig instance
+	 * @return {UiConfig} */
 	getUiConfig(){
 		return this.uiConfig;
 	}
+	/**
+	 * get current API Endpoint
+	 * */
 	getApiEndpoint(){
 		return this.api_endpoint
 	}
-
+	/**
+	 * get current PUSH / Socket.io server Endpoint
+	 * */
 	getPushEndpoint(){
 		return this.push_endpoint
 	}
-
+	/**
+	 * get current Messaging Endpoint
+	 * */
 	getMessagingEndpoint(){
 		return this.messaging_endpoint
 	}
-
+	/**
+	 * get current Tts Server Endpoint
+	 * */
 	getTtsEndpoint(){
 		return this.tts_endpoint
 	}
- 
+ 	/**
+	 * get current host of browser
+	 * */
 	getHost(){
 		return this.host;
 	}
+	/**
+	 * get current hostname without port
+	 * */
 	getClientHostName(stripPort = true){
 		const hostName = document.location.host
 
@@ -143,7 +197,9 @@ export default class AppConfig {
 
 		return hostName;
 	}
-
+	/**
+	 * set default Endpoint based on current url in the current browser
+	 * */
 	setDefultEndpoint(secure = false){
 		const protoSuffix = secure ? 's' : ''
 		this.api_endpoint 		= `http${protoSuffix}://${this.host}`
@@ -152,3 +208,5 @@ export default class AppConfig {
 		this.messaging_endpoint = `ws${protoSuffix}://${this.host}:7001`
 	}
 }
+
+export default AppConfig

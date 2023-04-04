@@ -1,43 +1,24 @@
 import React from "react"
 import TextareaAutosize from 'react-textarea-autosize';
 import Helper from "../../../../lib/Helper"
+import UiItem from "./UiItem"
 
-export default class ContentEditor extends React.Component{
-    contentInputRef = null
-	parent = null
+/**
+ * ContentEditor
+ * @component
+ * @augments UiItem
+ * 
+ * @example
+ * 	<ContentEditor parent={Ui_se} pk={Ui_se.pk} content={Ui_se.state.content}/> 
+ * */
+class ContentEditor extends UiItem{
     constructor(props){
-        super(props)
-		this.parent = props.parent
-        this.contentInputRef = React.createRef(null)
-        this.state = {
-            inputStatus : 0
-        }
+        super(props, 'content')
+        this.state.inputStatus = 0
     }
-    async onChangeContent(evt){		
-		Helper.delay(async(e)=>{
-		    const content = evt.target.value;
-            if(!content){
-                return;
-            }
-			await this.props.store.updateSentenceField('content', content, this.props.pk)
-			this.parent.updateRow('content', content)
-		})
-	}
-	loadFormData(){
-		setTimeout(()=>{
-			try {
-				this.contentInputRef.current.value = this.props.content
-
-			} catch (error) {
-				console.log(error)
-				this.loadFormData()
-			}
-		},500)
-	}
-	componentDidMount(){
-		this.loadFormData()
-
-	}
+   
+  
+	
     render(){
         const inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
         const inputOkCls = "py-3 px-4 block w-full border-green-500 rounded-md text-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
@@ -46,8 +27,8 @@ export default class ContentEditor extends React.Component{
         return(<>
             
 			<div className="grow-wrap my-2">
-				<TextareaAutosize cacheMeasurements={false} ref={this.contentInputRef} 
-						   onChange={ evt => this.onChangeContent(evt) } 
+				<TextareaAutosize cacheMeasurements={false} ref={this.inputRef} 
+						   onChange={ evt => this.onChangeInput(evt) } 
 						   className={this.state.inputStatus == 0 ? inputDefaultCls 
 						   							   : (this.state.inputStatus == 1 ? inputOkCls : inputErrorCls)} 
 						   maxRows={20}
@@ -76,3 +57,6 @@ export default class ContentEditor extends React.Component{
 	    </>)
     }
 }
+
+
+export default ContentEditor

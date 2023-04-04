@@ -582,7 +582,16 @@ const speaker_ids = [
   }
 ];
 import React from "react"
-export default class SelectSpeaker extends React.Component{
+/**
+ * SelectSpeaker
+ * state = {speakerId}
+ * props = {config:AppConfig}
+ * @component
+ * @example
+ * const config = AppConfig.getInstance()
+ * <SelectSpeaker config={config}/>
+ * */
+class SelectSpeaker extends React.Component{
 
 	constructor(props){
 		super(props)
@@ -618,3 +627,6 @@ export default class SelectSpeaker extends React.Component{
     </div>)
 	}
 }
+
+
+export default SelectSpeaker

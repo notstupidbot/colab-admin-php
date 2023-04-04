@@ -2,7 +2,12 @@ import React from "react";
 import SentenceItem from "./SentenceItem";
 import Helper from "../../../../../lib/Helper"
 const delay = Helper.makeDelay(250)
-class Toolbar extends React.Component{
+/**
+ * Toolbar_ti
+ * @component
+ * @augments SentenceItem
+ * */
+class Toolbar_ti extends React.Component{
     parent = null
     constructor(props){
         super(props)
@@ -12,6 +17,10 @@ class Toolbar extends React.Component{
 			inTaskMode : false
         }
     }
+    /**
+     * @example 
+     * this.applyState({loadingConvert,inTaskMode})
+     * */
 	applyState(srcState){
         const {
             loadingConvert,inTaskMode
@@ -29,6 +38,9 @@ class Toolbar extends React.Component{
         })
 
     }
+    /**
+     * onConvertItem toolbar click
+     * */
     async onConvertItem(evt, index){
 			const sie = this.parent.parent
 			const inTaskMode = sie.state.taskModeConvert
@@ -79,16 +91,20 @@ class Toolbar extends React.Component{
         </>)
     }
 }
-export default class TextItem extends SentenceItem{
+/**
+ * TaskQueueToolbar
+ * @component
+ * */
+class TextItem extends SentenceItem{
 	toolbarRef = null
     constructor(props){
         super(props)
 		this.toolbarRef = React.createRef(null)
         this.setType('text', props)
-        this.setToolbar(<Toolbar index={props.index} parent={this} ref={this.toolbarRef}/>)
+        this.setToolbar(<Toolbar_ti index={props.index} parent={this} ref={this.toolbarRef}/>)
 
     }
-    
-    
-    
 }
+
+
+export default TextItem

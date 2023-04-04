@@ -1,16 +1,20 @@
 import React from "react"
-import Store from "./Store"
-export default class State extends React.Component {
+import Store_se from "./Store_se"
+/**
+ * State_se
+ * @component
+ * @augments React.Component
+ * */ 
+class State_se extends React.Component {
 	config = null
-	store = null
 	pk = null
 	row = null
-
+	/**
+	 * */
 	constructor(props){
 		super(props)
 		this.pk = props.pk
 		this.config = props.config
-		this.store = new Store(this.config)
 		this.state = {
 			content : '',
 			title : '',
@@ -19,10 +23,17 @@ export default class State extends React.Component {
 			unique_id:''
 		}
 	}
-	/* return actual row from database result */
+	
+	/**
+	 * return actual row Object from database result*/
 	getRow(){
 		return this.row
 	}
+	/**
+	 * update row state object and property
+	 * @param {string} 	key field name of sentence row object
+	 * @param {any}		value field value of current field needed to updated
+	 * */
 	updateRow(key, value){
 		this.row[key] = value
 		let state = {}
@@ -30,20 +41,17 @@ export default class State extends React.Component {
 		console.log(state)
 		this.setState(state)
 	}
+	/**
+	 * set and update row state object and property
+	 * @param {object} 	row object reprents sentence
+	 * */
 	setRow(row){
 		this.row = row
 		const {title, content, sentences, content_ttf, unique_id } = row
 		this.setState({title, content, sentences, content_ttf, row, unique_id},()=>{
 			this.seiRef.current.buildItems(true)
 		})
-
-		// this.setState({sentences:'[]'},()=>{
-		// 	setTimeout(()=>{
-		// 		this.setState({sentences},()=>{
-		// 			console.log('B')
-		// 			this.seiRef.current.buildItems(true)
-		// 		})
-		// 	},5000)
-		// })
 	}
 }
+
+export default State_se

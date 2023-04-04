@@ -1,14 +1,26 @@
-import Action from "./Action";
+import Action_sei from "./Action_sei";
 import TextItem from "./TextItem";
 import TtfItem from "./TtfItem";
-export default class SentenceItemEditor extends Action{
-    parent = null
+/**
+ * SentenceItemEditor
+ * @component
+ * @augments Action_sei
+ * @augments Task_sei
+ * @example
+ * 
+ * <SentenceItemEditor parent={} tqtRef={} store={}>
+ * */
+class SentenceItemEditor extends Action_sei{
+   
+    
     tqtRef = null
     constructor(props){
         super(props)
-        this.parent = props.parent
         this.tqtRef = props.tqtRef
     }
+    /**
+     * componentDidUpdate
+     * */
     componentDidUpdate(){
         // console.log('SentenceItemEditor.componentDidUpdate()')
         if(this.tqtRef.current){
@@ -18,7 +30,9 @@ export default class SentenceItemEditor extends Action{
         }
 
     }
-    
+    /**
+     * onItemChange
+     * */
     async onItemChange(ref){
         console.log(ref.type)
         const items = this.state.items
@@ -26,15 +40,22 @@ export default class SentenceItemEditor extends Action{
 
         this.setState({items})
 		const sentences = JSON.stringify(items)
-        await this.props.store.updateSentenceField('sentences', sentences, this.props.pk)
-        this.parent.updateRow('sentences', sentences)
+        await this.getStore().updateSentenceField('sentences', sentences, this.props.pk)
+        this.getParent().updateRow('sentences', sentences)
     }
+    /**
+     * getItems
+     * @param {boolean} stringify should return as string or list 
+     * */
     getItems(stringify){
         if(stringify){
             return JSON.stringify(this.state.items)
         }
         return this.state.items
     }
+    /**
+     * componentDidMount
+     * */
     componentDidMount(){
         // this.buildItems(true)
         // this.triggerUpdateItems()
@@ -58,3 +79,5 @@ export default class SentenceItemEditor extends Action{
         </div></>)
     }
 }
+
+export default SentenceItemEditor

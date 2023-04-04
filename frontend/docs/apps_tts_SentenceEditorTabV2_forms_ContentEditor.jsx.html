@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: apps/tts/SentenceEditorTabV2/forms/ContentEditor.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: apps/tts/SentenceEditorTabV2/forms/ContentEditor.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react"
+import TextareaAutosize from 'react-textarea-autosize';
+import Helper from "../../../../lib/Helper"
+import UiItem from "./UiItem"
+
+/**
+ * ContentEditor
+ * @component
+ * @augments UiItem
+ * 
+ * @example
+ * 	&lt;ContentEditor parent={Ui_se} pk={Ui_se.pk} content={Ui_se.state.content}/> 
+ * */
+class ContentEditor extends UiItem{
+    constructor(props){
+        super(props, 'content')
+        this.state.inputStatus = 0
+    }
+   
+  
+	
+    render(){
+        const inputErrorCls = "py-3 px-4 block w-full border-red-500 rounded-md text-sm focus:border-red-500 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
+        const inputOkCls = "py-3 px-4 block w-full border-green-500 rounded-md text-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
+        const inputDefaultCls = "py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400";
+
+        return(&lt;>
+            
+			&lt;div className="grow-wrap my-2">
+				&lt;TextareaAutosize cacheMeasurements={false} ref={this.inputRef} 
+						   onChange={ evt => this.onChangeInput(evt) } 
+						   className={this.state.inputStatus == 0 ? inputDefaultCls 
+						   							   : (this.state.inputStatus == 1 ? inputOkCls : inputErrorCls)} 
+						   maxRows={20}
+                           defaultValue={this.props.content}
+						   placeholder="Sentence text">
+				&lt;/TextareaAutosize>	
+			&lt;/div>
+			
+			{
+				this.state.inputStatus == 2 ? 
+					(&lt;div className="absolute inset-y-0 right-0 flex items-center pointer-events-none pr-3">
+						&lt;svg className="h-5 w-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+							&lt;path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+						&lt;/svg>
+					&lt;/div>):""
+			}
+			{
+				this.state.inputStatus == 1 ?
+					(&lt;div className="absolute inset-y-0 right-0 flex items-center pointer-events-none pr-3">
+						&lt;svg className="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+						&lt;path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+						&lt;/svg>
+					&lt;/div>):""
+			}
+	
+	    &lt;/>)
+    }
+}
+
+
+export default ContentEditor</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Action_se.html">Action_se</a></li><li><a href="Action_sei.html">Action_sei</a></li><li><a href="AppConfig.html">AppConfig</a></li><li><a href="ContentEditor.html">ContentEditor</a></li><li><a href="ContentTtfEditor.html">ContentTtfEditor</a></li><li><a href="Helper.html">Helper</a></li><li><a href="LsConfig.html">LsConfig</a></li><li><a href="Prx.html">Prx</a></li><li><a href="PrxCache.html">PrxCache</a></li><li><a href="PrxStore.html">PrxStore</a></li><li><a href="SelectSpeaker.html">SelectSpeaker</a></li><li><a href="SentenceEditorTab.html">SentenceEditorTab</a></li><li><a href="SentenceItem.html">SentenceItem</a></li><li><a href="SentenceItemEditor.html">SentenceItemEditor</a></li><li><a href="State_se.html">State_se</a></li><li><a href="Store_se.html">Store_se</a></li><li><a href="TaskQueueToolbar.html">TaskQueueToolbar</a></li><li><a href="Task_sei.html">Task_sei</a></li><li><a href="TextItem.html">TextItem</a></li><li><a href="TitleEditor.html">TitleEditor</a></li><li><a href="Toolbar_ti.html">Toolbar_ti</a></li><li><a href="Toolbar_ttf.html">Toolbar_ttf</a></li><li><a href="TtfItem.html">TtfItem</a></li><li><a href="UiConfig.html">UiConfig</a></li><li><a href="UiItem.html">UiItem</a></li><li><a href="Ui_se.html">Ui_se</a></li><li><a href="Ws.html">Ws</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 04 2023 16:14:16 GMT+0700 (Western Indonesia Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

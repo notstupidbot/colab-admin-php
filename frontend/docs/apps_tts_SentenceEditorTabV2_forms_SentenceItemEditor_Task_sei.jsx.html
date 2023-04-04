@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: apps/tts/SentenceEditorTabV2/forms/SentenceItemEditor/Task_sei.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: apps/tts/SentenceEditorTabV2/forms/SentenceItemEditor/Task_sei.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react"
+import Helper from "../../../../../lib/Helper"
+/**
+ * Task_sei
+ * @component
+ * */
+class Task_sei extends React.Component {
+    /**
+     * 
+     *onTaskConvert 
+     * 
+     * */
+    async onTaskConvert(evt){
+        this.applyTexItemRefStateBatch({inTaskMode : true})
+        this.setState({taskModeConvert : true})
+
+        for(let index in this.textItemRefs){
+            const ref = this.textItemRefs[index]
+            ref.current.applyToolbarState({loadingConvert : true})
+            const inputText = ref.current.getInputText()
+
+            const ttf = await this.parent.store.convertTtf(inputText)
+            // await Helper.timeout(1000)
+            const refTtf = this.ttfItemRefs[index]
+            refTtf.current.setContent(ttf)
+            this.items[index].ttf = ttf
+            // console.log(ttf)
+            ref.current.applyToolbarState({loadingConvert : false})
+
+        }
+
+        const sentences = this.getItems(true)
+        this.parent.store.updateSentenceField('sentences', sentences, this.parent.pk)
+        this.setState({taskModeConvert : false})
+        this.applyTexItemRefStateBatch({inTaskMode : false})
+
+        
+    }
+
+    /**
+     * Build items from parent.row.content
+     * 
+     * */
+    async onTaskExtract(evt){
+        let confirmed = true
+        if(this.items.length > 0){
+            confirmed = confirm("sei.items is not empty, whould you like to proceed?")
+        }
+        // console.log(confirmed)
+        if(!confirmed){
+            console.log(`SentenceItemEditor.onExtract() : canceled caused of false confirmed`)
+            return
+        }
+        this.setState({items:[]})
+        await Helper.timeout(150)
+
+        const row =  this.parent.getRow()
+        const content = row.content   
+
+        /*============================================================================== */
+        this.items = [];
+        const dotSentences = content.split('.');
+        let sourceIndex = 0;
+        this.setState({taskModeExtract : true})
+        for(let i in dotSentences){
+            const commaSentence = dotSentences[i].split(',');
+
+            if(commaSentence.length > 1){
+                const lastIndex = commaSentence.length - 1;
+                for(let j in commaSentence){
+                    const text = commaSentence[j].replace(/^\s+/,'');
+                    const type = j == lastIndex ? 'dot':'comma';
+                    if(text.length){
+                        const si = {
+                            text : Helper.fixTttsText(text), 
+                            type,
+                            ttf:''
+                        }
+                        if(si.text != ''){
+                            this.items.push(si)
+                        }
+                        sourceIndex += 1;
+                    }
+                    
+                }
+            }else{
+                const text = commaSentence[0].replace(/^\s+/,'');
+                if(text.length){
+                    const si = {
+                        text : Helper.fixTttsText(text), 
+                        type : 'dot',
+                        ttf : '',
+                    }
+                    if(si.text != ''){
+                        this.items.push(si)
+                    }
+                    
+                    sourceIndex += 1;
+                }
+            }
+            this.setState({items : this.items})
+        }
+        // console.log(this.items)
+        this.setState({taskModeExtract : false})
+        this.initSentenceItemRefs()
+        /*==============================================================================*/
+    }
+     /**
+     * onTaskSynthesize 
+     * 
+     * */
+    async onTaskSynthesize(evt){
+        const activeIndex = 0
+
+        this.setState({
+            taskModeSynthesize : true,
+            taskSynthesizeConfig : {
+                run : true,
+                index : activeIndex,
+                next : activeIndex + 1,
+                result : -1
+            }
+        })
+    }
+}
+
+export default Task_sei</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Action_se.html">Action_se</a></li><li><a href="Action_sei.html">Action_sei</a></li><li><a href="AppConfig.html">AppConfig</a></li><li><a href="ContentEditor.html">ContentEditor</a></li><li><a href="ContentTtfEditor.html">ContentTtfEditor</a></li><li><a href="Helper.html">Helper</a></li><li><a href="LsConfig.html">LsConfig</a></li><li><a href="Prx.html">Prx</a></li><li><a href="PrxCache.html">PrxCache</a></li><li><a href="PrxStore.html">PrxStore</a></li><li><a href="SelectSpeaker.html">SelectSpeaker</a></li><li><a href="SentenceEditorTab.html">SentenceEditorTab</a></li><li><a href="SentenceItem.html">SentenceItem</a></li><li><a href="SentenceItemEditor.html">SentenceItemEditor</a></li><li><a href="State_se.html">State_se</a></li><li><a href="Store_se.html">Store_se</a></li><li><a href="TaskQueueToolbar.html">TaskQueueToolbar</a></li><li><a href="Task_sei.html">Task_sei</a></li><li><a href="TextItem.html">TextItem</a></li><li><a href="TitleEditor.html">TitleEditor</a></li><li><a href="Toolbar_ti.html">Toolbar_ti</a></li><li><a href="Toolbar_ttf.html">Toolbar_ttf</a></li><li><a href="TtfItem.html">TtfItem</a></li><li><a href="UiConfig.html">UiConfig</a></li><li><a href="UiItem.html">UiItem</a></li><li><a href="Ui_se.html">Ui_se</a></li><li><a href="Ws.html">Ws</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 04 2023 16:14:16 GMT+0700 (Western Indonesia Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

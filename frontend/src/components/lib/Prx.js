@@ -1,6 +1,11 @@
 import axios from "axios"
 import {v4} from "uuid"
 import Helper from "./Helper"
+
+/**
+ * PrxCache
+ * ProxyHttp with local cache
+ * */
 class PrxCache {
 	age = 0
 	result = null
@@ -49,9 +54,6 @@ class PrxCache {
 
 	validate(){
 		if(this.reqCount > 0){
-			// console.log('OnRequest')
-			// if()
-			// this.result = null
 			return true
 		}
 		let validResult = typeof this.result == 'object'
@@ -62,7 +64,6 @@ class PrxCache {
 			validResult = false
 		}
 
-		// console.log(validResult,hit)
 		return validResult  && hit
 	}
 
@@ -71,24 +72,25 @@ class PrxCache {
 		this.calculateAge()
 	}
 	setOnRequest(){
-		// console.log('setOnRequest')
-
 		this.reqCount += 1
 		const delay = Helper.makeDelay(this.maxAge)
 		delay(()=>{
-			// console.log(`set req count`)
 			this.resetOnRequest()
-			// console.log(this)
 		})
 	}
 }
-
-export default class Prx {
+/**
+ * Prx
+ * Axios capsules with Caching support
+ * */
+class Prx {
 	static caches = {}
 	static async request(options){
 
 	}
-
+	/**
+	 * perform http get
+	 * */
 	static async get(url){
 		const key = Helper.underscore(url);
 		// console.log(key)
@@ -109,7 +111,9 @@ export default class Prx {
 
 		return res
 	}
-
+	/**
+	 * perform http post
+	 * */
 	static async post(url, data){
 		const formData = new FormData();
 		for(let key in data){
@@ -124,3 +128,5 @@ export default class Prx {
 		});
 	}
 }
+
+export default Prx 

@@ -1,7 +1,10 @@
 import React from "react";
 import Helper from "../../../../../lib/Helper"
-
-export default class SentenceItem extends React.Component{
+/**
+ * SentenceItem
+ * @component
+ * */
+class SentenceItem extends React.Component{
     inputRef = null
     parent = null
     type = null
@@ -19,6 +22,11 @@ export default class SentenceItem extends React.Component{
             content : ''
         }
     }
+    /**
+     * @example 
+     * this.setType('ttf',props)
+     * this.setType('text',props)
+     * */
     setType(type, props){
         this.content = props.item[type]
         this.type = type
@@ -26,6 +34,10 @@ export default class SentenceItem extends React.Component{
     onItemFocus(evt){
 
     }
+    /**
+     * @example 
+     * this.applyState({inTaskMode, content})
+     * */
     applyState(srcState){
         const {
             inTaskMode, content
@@ -43,6 +55,9 @@ export default class SentenceItem extends React.Component{
         })
 
     }
+    /**
+     * set content text
+     * */
     setContent(content){
         this.content = content
         this.setState({content})
@@ -50,10 +65,15 @@ export default class SentenceItem extends React.Component{
 
     }
    
-   
+   /**
+     * componentDidUpdate
+     * */
     componentDidUpdate(){
         this.applyToolbarState(this.state)
     }
+    /**
+     * onChangeContent
+     * */
     onChangeContent(evt){
         console.log(evt)
         Helper.delay(()=>{
@@ -68,6 +88,9 @@ export default class SentenceItem extends React.Component{
             this.parent.onItemChange(this)
         })
     }
+    /**
+     * applyToolbarState
+     * */
     applyToolbarState(newState){
         if(this.toolbarRef){
             if(this.toolbarRef.current){
@@ -75,16 +98,16 @@ export default class SentenceItem extends React.Component{
             }
         }
     }
+    /**
+     * getInputText
+     * */
     getInputText(){
         return this.inputRef.current.value
     }
-    onItemClick(evt){
-        // $(this.inputRef.current).prop('contentEditable',true)
-    }
-    onItemBlur(evt){
-        // $(this.inputRef.current).prop('contentEditable',false)
-        // this.onChangeContent(evt)
-    }
+     
+    /**
+     * setToolbar
+     * */
     setToolbar(toolbar){
         this.toolbar = toolbar
     }
@@ -109,3 +132,6 @@ export default class SentenceItem extends React.Component{
         </>)
     }
 }
+
+
+export default SentenceItem

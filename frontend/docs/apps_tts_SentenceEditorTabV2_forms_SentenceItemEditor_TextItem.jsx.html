@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: apps/tts/SentenceEditorTabV2/forms/SentenceItemEditor/TextItem.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: apps/tts/SentenceEditorTabV2/forms/SentenceItemEditor/TextItem.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import SentenceItem from "./SentenceItem";
+import Helper from "../../../../../lib/Helper"
+const delay = Helper.makeDelay(250)
+/**
+ * Toolbar_ti
+ * @component
+ * @augments SentenceItem
+ * */
+class Toolbar_ti extends React.Component{
+    parent = null
+    constructor(props){
+        super(props)
+        this.parent = props.parent
+        this.state = {
+            loadingConvert : false,
+			inTaskMode : false
+        }
+    }
+    /**
+     * @example 
+     * this.applyState({loadingConvert,inTaskMode})
+     * */
+	applyState(srcState){
+        const {
+            loadingConvert,inTaskMode
+        } = srcState
+
+        const appliedState = {
+            loadingConvert,inTaskMode
+        }
+        Object.keys(this.state).map(key=>{
+            if(typeof appliedState[key] != 'undefined' ){
+                let state = {}
+				state[key] = appliedState[key]
+				this.setState(state)
+            }
+        })
+
+    }
+    /**
+     * onConvertItem toolbar click
+     * */
+    async onConvertItem(evt, index){
+			const sie = this.parent.parent
+			const inTaskMode = sie.state.taskModeConvert
+			if(inTaskMode){
+                console.log(`TextItem.onConvertItem() canceled because taskModeConvert is true`)
+                return
+            }
+
+			this.setState({loadingConvert:true})
+			const inputText = this.parent.getInputText()
+			const ttf = await sie.props.store.convertTtf(inputText) 
+
+            const refTtf = sie.ttfItemRefs[index]
+            refTtf.current.setContent(ttf)
+
+            sie.items[index].ttf = ttf
+			const sentences = sie.getItems(true)
+        	sie.props.store.updateSentenceField('sentences', sentences, sie.props.pk)
+			// console.log(sie.items[index])
+			// const textInput = this.getTextInput()
+			// console.log(ttf)
+			this.setState({loadingConvert:false})
+		
+	}
+    
+    render(){
+		const loadingCls = "animate-spin inline-block w-4 h-4 border-[3px] border-current border-t-transparent text-blue-600 rounded-full"
+
+	    const lcls = "mt-1 py-1 px-1 inline-flex justify-center items-center gap-2 -ml-px  first:ml-0  border font-medium bg-white text-gray-700 align-middle hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400"
+        const index = this.props.index
+        return(&lt;>
+        &lt;div className="absolute z-10 right-2">
+				&lt;div className="inline-flex shadow-sm">
+				  &lt;button title="Translate this line" 
+				  		  disabled={this.state.loadingConvert || this.state.inTaskMode} 
+				  		  type="button" 
+				  		  onClick = { evt => this.onConvertItem(evt, index) } 
+				  		  className={lcls}>
+				    {
+				    	this.state.loadingConvert ? (&lt;span className={loadingCls} role="status" aria-label="loading">
+										    	&lt;span className="sr-only">Loading...&lt;/span>
+										  	&lt;/span>)
+				    					 : (&lt;i className="bi bi-translate">&lt;/i>)
+				    }
+				  &lt;/button>
+				&lt;/div>
+		&lt;/div>
+        &lt;/>)
+    }
+}
+/**
+ * TaskQueueToolbar
+ * @component
+ * */
+class TextItem extends SentenceItem{
+	toolbarRef = null
+    constructor(props){
+        super(props)
+		this.toolbarRef = React.createRef(null)
+        this.setType('text', props)
+        this.setToolbar(&lt;Toolbar_ti index={props.index} parent={this} ref={this.toolbarRef}/>)
+
+    }
+}
+
+
+export default TextItem</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Action_se.html">Action_se</a></li><li><a href="Action_sei.html">Action_sei</a></li><li><a href="AppConfig.html">AppConfig</a></li><li><a href="ContentEditor.html">ContentEditor</a></li><li><a href="ContentTtfEditor.html">ContentTtfEditor</a></li><li><a href="Helper.html">Helper</a></li><li><a href="LsConfig.html">LsConfig</a></li><li><a href="Prx.html">Prx</a></li><li><a href="PrxCache.html">PrxCache</a></li><li><a href="PrxStore.html">PrxStore</a></li><li><a href="SelectSpeaker.html">SelectSpeaker</a></li><li><a href="SentenceEditorTab.html">SentenceEditorTab</a></li><li><a href="SentenceItem.html">SentenceItem</a></li><li><a href="SentenceItemEditor.html">SentenceItemEditor</a></li><li><a href="State_se.html">State_se</a></li><li><a href="Store_se.html">Store_se</a></li><li><a href="TaskQueueToolbar.html">TaskQueueToolbar</a></li><li><a href="Task_sei.html">Task_sei</a></li><li><a href="TextItem.html">TextItem</a></li><li><a href="TitleEditor.html">TitleEditor</a></li><li><a href="Toolbar_ti.html">Toolbar_ti</a></li><li><a href="Toolbar_ttf.html">Toolbar_ttf</a></li><li><a href="TtfItem.html">TtfItem</a></li><li><a href="UiConfig.html">UiConfig</a></li><li><a href="UiItem.html">UiItem</a></li><li><a href="Ui_se.html">Ui_se</a></li><li><a href="Ws.html">Ws</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Apr 04 2023 16:14:16 GMT+0700 (Western Indonesia Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

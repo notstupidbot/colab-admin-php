@@ -1,7 +1,11 @@
 import { v4 } from 'uuid';
 import Helper from "./Helper"
-
-export default class Ws{
+/**
+ * Ws
+ * 
+ * Autobahn client wrapper for ZMQ Messaging protocol communication
+ * */
+class Ws{
 	endpoint = null
 	socketUid = null
 	subscriberId = null
@@ -14,7 +18,10 @@ export default class Ws{
 	setSoketLog = (message, data) => {}
 	setSoketLog_context = {}
 	static instance = null
-
+	/**
+	 * get singelton instance
+	 * @return {Ws}
+	 * */
 	static getInstance(){
 		if(Ws.instance instanceof Ws){
 		}else{
@@ -24,6 +31,10 @@ export default class Ws{
 
 		return Ws.instance;
 	}
+	/**
+	 * create singelton instance
+	 * @return {Ws}
+	 * */
 	static factory(){
 		const instance = new Ws()
 		return instance
@@ -39,26 +50,45 @@ export default class Ws{
 		}
 		console.log(`Ws.constructor()`)
 	}
-
+	/**
+	 * reset onSocketLog Handler
+	 * */
 	resetSocketLogHandler(){
 		this.setSoketLog = (message, data) => {}
 	}
+	/**
+	 * set default socketId string
+	 * */
 	setDefaultSocketId(){
 		this.socketUid = localStorage.socketUid || v4();
 	}
-
+	/**
+	 * set default socket SubscriberId
+	 * */
 	setDefaultSubcriberId(){
 		const subscriberId = 'zmqTts_' + this.socketUid.replace(/\W/g,'');
 		this.subscriberId = localStorage.subscriberId || subscriberId;
 	}
+	/**
+	 * get socket subcriberId
+	 * */
 	getSubcriberId(){
 		return this.subscriberId;
 	}
+	/**
+	 * reconnect socket connection
+	 * */
 	async reconnect(){
         console.log(`Ws: retry in ${this.reconnectInterval} ms`);
         await Helper.timeout(this.reconnectInterval);
         this.init();
     }
+    /**
+	 * set event handler on socket event
+	 * @example
+	 * 
+	 * Ws.setHandler('connect', (e)=>e, 'unique_key')
+	 * */
     setHandler(evt, callback, key){
     	const handlerKey = `${key}_on_${evt}`;
     	if(typeof this.handler[evt][handlerKey] != 'function'){
@@ -128,7 +158,11 @@ export default class Ws{
             skipSubprotocolCheck: true
         });
 	}
+	/**
+	 * set socket endpoint to connect*/
 	setEndpoint(endpoint){
 		this.endpoint = endpoint;
 	}
 }
+
+export default Ws

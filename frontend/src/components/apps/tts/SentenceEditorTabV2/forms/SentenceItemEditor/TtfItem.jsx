@@ -2,7 +2,11 @@ import React from "react";
 import SentenceItem from "./SentenceItem";
 import Helper from "../../../../../lib/Helper"
 const delay = Helper.makeDelay(250)
-class Toolbar extends React.Component{
+/**
+ * Toolbar_ttf
+ * @component
+ * */
+class Toolbar_ttf extends React.Component{
     audioRef = null
     parent = null
     constructor(props){
@@ -15,6 +19,10 @@ class Toolbar extends React.Component{
             loadingSynthesize : false
         }
     }
+    /**
+     * @example 
+     * this.applyState({hideAudio,audioSource,loadingSynthesize})
+     * */
     applyState(srcState){
         const {
             hideAudio,audioSource,loadingSynthesize
@@ -32,6 +40,9 @@ class Toolbar extends React.Component{
             }
         })
     }
+    /**
+     * onSynthesizeItem toolbar click
+     * */
     onSynthesizeItem(evt, index){
         const text = evt.target.value;
 
@@ -78,12 +89,18 @@ class Toolbar extends React.Component{
 </div>)
     }
 }
-export default class TtfItem extends SentenceItem{
+/**
+ * TtfItem
+ * @component
+ * @augments SentenceItem
+ * */
+class TtfItem extends SentenceItem{
 
     constructor(props){
         super(props)
         this.setType('ttf', props)
-        this.setToolbar(<Toolbar index={props.index} parent={this}/>)
-    }
-    
+        this.setToolbar(<Toolbar_ttf index={props.index} parent={this}/>)
+    }    
 }
+
+export default TtfItem

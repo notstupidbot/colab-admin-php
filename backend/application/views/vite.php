@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
   <script type="module">
 import RefreshRuntime from "http://localhost:3000/@react-refresh"
