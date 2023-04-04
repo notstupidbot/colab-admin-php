@@ -1,21 +1,18 @@
 import React from "react";
-import SentenceItem from "./SentenceItem";
+import SentenceItem from "./SentenceItem"
+import Toolbar_sei from "./Toolbar_sei"
+
 import Helper from "../../../../../lib/Helper"
 const delay = Helper.makeDelay(250)
 /**
  * Toolbar_ti
  * @component
- * @augments SentenceItem
+ * @augments Toolbar_sei
  * */
-class Toolbar_ti extends React.Component{
-    parent = null
+class Toolbar_ti extends Toolbar_sei{
     constructor(props){
         super(props)
-        this.parent = props.parent
-        this.state = {
-            loadingConvert : false,
-			inTaskMode : false
-        }
+        this.state.loadingConvert = false
     }
     /**
      * @example 
@@ -41,8 +38,10 @@ class Toolbar_ti extends React.Component{
     /**
      * onConvertItem toolbar click
      * */
+
+    
     async onConvertItem(evt, index){
-			const sie = this.parent.parent
+			const sie = this.getSie()
 			const inTaskMode = sie.state.taskModeConvert
 			if(inTaskMode){
                 console.log(`TextItem.onConvertItem() canceled because taskModeConvert is true`)
@@ -50,18 +49,16 @@ class Toolbar_ti extends React.Component{
             }
 
 			this.setState({loadingConvert:true})
-			const inputText = this.parent.getInputText()
-			const ttf = await sie.props.store.convertTtf(inputText) 
+			const inputText = this.getInputText()
+			const ttf = await this.getStore().convertTtf(inputText) 
 
             const refTtf = sie.ttfItemRefs[index]
             refTtf.current.setContent(ttf)
 
             sie.items[index].ttf = ttf
 			const sentences = sie.getItems(true)
-        	sie.props.store.updateSentenceField('sentences', sentences, sie.props.pk)
-			// console.log(sie.items[index])
-			// const textInput = this.getTextInput()
-			// console.log(ttf)
+        	this.getStore().updateSentenceField('sentences', sentences, this.getPk())
+		
 			this.setState({loadingConvert:false})
 		
 	}

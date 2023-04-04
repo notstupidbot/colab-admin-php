@@ -1,23 +1,21 @@
 import React from "react";
-import SentenceItem from "./SentenceItem";
+import SentenceItem from "./SentenceItem"
+import Toolbar_sei from "./Toolbar_sei"
 import Helper from "../../../../../lib/Helper"
 const delay = Helper.makeDelay(250)
 /**
  * Toolbar_ttf
  * @component
+ * @augments Toolbar_sei
  * */
-class Toolbar_ttf extends React.Component{
+class Toolbar_ttf extends Toolbar_sei{
     audioRef = null
-    parent = null
     constructor(props){
         super(props)
-        this.parent = props.parent
         this.audioRef = React.createRef(null)
-        this.state = {
-            hideAudio : true,
-            audioSource : '',
-            loadingSynthesize : false
-        }
+        this.state.hideAudio = true
+        this.state.audioSource = ''
+        this.state.loadingSynthesize = false
     }
     /**
      * @example 
@@ -25,11 +23,11 @@ class Toolbar_ttf extends React.Component{
      * */
     applyState(srcState){
         const {
-            hideAudio,audioSource,loadingSynthesize
+            inTaskMode, hideAudio,audioSource,loadingSynthesize
         } = srcState
 
         const appliedState = {
-            hideAudio,audioSource,loadingSynthesize
+            inTaskMode, hideAudio,audioSource,loadingSynthesize
         }
 
         Object.keys(this.state).map(key=>{
@@ -47,7 +45,7 @@ class Toolbar_ttf extends React.Component{
         const text = evt.target.value;
 
 			this.setState({loadingSynthesize:true})
-            const sie = this.parent.parent
+            const sie = this.getSie()
             const inTaskMode = sie.state.taskModeSynthesize
 
             if(inTaskMode){
