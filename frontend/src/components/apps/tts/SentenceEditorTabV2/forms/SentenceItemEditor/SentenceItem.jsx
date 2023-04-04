@@ -10,10 +10,12 @@ class SentenceItem extends React.Component{
     type = null
     index = null
     content = null
+    toolbarRef = null
     toolbar = ""
     constructor(props){
         super(props)
         this.inputRef = React.createRef(null)
+        this.toolbarRef = React.createRef(null)
         this.parent = props.parent
         this.index = props.index
 

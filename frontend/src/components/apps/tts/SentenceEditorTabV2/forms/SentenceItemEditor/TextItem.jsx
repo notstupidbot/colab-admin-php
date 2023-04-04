@@ -93,10 +93,8 @@ class Toolbar_ti extends Toolbar_sei{
  * @component
  * */
 class TextItem extends SentenceItem{
-	toolbarRef = null
     constructor(props){
         super(props)
-		this.toolbarRef = React.createRef(null)
         this.setType('text', props)
         this.setToolbar(<Toolbar_ti index={props.index} parent={this} ref={this.toolbarRef}/>)
 

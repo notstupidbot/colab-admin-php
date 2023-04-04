@@ -97,7 +97,7 @@ class TtfItem extends SentenceItem{
     constructor(props){
         super(props)
         this.setType('ttf', props)
-        this.setToolbar(<Toolbar_ttf index={props.index} parent={this}/>)
+        this.setToolbar(<Toolbar_ttf index={props.index} parent={this}  ref={this.toolbarRef}/>)
     }    
 }
 
