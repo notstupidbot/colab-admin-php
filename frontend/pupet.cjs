@@ -19,6 +19,7 @@ const exampleBrowse = async()=>{
 	var baseUrl = "https://www.tokopedia.com/"
     const browser = await puppeteer.launch({
         headless: true,
+        args: ['--no-sandbox'],
     })
     const page = await browser.newPage()
     await page.setDefaultNavigationTimeout(0);
