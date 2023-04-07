@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: apps/tts/SentenceEditorTabV2/SentenceEditorTab.jsx</title>
+    <title>JSDoc: Source: apps/tts/SentenceEditorTabV2/forms/SentenceItemEditor/Toolbar_sei.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: apps/tts/SentenceEditorTabV2/SentenceEditorTab.jsx</h1>
+    <h1 class="page-title">Source: apps/tts/SentenceEditorTabV2/forms/SentenceItemEditor/Toolbar_sei.jsx</h1>
 
     
 
@@ -26,33 +26,46 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import {useLoaderData} from "react-router-dom"
-import Ui_se from "./Ui_se"
-// import { useEffect, useState } from "react";
-// import Helper from "../../../lib/Helper"
-
-export async function loader({ params }) {
-  return { sentenceId:params.pk };
-}
+            <pre class="prettyprint source linenums"><code>import React from "react"
 /**
- * SentenceEditorTab 
- * Controller function component of Ui component
- * @component
- * @example 
- * const config = AppConfig.getInstance()
- * &lt;SentenceEditorTab config={config}/>
+ * Toolbar_sei
  * */
-const SentenceEditorTab = ({config}) => {
-	const {sentenceId} = useLoaderData()
-	
-	return(&lt;>
-		&lt;div className="SentenceEditorTabV2 dark:text-slate-500">
-			&lt;Ui_se pk={sentenceId} config={config}/>
-		&lt;/div>
-	&lt;/>)
+class Toolbar_sei extends React.Component{
+    parent = null
+	 constructor(props){
+        super(props)
+        this.parent = props.parent
+        this.state = {
+			inTaskMode : false
+        }
+    }
+    /**
+     * get current SentenceItem input text
+     * */
+	getInputText(){
+        return this.parent.getInputText()
+    }
+    /**
+     * get SentenceItemEditor instance
+     * */
+    getSie(){
+        return this.parent.parent
+    }
+    /**
+     * get curent Store instance
+     * */
+    getStore(){
+        return this.getSie().getStore()
+    }
+    /**
+     * get curent sentence row pk
+     * */
+    getPk(){
+        return this.getSie().props.pk
+    }
 }
 
-export default SentenceEditorTab</code></pre>
+export default Toolbar_sei</code></pre>
         </article>
     </section>
 

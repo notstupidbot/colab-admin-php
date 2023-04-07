@@ -23,7 +23,7 @@ import Explorer from "./apps/tts/ExplorerTab";
 import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTabV2/SentenceEditorTab"; 
 import SideBar from "./SideBar"
 import Template from "./Template"
-
+import Puppeteer from "./apps/Puppeteer"
 import TtsServerPrefTab, {loader as ttsServerPrefTabLoader} from "./apps/preferences/TtsServerPrefTab"
 
 import ErrorPage from "./ErrorPage"
@@ -48,7 +48,8 @@ export default function Router({config}){
 				<Route  path="/dashboard" element={<Dashboard/>}>
 					
 				</Route>
-				<Route  path="/book" element={<Book/>}>
+				<Route  path="/book" element={<Book/>}></Route>
+				<Route  path="/puppeteer" element={<Puppeteer/>}>
 					
 				</Route>
 				<Route  path="/bootstrap-icons" loader={bootstrapIconLoader} element={<BootstrapIcons/>}></Route>

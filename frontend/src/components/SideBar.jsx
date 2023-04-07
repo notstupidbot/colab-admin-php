@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react"
 import { Link, NavLink } from 'react-router-dom';
+import side_menu from "./side_menu.json"
 
 export default function SideBar({config, showSidebar}){
 
@@ -39,31 +40,16 @@ export default function SideBar({config, showSidebar}){
           <button className="dark:text-white absolute -right-4 my-32" onClick={toggle}><i className="bi bi-chevron-left"></i></button>
         </div>
         <ul className="space-y-1.5">
-          <li>
-            <NavLink className={linkCls} to="/dashboard">
-              <i className="bi bi-speedometer2"></i> Dashboard
+        {
+          Object.keys(side_menu.links).map((key,index)=>{
+            return (<li>
+            <NavLink className={linkCls} to={side_menu.links[key].path}>
+              <i className={side_menu.links[key].iconCls}></i> {side_menu.links[key].title}
             </NavLink>
-          </li>
-          <li>
-            <NavLink className={linkCls} to="/tts">
-              <i className="bi bi-globe2"></i> TTS
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className={linkCls} to="/preferences">
-              <i className="bi bi-sliders2"></i> Preferences
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className={linkCls} to="/book">
-              <i className="bi bi-code"></i> Book
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className={linkCls} to="/bootstrap-icons">
-              <i className="bi bi-bootstrap"></i> Bootstrap Icons
-            </NavLink>
-          </li>
+          </li>)
+          })
+        }
+          
         </ul>
       </nav>
     </div>
