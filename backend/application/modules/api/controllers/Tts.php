@@ -285,6 +285,8 @@ class Tts extends REST_Controller {
             pclose( popen( $shell_cmd, 'r' ) );
         */
         $stdout = "";
+        putenv("PATH=/opt/local/bin");
+
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $pid = 0;
             $shell_cmd = sprintf('start RunHiddenConsole php %s %s > NUL 2>&1', $script, $job_id);
@@ -295,13 +297,14 @@ class Tts extends REST_Controller {
             
             
         } else {
-            $shell_cmd = sprintf('php %s %s %s "%s" "%s" %s > /dev/null 2>&1 & echo $! > %s', 
-                              $script, $job_id, $sentence_id, $text, $speaker_id, $index, $pidfile);
-            $output = shell_exec($shell_cmd);
-
-            $pid = intval(trim(file_get_contents($pidfile)))+0;
-            $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $pid);
             
+            $shell_cmd = sprintf('php %s %s > /dev/null 2>&1', $script, $job_id);
+
+            $pid = 0;
+            $job = $this->m_job->create($job_id,'tts', $shell_cmd, $subscriber_id, $params,$pid);
+            // $shell_cmd = sprintf('php %s %s', $script, $job_id);
+            // pclose( popen( $shell_cmd, 'r' ) );
+            $stdout = shell_exec($shell_cmd);
         }
         
         $result = [
@@ -311,7 +314,9 @@ class Tts extends REST_Controller {
             'sentence_id' => $sentence_id,
             'success' => true,
             'at' => 'create_job',
-            'stdout' => $stdout
+            'stdout' => $stdout,
+            'shell_cmd'=> $shell_cmd,
+            'env' => $_ENV 
         ];
         $this->response($result,200);
 

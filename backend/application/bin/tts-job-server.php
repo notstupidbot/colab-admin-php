@@ -27,6 +27,7 @@ function fetch_tts_server(&$ci, &$job, $url, $output_file, $proxy="", &$errors, 
     ];
 
     if(!empty($proxy)){
+        // echo "using proxy ${proxy}\n";
         $options['proxy'] = $proxy;
     }
     
@@ -37,6 +38,8 @@ function fetch_tts_server(&$ci, &$job, $url, $output_file, $proxy="", &$errors, 
             $chunkMode, $index_number, $sentence_id, true);
     }
     $response = "";
+    // $url = "https://api.ipify.org";
+    // echo $url;
     try {
         $response = $client->get($url, $options);
 
@@ -163,7 +166,9 @@ $ci = get_instance();
 $ci->load->model('api/ZmqMdl', 'm_zmq');
 $ci->load->model('api/JobMdl', 'm_job');
 $ci->load->model('api/PreferenceMdl', 'm_pref');
-list($tts_server_endpoint, $tts_server_proxy, $tts_enable_proxy) = $ci->m_pref->getTtsServerPrefs();
+$prefs = $ci->m_pref->getTtsServerPrefs();
+// print_r($prefs);
+list($tts_server_endpoint, $tts_server_proxy, $tts_enable_proxy) = $prefs;
 if(isset($argv[1])){
     
     $job_id = $argv[1];

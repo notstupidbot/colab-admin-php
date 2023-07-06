@@ -20,7 +20,8 @@ import SentenceTab from "./apps/tts/SentenceTab";
 import ProjectEditorTab,{loader as projectEditorTabLoader} from "./apps/tts/ProjectEditorTab";
 
 import Explorer from "./apps/tts/ExplorerTab";
-import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTabV2/SentenceEditorTab"; 
+// import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTabV2/SentenceEditorTab"; 
+import SentenceEditorTab, {loader as sentenceEditorTabLoader} from "./apps/tts/SentenceEditorTab/Ui"; 
 import SideBar from "./SideBar"
 import Template from "./Template"
 import Puppeteer from "./apps/Puppeteer"

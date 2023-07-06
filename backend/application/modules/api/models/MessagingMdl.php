@@ -20,6 +20,9 @@ class MessagingMdl extends BaseMdl{
 
 	function update($subscriber_id, $row){
 		foreach($row as $key => $val){
+			if(empty($val)){
+				$val="-";
+			}
 			if(!empty($val)){
 				$this->db->set($key, $val);
 			}
