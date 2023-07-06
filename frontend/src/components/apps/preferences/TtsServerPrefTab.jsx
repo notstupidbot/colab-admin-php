@@ -32,7 +32,7 @@ export default function TtsServerPrefTab({config}){
 			page : 1,
 			total_pages : 0,
 			total_records : 0,
-			order_by:'ord',
+			order_by:'key',
 			order_dir:'asc'
 		});
  

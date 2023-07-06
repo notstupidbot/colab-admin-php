@@ -129,13 +129,18 @@ function restore_json_dump($table, $filename, $pk = "id"){
 	// print_r($json_buffer);
 	foreach($rows as $row){
 		// echo $row->id . "\n";
-		$existing_row = $ci->db->where($pk,$row->$pk)->get($table)->row();
-		if($existing_row){
-			$ci->db->from($table)->where($pk,$row->$pk)->delete();
-		}
+		// $existing_row = $ci->db->where($pk,$row->$pk)->get($table)->row();
+		// if($existing_row){
+		// 	$ci->db->from($table)->where($pk,$row->$pk)->delete();
+		// }
 		// sleep(1);
 		echo ".";
-		$ci->db->insert($table, $row);	
+		try {
+			$ci->db->insert($table, $row);	
+						
+		} catch (Exception $e) {
+			
+		}
 
 	}
 	echo "\n";

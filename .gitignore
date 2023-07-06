@@ -13,6 +13,7 @@ dist-ssr
 *.local
 
 # Editor directories and files
+www-dist/preline_co
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -25,3 +26,4 @@ dist-ssr
 /package-lock.json
 /push-server/yarn.lock
 __unused
+frontend/package-lock.json
