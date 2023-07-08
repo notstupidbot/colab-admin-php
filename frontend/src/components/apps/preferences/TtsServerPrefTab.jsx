@@ -38,15 +38,19 @@ export default function TtsServerPrefTab({config}){
  
 
 	const updateList = async(page_number)=>{
+		let newGrid = Object.assign({},grid)
+		setGrid(null)
 		page_number = page_number || 1;
-		grid.page = page_number;
-		grid.limit = grid.limit||5
-		grid.records = [];
-		setGrid(Object.assign({},grid))
+		newGrid.page = page_number;
+		newGrid.limit = grid.limit||5
+		newGrid.records = [];
+		
+		setGrid(null)
 
 		const data = await store.getTtsPreferenceList(page_number, grid.limit, grid.order_by, grid.order_dir)
 		if(data){
-			setGrid(data)
+			newGrid = Object.assign(newGrid,data)
+			setGrid(newGrid)
 		}
 	}
 
@@ -135,6 +139,9 @@ export default function TtsServerPrefTab({config}){
 		}
 	}
 	const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+	if(!grid){
+		return 'no data'
+	}
 	return(<div className={containerCls}>		
 				<div className="flex flex-col">
 	  				<div className="-m-1.5 overflow-x-auto">

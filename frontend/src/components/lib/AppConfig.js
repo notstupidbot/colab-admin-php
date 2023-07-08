@@ -202,7 +202,7 @@ class AppConfig {
 	 * */
 	setDefultEndpoint(secure = false){
 		const protoSuffix = secure ? 's' : ''
-		this.api_endpoint 		= `http${protoSuffix}://${this.host}`
+		this.api_endpoint 		= `http${protoSuffix}://${this.host}:8000`
 		this.push_endpoint 		= `http${protoSuffix}://${this.host}:7000`
 		this.tts_endpoint 		= `http${protoSuffix}://kutukupret:5002`
 		this.messaging_endpoint = `ws${protoSuffix}://${this.host}:7001`

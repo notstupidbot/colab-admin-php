@@ -10,7 +10,7 @@ class PrxCache {
 	age = 0
 	result = null
 	key = null
-	maxAge = 9000
+	maxAge = 1000
 	birth = null
 	data = null
 	reqCount = 0

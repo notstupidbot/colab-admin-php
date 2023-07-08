@@ -17,7 +17,7 @@ const AppDataSource = new DataSource({
     database: "./main.sqlite",
     synchronize: true,
     logging: true,
-    entities: [CategorySchema, PostSchema, JobSchema, MessagingSchema, PreferenceSchema, SocketSessionSchema, TtsProjectSchema, TtsSentenceSchema,UserSchema,WordListSchema,WordListTtfSchema],
+    entities: [CategorySchema, PostSchema, JobSchema, MessagingSchema, PreferenceSchema, SocketSessionSchema, TtsProjectSchema, TtsSentenceSchema, UserSchema, WordListSchema, WordListTtfSchema],
     subscribers: [],
     migrations: [],
 })

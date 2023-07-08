@@ -8,9 +8,7 @@
     "preview": "vite preview",
     "docs": "jsdoc -r --verbose -c jsdoc.conf.json",
     "sidebar": "node sidebar.cjs",
-    "dev": "run-p --race frontend backend",
-    "frontend": "vite",
-    "backend": "node ./api.js"
+    "dev": "vite"
   },
   "dependencies": {
     "@preline/overlay": "^1.4.0",

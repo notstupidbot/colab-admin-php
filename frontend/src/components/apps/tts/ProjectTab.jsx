@@ -91,14 +91,12 @@ export default function ProjectTab({config}){
           <tbody>
           {
           	grid.records.length == 0 ?
-          		Array(parseInt(grid.limit)).fill(1).map((a,r)=>{return(
-          		<tr className="animate-pulse" key={r}>
-          			<td className=""><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className="w-3/4 "><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
-          			<td className=""><span className=" my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700"></span></td>
+          	
+          		<tr className="animate-pulse">
+          			<td className="" colSpan="3"><span className="my-2 h-8 block bg-gray-200 rounded-full dark:bg-gray-700">No records</span></td>
           			
           		</tr>
-          	)})
+          
           	:""
           }
           {

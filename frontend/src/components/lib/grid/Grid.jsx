@@ -6,14 +6,12 @@ import {v4} from "uuid"
 const GridItemEmpty = ({spanCls, limit}) => {
 	// const arrLength = lastLength ? lastLength : limit
 	const dummyRecords =Array(limit).fill(0)
+	const colSpan = 4
 	return(<>
 		{
 			dummyRecords.map((value,index)=>{
-				return (<tr className="animate-pulse" key={index}>
-		          			<td><span className={spanCls}></span></td>
-		          			<td><span className={spanCls}></span></td>
-		          			<td><span className={spanCls}></span></td>
-		          			<td><span className={spanCls}></span></td>
+				return (<tr key={index}>
+		          			<td colSpan={colSpan}><span className={spanCls}>No records</span></td>
 		          		</tr>)
 			})
 		}
