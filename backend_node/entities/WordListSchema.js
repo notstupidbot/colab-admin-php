@@ -1,10 +1,10 @@
 
 import {EntitySchema} from "typeorm"  
-import SocketSession from "../models/SocketSession.js"      
+import WordList from "../models/WordList.js"      
 
-const SocketSessionSchema = new EntitySchema({
-    name: "SocketSession",
-    target: SocketSession,
+const WordListSchema = new EntitySchema({
+    name: "WordList",
+    target: WordList,
     columns: {
         id : {
             type : "int", 
@@ -12,17 +12,11 @@ const SocketSessionSchema = new EntitySchema({
 			generated : true, 
 
         },
-		ip_addr : {
+		content : {
             type : "varchar", 
-			nullable : true, 
 
         },
-		uuid : {
-            type : "varchar", 
-			nullable : true, 
-
-        },
-		connected : {
+		user_id : {
             type : "int", 
 			nullable : true, 
 
@@ -44,5 +38,5 @@ const SocketSessionSchema = new EntitySchema({
 
 
 
-export default SocketSessionSchema
+export default WordListSchema
     

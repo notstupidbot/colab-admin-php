@@ -1,10 +1,10 @@
 
 import {EntitySchema} from "typeorm"  
-import TtsProject from "../models/TtsProject.js"      
+import WordListTtf from "../models/WordListTtf.js"      
 
-const TtsProjectSchema = new EntitySchema({
-    name: "TtsProject",
-    target: TtsProject,
+const WordListTtfSchema = new EntitySchema({
+    name: "WordListTtf",
+    target: WordListTtf,
     columns: {
         id : {
             type : "int", 
@@ -12,28 +12,17 @@ const TtsProjectSchema = new EntitySchema({
 			generated : true, 
 
         },
-		order : {
+		content : {
+            type : "varchar", 
+
+        },
+		word_id : {
             type : "int", 
-			nullable : true, 
-
-        },
-		title : {
-            type : "varchar", 
-			nullable : true, 
-
-        },
-		slug : {
-            type : "varchar", 
-			nullable : true, 
-
-        },
-		items : {
-            type : "text", 
-			nullable : true, 
 
         },
 		user_id : {
             type : "int", 
+			nullable : true, 
 
         },
 		create_date : {
@@ -53,5 +42,5 @@ const TtsProjectSchema = new EntitySchema({
 
 
 
-export default TtsProjectSchema
+export default WordListTtfSchema
     

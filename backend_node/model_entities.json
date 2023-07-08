@@ -70,8 +70,8 @@
             "types" : ["int","varchar","int","int","datetime","datetime"],
             "pk" : "id",
             "nullable" : ["user_id","create_date", "last_updated"],
-            "model" : "WordList",
-            "schema" : "WordListSchema"
+            "model" : "WordListTtf",
+            "schema" : "WordListTtfSchema"
         }
     }
 }
