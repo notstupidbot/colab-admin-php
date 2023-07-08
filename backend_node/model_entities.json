@@ -1,0 +1,77 @@
+{
+    "schema" : {
+        "job" : {
+            "fields" : ["id", "name", "cmdline","ps_output", "pid", "subscriber_id", "params", "user_id", "create_date", "last_updated"],
+            "types" : ["int","varchar","varchar","text","int","varchar","text","int","datetime","datetime"],
+            "pk" : "id",
+            "nullable" : ["pid","ps_output","cmdline","create_date", "last_updated"],
+            "model" : "Job",
+            "schema" : "JobSchema"
+        },
+        "messaging" : {
+            "fields" : ["id", "subscriber_id", "ip_addr", "create_date", "last_updated"],
+            "types" : ["int","varchar","varchar","datetime","datetime"],
+            "pk" : "id",
+            "nullable" : ["create_date", "last_updated"],
+            "model" : "Messaging",
+            "schema" : "MessagingSchema"
+        },
+        "preference" : {
+            "fields" : ["id", "key",    "val",    "type",   "group",   "editor",  "prop",      "desc",   "create_date", "last_updated"],
+            "types" :  ["int","varchar","text","varchar", "varchar",  "varchar", "varchar",    "varchar","datetime", "datetime"],
+            "pk" : "id",
+            "nullable" : [ "key",       "type",   "group",   "editor",  "prop",      "desc", "create_date", "last_updated"],
+            "model" : "Preference",
+            "schema" : "PreferenceSchema"
+        },
+
+        "socket_session" : {
+            "fields" : ["id", "ip_addr", "uuid", "connected", "create_date", "last_updated"],
+            "types" : ["int","varchar","varchar","int","datetime","datetime"],
+            "pk" : "id",
+            "nullable" : ["ip_addr", "uuid", "connected", "create_date","last_updated"],
+            "model" : "SocketSession",
+            "schema" : "SocketSessionSchema"
+        },
+        "tts_project" : {
+            "fields" : ["id", "order", "title", "slug", "items", "user_id","create_date",  "last_updated"],
+            "types" : ["int", "int",   "varchar","varchar","text","int","datetime","datetime"],
+            "pk" : "id",
+            "nullable" : ["order", "title", "slug","items", "create_date","last_updated"],
+            "model" : "TtsProject",
+            "schema" : "TtsProjectSchema"
+        },
+        "tts_sentence" : {
+            "fields" : ["id", "project_id", "order", "title", "slug", "content", "sentences", "content_ttf", "output_file",  "user_id","create_date",  "last_updated"],
+            "types" : ["int", "int",        "int",  "varchar","varchar","text",   "text",    "text", "varchar", "int", "datetime","datetime"],
+            "pk" : "id",
+            "nullable" : [ "order", "title", "slug", "content", "sentences", "content_ttf", "output_file",  "user_id","create_date",  "last_updated"],
+            "model" : "TtsSentence",
+            "schema" : "TtsSentenceSchema"
+        },
+        "user" : {
+            "fields" : ["id", "username", "email","password", "first_name", "last_name", "create_date", "last_updated"],
+            "types" : ["int","varchar","varchar",  "text", "varchar",   "varchar",    "datetime", "datetime"],
+            "pk" : "id",
+            "nullable" : ["email", "last_name", "create_date","last_updated"],
+            "model" : "User",
+            "schema" : "UserSchema"
+        },
+        "word_list" : {
+            "fields" : ["id", "content", "user_id", "create_date", "last_updated"],
+            "types" : ["int","varchar","int","datetime","datetime"],
+            "pk" : "id",
+            "nullable" : ["user_id","create_date", "last_updated"],
+            "model" : "WordList",
+            "schema" : "WordListSchema"
+        },
+        "word_list_ttf" : {
+            "fields" : ["id", "content", "word_id","user_id", "create_date", "last_updated"],
+            "types" : ["int","varchar","int","int","datetime","datetime"],
+            "pk" : "id",
+            "nullable" : ["user_id","create_date", "last_updated"],
+            "model" : "WordList",
+            "schema" : "WordListSchema"
+        }
+    }
+}

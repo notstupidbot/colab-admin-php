@@ -1,0 +1,18 @@
+// vite.config.js
+import { defineConfig } from "file:///Volumes/STORAGE/www/frontend/node_modules/vite/dist/node/index.js";
+import react from "file:///Volumes/STORAGE/www/frontend/node_modules/@vitejs/plugin-react/dist/index.mjs";
+import { createServer } from "file:///Volumes/STORAGE/www/frontend/node_modules/vite/dist/node/index.js";
+var vite_config_default = defineConfig({
+  plugins: [react()],
+  build: {
+    sourcemap: true,
+    outDir: "../www-dist"
+  },
+  server: {
+    middleware: [createServer().middlewares]
+  }
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcuanMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCIvVm9sdW1lcy9TVE9SQUdFL3d3dy9mcm9udGVuZFwiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9maWxlbmFtZSA9IFwiL1ZvbHVtZXMvU1RPUkFHRS93d3cvZnJvbnRlbmQvdml0ZS5jb25maWcuanNcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfaW1wb3J0X21ldGFfdXJsID0gXCJmaWxlOi8vL1ZvbHVtZXMvU1RPUkFHRS93d3cvZnJvbnRlbmQvdml0ZS5jb25maWcuanNcIjtpbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tICd2aXRlJ1xuaW1wb3J0IHJlYWN0IGZyb20gJ0B2aXRlanMvcGx1Z2luLXJlYWN0J1xuaW1wb3J0IHsgY3JlYXRlU2VydmVyIH0gZnJvbSAndml0ZSc7XG5cbi8vIGh0dHBzOi8vdml0ZWpzLmRldi9jb25maWcvXG5leHBvcnQgZGVmYXVsdCBkZWZpbmVDb25maWcoe1xuICBwbHVnaW5zOiBbcmVhY3QoKV0sXG4gIFxuICBidWlsZDp7XG4gICAgc291cmNlbWFwOnRydWUsXG4gICAgb3V0RGlyOicuLi93d3ctZGlzdCcsXG4gIH0sc2VydmVyOiB7XG4gICAgbWlkZGxld2FyZTogW2NyZWF0ZVNlcnZlcigpLm1pZGRsZXdhcmVzXSxcbiAgfSxcbn0pXG4iXSwKICAibWFwcGluZ3MiOiAiO0FBQXlRLFNBQVMsb0JBQW9CO0FBQ3RTLE9BQU8sV0FBVztBQUNsQixTQUFTLG9CQUFvQjtBQUc3QixJQUFPLHNCQUFRLGFBQWE7QUFBQSxFQUMxQixTQUFTLENBQUMsTUFBTSxDQUFDO0FBQUEsRUFFakIsT0FBTTtBQUFBLElBQ0osV0FBVTtBQUFBLElBQ1YsUUFBTztBQUFBLEVBQ1Q7QUFBQSxFQUFFLFFBQVE7QUFBQSxJQUNSLFlBQVksQ0FBQyxhQUFhLEVBQUUsV0FBVztBQUFBLEVBQ3pDO0FBQ0YsQ0FBQzsiLAogICJuYW1lcyI6IFtdCn0K
