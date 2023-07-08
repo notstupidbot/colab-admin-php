@@ -1,14 +1,6 @@
-import fs from 'fs'
-const writeFile = async(outputPath, outputContentBuffer, info) =>{
-    try {
-        const fileDescriptor = fs.openSync(outputPath, 'w'); // Open the file in write mode
-        fs.writeSync(fileDescriptor, outputContentBuffer); // Write the data to the file
-        fs.closeSync(fileDescriptor); // Close the file
-        console.log(`${info} success.`)
-    } catch (error) {
-        console.error(`${info} failed.`)
-    }
-}
+import fs from "fs"
+import {writeFile} from "./lib.js"
+
 const createModelFile = async(config, table_name, target_dir)=>{
     const outputFilename = `${config.model}.js`
     const outputPath = `${target_dir}/${outputFilename}`

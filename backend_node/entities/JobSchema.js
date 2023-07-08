@@ -31,7 +31,9 @@ const JobSchema = new EntitySchema({
             type: "varchar"
         },
         cmdline: {
-            type: "text"
+            type: "text",
+            nullable: true,
+
         },
         ps_output: {
             type: "text",

@@ -8,10 +8,14 @@ import {
 // import {Tblpost} from './entities/Post.entities.js';
 import Category from "./models/Category.js"
 import Post from "./models/Post.js"
+import {router as jobRoute}  from  "./routes/job.js"
+
 
 const app = express()
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json());
+
+app.use("/api",jobRoute)
 
 app.get("/",(req,res)=>{
   res.send("run success")
