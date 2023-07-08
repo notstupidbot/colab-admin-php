@@ -7,3 +7,5 @@ class Messaging {
         this.last_updated = last_updated
     }
 }
+
+export default Messaging

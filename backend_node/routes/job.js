@@ -10,16 +10,57 @@ import {
 
 import Job from "../models/Job.js"
 
+const calculateOffset = (pageNumber, limit) => {
+    const offset = (pageNumber - 1) * limit
+    return offset
+
+}
+
+const calculateTotalPages = (recordCount, limit) => {
+    return Math.ceil(recordCount / limit)
+}
+
 router.get('/jobs', async (req, res) => {
     // Route logic for handling GET '/job'
+    let {page,limit,order_by,order_dir} = req.query
+    /*
+    records : [],
+			limit : 5,
+			page : 1,
+			total_pages : 0,
+			total_records : 0,
+			order_by:'key',
+			order_dir:'asc'
+    
+    */
+    if(!limit){
+        limit = 5
+    }
+    
+    if(!page){
+        page = 1
+    }
 
+      
     try {
-        const jobs =  await AppDataSource.manager.find(Job)
-        const list = jobs
-        res.json({list})
+        const total_records =  await AppDataSource.manager.count(Job)
+    
+        const total_pages = calculateTotalPages(total_records, limit) 
+        const offset = calculateOffset(page, limit)
+        
+        let option = {
+            skip : offset,
+            take : limit
+        }
+
+        const jobs =  await AppDataSource.manager.find(Job, option)
+        const records = jobs
+        
+        res.send({ page, limit, order_by, order_dir, records, total_pages, total_records})
+
     }catch(e){
         console.error(e)
-        res.json(e)
+        res.send(e)
 
     }
 });

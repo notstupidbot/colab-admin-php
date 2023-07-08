@@ -1,13 +1,16 @@
 import createReactComponent from './actions/createReactComponent.mjs'
 import createModelEntity from "./actions/createModelEntity.js"
 import createModelAPIRoute from "./actions/createModelAPIRoute.mjs"
-const availableActions = ['createReactComponent', 'createModelEntity','createModelAPIRoute']
+import listModelAPIRoutes from "./actions/listModelAPIRoutes.mjs"
+
+const availableActions = ['createReactComponent', 'createModelEntity','createModelAPIRoute','listModelAPIRoutes']
 const argv = process.argv
 const showHelp = f => {
     console.log('Welcome to artisan')
     console.log(createReactComponent.HELP)
     console.log(createModelEntity.HELP)
     console.log(createModelAPIRoute.HELP)
+    console.log(listModelAPIRoutes.HELP)
 }
 
 const parseCmd = () => {
@@ -59,6 +62,17 @@ const processCmd = async (cmd) => {
             console.log(createModelAPIRoute.HELP)
 
         }
+    }
+    if(cmd === 'listModelAPIRoutes'){
+        argv.splice(0,3)
+        let json_path = null
+        const [json_path_arg] = argv
+        json_path = json_path_arg
+        if(!json_path){
+            json_path = "./model_entities.json"
+        }
+        await listModelAPIRoutes(json_path)
+        
     }
 }
 

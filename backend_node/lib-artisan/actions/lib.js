@@ -15,4 +15,28 @@ const writeFile = async(outputPath, outputContentBuffer, info) =>{
 const excludeFields = (excludeFields, fields) =>{
     return fields.filter(f => !excludeFields.includes(f))
 }
-export {writeFile,camelToDashCase,excludeFields}
+
+const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKeyInfo = 'table', defaultKey = 'schema') => {
+    let jsonContent = `{${defaultKey}:{}}`
+    let obj = {}
+    obj[defaultKey] = {}
+    try{
+        jsonContent = await fs.readFileSync(json_path)
+        jsonContent = jsonContent.toString()
+        obj = JSON.parse(jsonContent)
+    }catch(e){
+        console.error(e)
+    }
+
+    if(setDefaultChildKey){
+        if(!obj[defaultKey][setDefaultChildKey]){
+            console.error(`No definition for ${defaultChildKeyInfo} "${setDefaultChildKey}" specified in ${json_path}`)
+            return null
+        }
+        return obj[defaultKey][setDefaultChildKey]
+    }
+    return obj
+    
+}
+
+export {writeFile,camelToDashCase,excludeFields, jsonParseFile }

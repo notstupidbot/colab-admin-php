@@ -1,5 +1,5 @@
 import fs from "fs"
-import {writeFile, camelToDashCase, excludeFields} from "./lib.js"
+import { writeFile, camelToDashCase, excludeFields, jsonParseFile} from "./lib.js"
 
   
 const createRouteFile = async(config, table_name, target_dir)=>{
@@ -38,16 +38,57 @@ import {
 
 import ${config.model} from "../models/${config.model}.js"
 
+const calculateOffset = (pageNumber, limit) => {
+    const offset = (pageNumber - 1) * limit
+    return offset
+
+}
+
+const calculateTotalPages = (recordCount, limit) => {
+    return Math.ceil(recordCount / limit)
+}
+
 router.get('/${ctl}s', async (req, res) => {
     // Route logic for handling GET '/${ctl}'
+    let {page,limit,order_by,order_dir} = req.query
+    /*
+    records : [],
+			limit : 5,
+			page : 1,
+			total_pages : 0,
+			total_records : 0,
+			order_by:'key',
+			order_dir:'asc'
+    
+    */
+    if(!limit){
+        limit = 5
+    }
+    
+    if(!page){
+        page = 1
+    }
 
+      
     try {
-        const ${modelInstanceName}s =  await AppDataSource.manager.find(${config.model})
-        const list = ${modelInstanceName}s
-        res.json({list})
+        const total_records =  await AppDataSource.manager.count(${config.model})
+    
+        const total_pages = calculateTotalPages(total_records, limit) 
+        const offset = calculateOffset(page, limit)
+        
+        let option = {
+            skip : offset,
+            take : limit
+        }
+
+        const ${modelInstanceName}s =  await AppDataSource.manager.find(${config.model}, option)
+        const records = ${modelInstanceName}s
+        
+        res.send({ page, limit, order_by, order_dir, records, total_pages, total_records})
+
     }catch(e){
         console.error(e)
-        res.json(e)
+        res.send(e)
 
     }
 });
@@ -160,22 +201,7 @@ export {router}
 
 const createModelAPIRoute = async(table_name, target_dir, json_path) => {
     
-    let jsonContent = "{schema:{}}" 
-    let config = {schema : {}}
-    try{
-        jsonContent = await fs.readFileSync(json_path)
-        jsonContent = jsonContent.toString()
-        config = JSON.parse(jsonContent)
-    }catch(e){
-        console.error(e)
-    }
-
-    if(!config.schema[table_name]){
-        console.error(`No definition for table "${table_name}" specified in ${json_path}`)
-        return
-    }
-
-    config = config.schema[table_name]
+    let config = await jsonParseFile(json_path, table_name, 'table', 'schema')
     await createRouteFile(config, table_name, target_dir)
     
 }

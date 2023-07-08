@@ -1,5 +1,5 @@
 import fs from "fs"
-import {writeFile} from "./lib.js"
+import {writeFile, jsonParseFile} from "./lib.js"
 
 const createModelFile = async(config, table_name, target_dir)=>{
     const outputFilename = `${config.model}.js`
@@ -100,24 +100,13 @@ export default ${config.schema}
 }
 const createModelEntity = async(table_name, target_dir, json_path) => {
     
-    let jsonContent = "{schema:{}}" 
-    let config = {schema : {}}
-    try{
-        jsonContent = await fs.readFileSync(json_path)
-        jsonContent = jsonContent.toString()
-        config = JSON.parse(jsonContent)
-    }catch(e){
-        console.error(e)
-    }
 
-    if(!config.schema[table_name]){
-        console.error(`No definition for table "${table_name}" specified in ${json_path}`)
-        return
+    let config = await jsonParseFile(json_path, table_name, 'table', 'schema')
+    if(config){
+        await createModelFile(config, table_name, target_dir)
+        await createEntityFile(config, table_name, target_dir)
     }
-
-    config = config.schema[table_name]
-    await createModelFile(config, table_name, target_dir)
-    await createEntityFile(config, table_name, target_dir)
+    
     
 }
 createModelEntity.HELP = `createModelEntity <table_name> <target_dir> [model_entities.json]`
