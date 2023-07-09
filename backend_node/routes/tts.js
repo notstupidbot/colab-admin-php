@@ -91,7 +91,7 @@ router.get('/convert', async (req, res) => {
     mWordList.setMWordListTtf(mWordListTtf)
 
     for(let i in textSplit){
-        const word = textSplit[i].replace(/[^a-z]/,'')
+        const word = textSplit[i].toLowerCase()//.replace(/[^a-z]/,'')
         if(word.length > 0){
             const ttf = await mWordListTtf.convert(word)
             const ttfItem = {
