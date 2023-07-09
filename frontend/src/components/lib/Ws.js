@@ -80,8 +80,13 @@ class Ws{
 	 * */
 	async reconnect(){
         console.log(`Ws: retry in ${this.reconnectInterval} ms`);
-        await Helper.timeout(this.reconnectInterval);
-        this.init();
+		this.retryHandlerSet = true
+		setTimeout(()=>{
+ 			this.init();
+			 this.retryHandlerSet = false
+		},this.reconnectInterval)
+        // await Helper.timeout(this.reconnectInterval);
+       
     }
     /**
 	 * set event handler on socket event
@@ -117,9 +122,77 @@ class Ws{
     alreadyInit(){
     	return this.inited
     }
+	startSubcription(session){
+		session.subscribe(this.subscriberId,(subscriber_id, res)=>{
+			switch(res.type){
+				case 'loged_in':
+					
+				break;
+
+				case 'log' :
+					const message = res.message;
+					const data = res.data;
+					this.onSocketLogHandler(message, data);
+					this.setSoketLog(message, data, this);
+
+				break;
+				/*
+				case 'job' :
+					const job = res.job;
+					const message = res.message;
+
+					console.log(`Ws.log with message ${message} and data:`)
+					console.log(data);
+				break;    
+				*/
+			}
+		});
+	}
+	retryHandlerSet = false
 	init(){
+		if(this.connection){
+			// try{
+			// 	this.connection.open() 
+
+			// }catch(e){
+			// 	console.log(e)
+			// 	this.connection.close() 
+
+			// }
+			return
+		}
+		const realm = 'tts.realm'
+		this.connection = new autobahn.Connection({
+			realm ,// Specify the realm for the WAMP server
+			url: this.endpoint, // WebSocket URL
+		  //   authmethods: ['anonymous'], // Authentication methods (optional)
+		  //   authid: 'my_auth_id', // Authentication ID (optional)
+		  });
+		
+		// Reconnection handlers
+		this.connection.onopen = (session, details) => {
+			console.log('Connected to the server!');
+			this.onSocketConnectHandler();
+			this.setSoketConnected(true);
+			this.startSubcription(session)
+
+			session.publish('register', [],{ subscriber_id : this.subscriberId })
+		  };
+		  
+		this.connection.onclose = (reason, details) => {
+			console.log('Connection closed:', reason);
+			this.onSocketDisconnectHandler();
+            this.setSoketConnected(false);
+			// Attempt reconnection
+			if(!this.retryHandlerSet)
+				this.reconnect();
+
+		  };  
+		this.connection.open()  
+	}
+	init_legacy(){
 		this.inited = true
-		console.log(`Ws.init()`)
+		console.log(`Ws.init() ${this.subscriberId}`)
         this.connection = new ab.Session(this.endpoint,()=>{
         /*SOCKET OPEN*/    
             this.connection.subscribe(this.subscriberId,(subscriber_id, res)=>{
@@ -155,7 +228,8 @@ class Ws{
 
             this.reconnect();
         },{
-            skipSubprotocolCheck: true
+            skipSubprotocolCheck: true,
+			realm : 'com.example.inge'
         });
 	}
 	/**

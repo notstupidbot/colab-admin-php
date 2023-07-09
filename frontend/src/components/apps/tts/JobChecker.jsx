@@ -5,7 +5,7 @@ class Job extends React.Component {
 	title = ""
 	message = ""
 	type = ""
-	stopTimer = true
+	stopTimer= true
 	state = {
 		inc : 0
 
@@ -35,7 +35,7 @@ class Job extends React.Component {
 			await Helper.timeout(1000);
 		}
 	}
-	stopTimer(){
+	stopTimerCmd(){
 		this.stopTimer = true
 	}
 

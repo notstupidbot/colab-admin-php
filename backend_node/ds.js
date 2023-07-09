@@ -21,10 +21,5 @@ const AppDataSource = new DataSource({
     subscribers: [],
     migrations: [],
 })
-AppDataSource.initialize()
-.then(() => {
-  console.log("Berhasil inilize ")
-})
-.catch((error) => console.log(error))
 
 export {AppDataSource}

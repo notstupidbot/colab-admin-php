@@ -10,19 +10,7 @@ let ivs = window.__AUTOSAVE_BEHAVIOR_TIMER__;
 
 class AutosaveBehavior extends React.Component{
 	pk = null
-	state = {
-		time : '',
-		timer : 0,
-		timerStarted : false,
-		lastSaveDate : new Date,
-		infoText : '',
-		dotCount : 0,
-		tick : 0,
-		loading : false,
-		enableAutoSave : true,
-		prefSaveTimeout : 5,
-		prefSaveTimeoutDevider : 3,
-	}
+	
 	saveRecord = () => console.log('dummy saveRecord()')
 
 	constructor(props){
@@ -30,7 +18,19 @@ class AutosaveBehavior extends React.Component{
 		const {saveRecord, pk} = props 
 		this.saveRecord = saveRecord
 		this.pk = pk
-
+		this.state = {
+			time : '',
+			timer : 0,
+			timerStarted : false,
+			lastSaveDate : new Date,
+			infoText : '',
+			dotCount : 0,
+			tick : 0,
+			loading : false,
+			enableAutoSave : true,
+			prefSaveTimeout : 5,
+			prefSaveTimeoutDevider : 3,
+		}
 		this.initTimer()
 	}
 
@@ -62,6 +62,7 @@ class AutosaveBehavior extends React.Component{
 	 
 	createClock(){
 		console.log(`createClock is running`)
+		try{
 		const today = new Date
 
 		this.setState({dotCount: this.state.dotCount + 1 })
@@ -104,7 +105,7 @@ class AutosaveBehavior extends React.Component{
 			},1000)
 			
 		}
-
+		}catch(e){console.log(e)}
 	}
 	clockCheckTime(i){
 		if (i < 10) {
