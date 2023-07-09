@@ -50,10 +50,14 @@ class ABSessionManager {
 		},this.reconnectInterval)
   }
   startSubcription(session){
-    session.subscribe('register', (a,b,c) => {
+    session.subscribe('register', (a,payload,c) => {
       console.log('-----------------------')
-      console.log(a,b,c)
+      console.log(payload)
       console.log('--------------------')
+
+      if(payload.subscriber_id){
+        session.publish(payload.subscriber_id,[],{msg:'hello'})
+      }
     })
   }
   init(){

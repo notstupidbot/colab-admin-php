@@ -123,15 +123,17 @@ class Ws{
     	return this.inited
     }
 	startSubcription(session){
-		session.subscribe(this.subscriberId,(subscriber_id, res)=>{
-			switch(res.type){
+		session.subscribe(this.subscriberId,(a, payload,t)=>{
+			const res = payload.result
+			console.log(res)
+			switch(payload.type){
 				case 'loged_in':
 					
 				break;
 
 				case 'log' :
-					const message = res.message;
-					const data = res.data;
+					const message = payload.message;
+					const data = payload.result;
 					this.onSocketLogHandler(message, data);
 					this.setSoketLog(message, data, this);
 

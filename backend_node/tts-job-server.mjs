@@ -83,8 +83,12 @@ class MZmq {
     this.aBSessionManager = aBSessionManager
   }
   send_log(subscriberId, message, result){
-    this.aBSessionManager.getSession().publish(subscriberId,[],{subscriberId, message, result})
-    this.aBSessionManager.getSession().publish('log',[],{subscriberId, message, result})
+
+    console.log('(------------------------send log--------------------------------------)')
+    // console.log(subscriberId, message, result)
+    //session.publish(payload.subscriber_id,[],{msg:'hello'})
+    this.aBSessionManager.getSession().publish(subscriberId,[],{subscriberId, message, result, type : 'log'})
+    // this.aBSessionManager.getSession().publish('register',[],{subscriberId, message, result})
   }
 }
 class MJob{

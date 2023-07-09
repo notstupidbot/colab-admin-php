@@ -6,7 +6,12 @@ import 'reflect-metadata'
 import {
   AppDataSource
 } from './data-source.js'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
+const currentFileUrl = import.meta.url;
+const currentFilePath = fileURLToPath(currentFileUrl);
+const currentDirPath = dirname(currentFilePath);
 // import {Tblpost} from './entities/Post.entities.js';
 import Category from "./models/Category.js"
 import Post from "./models/Post.js"
@@ -30,6 +35,9 @@ app.use(
     methods: ['GET', 'POST','OPTION'], // Allow only specific HTTP methods
   })
 )
+const staticPath = path.join(currentDirPath, '/public')
+app.use('/public', express.static(staticPath)); // Serve static files
+app.use('/public', serveIndex(staticPath, { 'icons': true }))
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
 
@@ -43,9 +51,8 @@ app.use("/api",userRoute)
 app.use("/api",wordListRoute)
 app.use("/api",wordListTtfRoute)
 app.use("/api/tts",ttsRoute)
-const staticPath = path.join('./', 'public')
-app.use(express.static(staticPath)); // Serve static files
-app.use('/public', serveIndex(staticPath, { 'icons': true }));
+
+
 
 
 const port=8000

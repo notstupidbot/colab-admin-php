@@ -63,7 +63,7 @@ router.post('/job', upload.any(), async(req, res)=>{
 
    console.log(`running ${shell_cmd}`)
 
-   const [stdout, stderr, error] = await runCommand(shell_cmd) 
+   runCommand(shell_cmd) 
  
    // call sub process
    // get pid
@@ -77,7 +77,7 @@ router.post('/job', upload.any(), async(req, res)=>{
    // Save job
    let success = true
    const env = []
-   const result = {job, chunkMode, index, sentence_id, success, at : 'create_job', stdout, shell_cmd, env}
+   const result = {job, chunkMode, index, sentence_id, success, at : 'create_job', shell_cmd, env}
    res.send(result)
 })
 
