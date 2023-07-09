@@ -82,12 +82,12 @@ class MZmq {
     this.ds = ds
     this.aBSessionManager = aBSessionManager
   }
-  send_log(subscriberId, message, result){
+  async send_log(subscriberId, message, result){
 
     console.log('(------------------------send log--------------------------------------)')
-    // console.log(subscriberId, message, result)
+    console.log(subscriberId, message, result)
     //session.publish(payload.subscriber_id,[],{msg:'hello'})
-    this.aBSessionManager.getSession().publish(subscriberId,[],{subscriberId, message, result, type : 'log'})
+    await this.aBSessionManager.getSession().publish(subscriberId,[],{subscriberId, message, result, type : 'log'})
     // this.aBSessionManager.getSession().publish('register',[],{subscriberId, message, result})
   }
 }
@@ -145,7 +145,7 @@ async function fetchTtsServer(ci, job, url, outputFilePath, proxy = '', errors, 
   let sdt,edt
   if (job) {
     const jobId = job.id
-    zmqLog(ci, job, 'init_process', `job ${jobId} running`, [], chunkMode, indexNumber, sentenceId, true)
+    await zmqLog(ci, job, 'init_process', `job ${jobId} running`, [], chunkMode, indexNumber, sentenceId, true)
   }
   sdt = new Date
 
@@ -153,7 +153,13 @@ async function fetchTtsServer(ci, job, url, outputFilePath, proxy = '', errors, 
   try {
     response = await fetch(url, options)
   } catch (error) {
-    errors.push(`curl_error_code_${error.code}`)
+    // console.log(error.message)
+    let code = 404
+    if(error.code){
+      code = error.code
+    }
+    errors.push(`curl_error_code_${code}`)
+    errors.push(error.message.split(',').pop())
   }
 
 
@@ -193,7 +199,7 @@ async function zmqLogSuccess(ci, job, outputFilePath, chunkMode, indexNumber, se
     }
     Object.assign(result, origResult)
 
-    ci.m_zmq.send_log(subscriberId, message, result)
+    await ci.m_zmq.send_log(subscriberId, message, result)
     return result
   } else {
     warnings.push(`unexistent job_id ${jobId}`)
@@ -202,19 +208,19 @@ async function zmqLogSuccess(ci, job, outputFilePath, chunkMode, indexNumber, se
   return result
 }
 
-function zmqLog(ci, job, at, message, data = [], chunkMode = '', index = '', sentenceId = '', success = false) {
+async function zmqLog(ci, job, at, message, data = [], chunkMode = '', index = '', sentenceId = '', success = false) {
   if (job) {
     const subscriberId = job.subscriber_id
 
     delete job.params
 
     const result = {
-      at: at,
-      job: job,
+      at,
+      job,
       chunkMode: chunkMode,
       index: index,
       sentence_id: sentenceId,
-      success: success,
+      success,
       elapsed_time: 0,
     }
 
@@ -222,7 +228,7 @@ function zmqLog(ci, job, at, message, data = [], chunkMode = '', index = '', sen
       result.errors = data
     }
 
-    ci.m_zmq.send_log(subscriberId, message, result)
+    await ci.m_zmq.send_log(subscriberId, message, result)
   }
 }
 async function entryPoint(ci, job, text, speakerId, chunkMode, indexNumber, sentenceId, errors, warnings, ttsServerEndpoint, ttsServerProxy, ttsEnableProxy) {
@@ -248,65 +254,13 @@ async function entryPoint(ci, job, text, speakerId, chunkMode, indexNumber, sent
     result.output_url = outputUrl
     result.tts_server_endpoint = ttsServerEndpoint
     result.tts_server_proxy = ttsServerProxy
-
+    // console.log('hrere')
     return zmqLogSuccess(ci, job, outputFilePath, updatedChunkMode, indexNumber, sentenceId, result, errors, warnings)
   }
 
   return result
 }
-/*
-const errors = []
-const warnings = []
-let result = false
-let job = null
-let jobId = 0
-let sentenceId = 0
-let text = ''
-let speakerId = 'wibowo'
-let indexNumber = -1
-let chunkMode = false
 
-// Accessing instance and models is specific to the PHP framework used,
-// and this part needs to be adapted to your JavaScript project structure.
-
-if (process.argv[2]) {
-  jobId = process.argv[2]
-
-  // Load the job and other required data using the appropriate methods
-
-  const argvArr = JSON.parse(job.params)
-
-  // Assign values from argvArr to the respective variables
-
-  result = entryPoint(
-    ci,
-    job,
-    text,
-    speakerId,
-    chunkMode,
-    indexNumber,
-    sentenceId,
-    errors,
-    warnings,
-    ttsServerEndpoint,
-    ttsServerProxy,
-    ttsEnableProxy
-  )
-} else {
-  errors.push('Invalid arguments')
-}
-
-if (errors.length > 0) {
-  // Log errors and warnings using appropriate methods
-
-  console.error(JSON.stringify({ errors, success: false }, null, 2))
-  process.exit(1)
-}
-
-console.log(JSON.stringify({ errors, warnings, success: true, result }, null, 2))
-process.exit(0)
-
-*/
 const argv = process.argv
 
 const parseCmd = () => {
@@ -383,8 +337,39 @@ const processCmd = async (cmd) => {
 
       // console.log(abm)
 
-      console.log(result)
-      process.exit(0)
+      // console.log(result)
+      // process.exit(0)
+
+      //------------------------------------------
+      if (errors.length > 0) {
+        for (let i = 0; i < errors.length; i++) {
+          if (errors[i] === 'curl_error_code_0') {
+            errors[i] = `${tts_server_endpoint} is not accessible`;
+            if (tts_enable_proxy) {
+              errors[i] += ` with proxy ${tts_server_proxy}`;
+            }
+            errors[i] += ' please make sure TTS Server is running, or you can change in the Preferences --> Tts Server';
+          }
+        }
+        
+        if (job) {
+          //await setTimeout(()=>{
+              await zmqLog(ci, job, 'run_process', `job ${job_id} fails`, errors, chunkMode, indexNumber, sentenceId, false);
+
+          //},1000)
+        }
+      
+        // console.log(JSON.stringify({ errors: errors, success: false }, null, 2));
+        // process.exit(1);
+      }
+      
+      // console.log(JSON.stringify({ errors: errors, warnings: warnings, success: true, result: result }, null, 2));
+      // process.exit(0);
+      // setTimeout(()=>{
+        process.exit(0)
+      // },1000)
+      
+      //-----------------------------------------
 
     })
 

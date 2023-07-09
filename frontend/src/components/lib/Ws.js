@@ -124,8 +124,8 @@ class Ws{
     }
 	startSubcription(session){
 		session.subscribe(this.subscriberId,(a, payload,t)=>{
-			const res = payload.result
-			console.log(res)
+
+			console.log(payload)
 			switch(payload.type){
 				case 'loged_in':
 					

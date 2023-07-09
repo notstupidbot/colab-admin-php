@@ -210,14 +210,19 @@ export default function SentenceEditorTab({config}){
 	ws.setSocketConnectedHandlerState(setSocketConnected);	
 	
 	useEffect(()=>{
-		if(!ws.alreadyInit()){
+		if(!ws.connection){
 			
 			ws.init()
+		}else{
+			
 		}
 		if(!socketConnected){
-			setSocketConnected(ws.connection._websocket_connected)
+			if(ws.connection){
+				setSocketConnected(true)
+			}
+			//setSocketConnected(ws.connection._websocket_connected)
 		}
-		// console.log()
+		console.log(`socketConnected=${socketConnected}`)
 	},[socketConnected])
 
 	const jobCheckerRemove = (job) => {
