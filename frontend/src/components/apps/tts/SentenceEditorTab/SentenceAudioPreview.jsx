@@ -45,7 +45,7 @@ export default function SentenceAudioPreview({config, audioOutput, setAudioOutpu
 	useEffect(()=>{
 		if(audioOutput){
 			try{
-				let player  = videojs(`aplayer-${pk}`);
+				// let player  = videojs(`aplayer-${pk}`);
 				audioRef.current.load()
 				// audioRef.current.play()
 			}catch(e){

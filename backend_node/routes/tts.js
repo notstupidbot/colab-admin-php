@@ -1,6 +1,7 @@
 import express from "express"
 import {calculateOffset, calculateTotalPages, toSqliteDateTime, runCommand, getTtsPrefs} from "./fn.js"
-
+import path from 'path'
+import fs from 'fs'
 // Retrieve all users
 const router = express.Router()
 import {
@@ -80,7 +81,17 @@ router.post('/job', upload.any(), async(req, res)=>{
    const result = {job, chunkMode, index, sentence_id, success, at : 'create_job', shell_cmd, env}
    res.send(result)
 })
-
+router.get('/auexist', async(req, res) => {
+    const {filename} = req.query
+    const _path =`./public/tts-output/${filename}`
+  
+    const result = {
+      path: _path,
+      exist: await fs.existsSync(_path)
+    }
+    
+    res.send(result)
+})
 router.get('/convert', async (req, res) => {
     const {text} = req.query
     const textSplit = text.split(' ')
