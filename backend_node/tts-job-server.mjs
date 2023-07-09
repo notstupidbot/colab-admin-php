@@ -11,7 +11,7 @@ import {SocksProxyAgent} from 'socks-proxy-agent'
 import fs from 'fs'
 import autobahn from "autobahn"
 
-import {getTtsPrefs} from "./routes/fn.js"
+import {getTtsPrefs, getElapsedTime} from "./routes/fn.js"
 import path from 'path'
 
 class ABSessionManager {
@@ -142,11 +142,12 @@ async function fetchTtsServer(ci, job, url, outputFilePath, proxy = '', errors, 
     timeout: 60 * 60 * 60, // 1 hour
     agent: proxy ? new SocksProxyAgent(proxy) : undefined,
   }
-
+  let sdt,edt
   if (job) {
     const jobId = job.id
     zmqLog(ci, job, 'init_process', `job ${jobId} running`, [], chunkMode, indexNumber, sentenceId, true)
   }
+  sdt = new Date
 
   let response
   try {
@@ -160,9 +161,11 @@ async function fetchTtsServer(ci, job, url, outputFilePath, proxy = '', errors, 
     const responseBuffer = await response.buffer()
     await fs.writeFileSync(outputFilePath, responseBuffer)
 
-
+    edt = new Date
+    
     return {
       output_file: path.basename(outputFilePath),
+      elapsed_time : getElapsedTime(sdt,edt,'seconds')
     }
   }
 

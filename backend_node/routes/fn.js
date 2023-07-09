@@ -58,4 +58,27 @@ const toSqliteDateTime = (dt) =>{
     const sqliteDatetime = dt.toISOString().replace('T', ' ').replace('Z', '');
     return sqliteDatetime
 }
-export {calculateOffset, calculateTotalPages, toSqliteDateTime, runCommand, getTtsPrefs}
+
+function getElapsedTime(startDate, endDate, ret = null) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+  
+    const elapsedMilliseconds = Math.abs(end - start);
+    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+    const elapsedDays = Math.floor(elapsedHours / 24);
+  
+    let o = {
+      days: elapsedDays,
+      hours: elapsedHours % 24,
+      minutes: elapsedMinutes % 60,
+      seconds: elapsedSeconds % 60,
+      milliseconds: elapsedMilliseconds % 1000
+    };
+    if(o[ret]){
+        return o[ret]
+    }
+    return o
+  }
+export {calculateOffset, calculateTotalPages, toSqliteDateTime, runCommand, getTtsPrefs, getElapsedTime}
