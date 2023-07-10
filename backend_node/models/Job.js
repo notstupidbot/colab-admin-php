@@ -11,5 +11,22 @@ class Job {
         this.last_updated = last_updated
     }
 }
-
+export class MJob{
+    ds = null
+    constructor(ds){
+      this.ds = ds
+    }
+    async update(id, updatedData){
+      const {manager} = this.ds
+      let job = manager.findOne(Job, {id})
+  
+      if(job){
+        manager.merge(Job, job, updatedData)
+        job = await manager.save(job)
+        return job
+      }
+  
+      return null
+    }
+  }
 export default Job
