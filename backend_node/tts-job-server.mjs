@@ -1,6 +1,6 @@
 import {
     AppDataSource
-} from './ds.js'  
+} from './data-source.js'  
 import Job, {MJob} from "./models/Job.js"
 import {getTtsPrefs, getElapsedTime} from "./routes/fn.js"
 
@@ -9,7 +9,20 @@ import MZmq from "./tts-server-job/MZmq.js"
 import CI from "./tts-server-job/CI.js"
 import {getOutputFile, zmqLog, zmqLogSuccess, fetchTtsServer, entryPoint} from "./tts-server-job/fn.js"
 
+import "dotenv/config"
+const {
 
+  API_HOST,
+  API_PORT,
+
+  DEV_HOST,
+  DEV_PORT,
+
+  PUSH_HOST,
+  PUSH_PORT,
+
+  PUSH_REALM,
+} = process.env
 
 const argv = process.argv
 
@@ -37,7 +50,7 @@ const processCmd = async (cmd) => {
       job = await AppDataSource.manager.findOne(Job, {where:{id}})
     }catch(e){console.error(e)}
     
-    const aBSessionManager = new ABSessionManager('tts.realm', 'ws://localhost:7001/ws')
+    const aBSessionManager = new ABSessionManager(PUSH_REALM, `ws://${PUSH_HOST}:${PUSH_PORT}/ws`)
     aBSessionManager.ready(async(abm)=>{await realMain(abm, job_id, job)})
     aBSessionManager.init()
     

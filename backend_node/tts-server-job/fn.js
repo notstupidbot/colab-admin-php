@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 import {SocksProxyAgent} from 'socks-proxy-agent'
 import fs from 'fs'
 import path from 'path'
+import {getElapsedTime} from "../routes/fn.js"
 function getOutputFile(sentenceId, indexNumber) {
     const outputDir = path.join("./public", "tts-output")
     const outputUrl = "public/tts-output"

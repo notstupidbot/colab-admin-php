@@ -127,9 +127,6 @@ class Ws{
 
 			console.log(payload)
 			switch(payload.type){
-				case 'loged_in':
-					
-				break;
 
 				case 'log' :
 					const message = payload.message;
@@ -137,30 +134,13 @@ class Ws{
 					this.onSocketLogHandler(message, data);
 					this.setSoketLog(message, data, this);
 
-				break;
-				/*
-				case 'job' :
-					const job = res.job;
-					const message = res.message;
-
-					console.log(`Ws.log with message ${message} and data:`)
-					console.log(data);
-				break;    
-				*/
+				break
 			}
 		});
 	}
 	retryHandlerSet = false
 	init(){
 		if(this.connection){
-			// try{
-			// 	this.connection.open() 
-
-			// }catch(e){
-			// 	console.log(e)
-			// 	this.connection.close() 
-
-			// }
 			return
 		}
 		const realm = 'tts.realm'

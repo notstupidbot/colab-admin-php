@@ -1,6 +1,4 @@
 import {DataSource} from 'typeorm'
-import CategorySchema from "./entities/CategorySchema.js"
-import PostSchema from "./entities/PostSchema.js"
 import JobSchema from "./entities/JobSchema.js"
 import MessagingSchema from "./entities/MessagingSchema.js"
 import PreferenceSchema from "./entities/PreferenceSchema.js"
@@ -17,14 +15,10 @@ const AppDataSource = new DataSource({
     database: "./main.sqlite",
     synchronize: true,
     logging: 0,
-    entities: [CategorySchema, PostSchema, JobSchema, MessagingSchema, PreferenceSchema, SocketSessionSchema, TtsProjectSchema, TtsSentenceSchema, UserSchema, WordListSchema, WordListTtfSchema],
+    entities: [JobSchema, MessagingSchema, PreferenceSchema, SocketSessionSchema, TtsProjectSchema, TtsSentenceSchema, UserSchema, WordListSchema, WordListTtfSchema],
     subscribers: [],
     migrations: [],
 })
-AppDataSource.initialize()
-.then(() => {
-  console.log("Berhasil inilize ")
-})
-.catch((error) => console.log(error))
+
 
 export {AppDataSource}

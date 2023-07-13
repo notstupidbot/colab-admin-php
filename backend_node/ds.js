@@ -1,6 +1,4 @@
 import {DataSource} from 'typeorm'
-import CategorySchema from "./entities/CategorySchema.js"
-import PostSchema from "./entities/PostSchema.js"
 import JobSchema from "./entities/JobSchema.js"
 import MessagingSchema from "./entities/MessagingSchema.js"
 import PreferenceSchema from "./entities/PreferenceSchema.js"
@@ -10,14 +8,16 @@ import TtsSentenceSchema from "./entities/TtsSentenceSchema.js"
 import UserSchema from "./entities/UserSchema.js"
 import WordListSchema from "./entities/WordListSchema.js"
 import WordListTtfSchema from "./entities/WordListTtfSchema.js"
+import 'dotenv/config'
 
+const database = process.env.DB_PATH
 
 const AppDataSource = new DataSource({
     type: "better-sqlite3",
-    database: "./main.sqlite",
+    database,
     synchronize: true,
     logging: 0,
-    entities: [CategorySchema, PostSchema, JobSchema, MessagingSchema, PreferenceSchema, SocketSessionSchema, TtsProjectSchema, TtsSentenceSchema, UserSchema, WordListSchema, WordListTtfSchema],
+    entities: [JobSchema, MessagingSchema, PreferenceSchema, SocketSessionSchema, TtsProjectSchema, TtsSentenceSchema, UserSchema, WordListSchema, WordListTtfSchema],
     subscribers: [],
     migrations: [],
 })

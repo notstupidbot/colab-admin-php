@@ -12,9 +12,7 @@ import { dirname } from 'path';
 const currentFileUrl = import.meta.url;
 const currentFilePath = fileURLToPath(currentFileUrl);
 const currentDirPath = dirname(currentFilePath);
-// import {Tblpost} from './entities/Post.entities.js';
-import Category from "./models/Category.js"
-import Post from "./models/Post.js"
+
 
 import {router as jobRoute}  from  "./routes/job.js"
 import {router as messagingRoute}  from  "./routes/messaging.js"
@@ -28,10 +26,23 @@ import {router as wordListTtfRoute}  from  "./routes/word-list-ttf.js"
 import {router as ttsRoute}  from  "./routes/tts.js"
 
 import cors from "cors"
+import "dotenv/config"
+const {
+
+  API_HOST,
+  API_PORT,
+
+  DEV_HOST,
+  DEV_PORT,
+
+  // PUSH_HOST,
+  // PUSH_PORT,
+} = process.env
 const app = express()
+
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Allow requests from a specific origin
+    origin: `http://${DEV_HOST}:${DEV_PORT}`, // Allow requests from a specific origin
     methods: ['GET', 'POST','OPTION'], // Allow only specific HTTP methods
   })
 )
@@ -55,5 +66,10 @@ app.use("/api/tts",ttsRoute)
 
 
 
-const port=8000
-app.listen(port,()=>console.log("server run :"+port))
+AppDataSource.initialize().then(() => {
+  console.log("Database initialized. ")
+
+})
+.catch((error) => console.log(error))
+const API_ENDPOINT = `${API_HOST}:${API_PORT}`
+app.listen(API_PORT,f=>console.log(`API Server running ${API_ENDPOINT}`))
