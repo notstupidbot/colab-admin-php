@@ -1,0 +1,12 @@
+html[class="dark"] body,
+html[class="dark"] #docs-sidebar {
+    background: #1E1E2D;
+}
+
+html, body {
+/*    font-family: monospace !important;*/
+    font-size: 1rem;
+}
+
+
+   

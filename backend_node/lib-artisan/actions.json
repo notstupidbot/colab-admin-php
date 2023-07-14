@@ -23,14 +23,26 @@
         },
         "target_dir": {
           "type": "string",
-          "desc": "Target directory",
+          "desc": "Target directory, for individual output must set to custom then specify --out-model-dir and --out-entity-dir",
           "required": true
         },
-        "json_path": {
+        "--schema": {
           "type": "string",
-          "desc": "Model entity definition",
+          "desc": "Json schema Model entity definition",
           "required": false,
-          "defaultValue": "./model_entities.json"
+          "defaultValue": null
+        },
+        "--out-model-dir": {
+          "type": "string",
+          "desc": "Target Model directory to save with",
+          "required": false,
+          "defaultValue": null
+        },
+        "--out-entity-dir": {
+          "type": "string",
+          "desc": "Target Entity directory to save with",
+          "required": false,
+          "defaultValue": null
         }
       }
     },

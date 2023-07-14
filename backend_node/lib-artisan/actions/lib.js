@@ -48,6 +48,7 @@ const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKe
     }
 
     if(setDefaultChildKey){
+        console.log(obj)
         if(!obj[defaultKey][setDefaultChildKey]){
             console.error(`No definition for ${defaultChildKeyInfo} "${setDefaultChildKey}" specified in ${json_path}`)
             return null

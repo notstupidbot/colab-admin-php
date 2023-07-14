@@ -1,41 +1,40 @@
 {
-	"links" : {
-		"dashboard":{
-			"title" : "Dashboard",
-			"path" : "/dashboard",
-			"iconCls" : "bi bi-speedometer2",
-			"order": 1
-		},
-		"tts":{
-			"title" : "TTS",
-			"path" : "/tts",
-			"iconCls" : "bi bi-globe2",
-			"order" : 2
-		},
-		"preferences" : {
-			"title" : "Preferences",
-			"path" : "/preferences",
-			"iconCls" : "bi bi-sliders2",
-			"order" : 3
-		},
-		"book" : {
-			"title" : "Book",
-			"path" : "/book",
-			"iconCls" : "bi bi-code",
-			"order" : 4
-		},
-		"bootstrap-icons" : {
-			"title" : "Bootstrap Icons",
-			"path" : "/bootstrap-icons",
-			"iconCls" : "bi bi-bootstrap",
-			"order" : 5
-		},
-		"puppeteer" : {
-			"title" : "Puppeteer",
-			"path" : "/puppeteer",
-			"iconCls" : "bi bi-robot",
-			"order" : 6
-		}
-
-	}
+  "links": {
+    "dashboard": {
+      "title": "Dashboard",
+      "path": "/dashboard",
+      "iconCls": "bi bi-speedometer2",
+      "order": 1
+    },
+    "tts": {
+      "title": "TTS",
+      "path": "/tts",
+      "iconCls": "bi bi-globe2",
+      "order": 2
+    },
+    "preferences": {
+      "title": "Preferences",
+      "path": "/preferences",
+      "iconCls": "bi bi-sliders2",
+      "order": 3
+    },
+    "book": {
+      "title": "Book",
+      "path": "/book",
+      "iconCls": "bi bi-code",
+      "order": 4
+    },
+    "bootstrap-icons": {
+      "title": "Bootstrap Icons",
+      "path": "/bootstrap-icons",
+      "iconCls": "bi bi-bootstrap",
+      "order": 5
+    },
+    "puppeteer": {
+      "title": "Puppeteer",
+      "path": "/puppeteer",
+      "iconCls": "bi bi-robot",
+      "order": 6
+    }
+  }
 }

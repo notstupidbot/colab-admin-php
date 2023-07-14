@@ -1,0 +1,24 @@
+{
+		"recurseDepth": 10,
+
+	"tags" :{
+		"allUnknownTags" : true,
+		"dictionaries" : ["jsdoc", "closure"]
+	},
+
+	"source": {
+        "include": [ "src"],
+        "exclude": [ "src/jqgrid" ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+
+	"plugins" : ["plugins/markdown", "better-docs/component"],
+	
+
+	"opts" : {
+		"destination" : "docs",
+		"recurese" : true,
+		"readme" : "README.md"
+	}
+}
