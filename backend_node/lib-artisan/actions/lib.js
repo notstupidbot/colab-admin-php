@@ -1,4 +1,20 @@
 import fs from 'fs'
+import readline from 'readline'
+
+function confirm(question) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      resolve(answer.toLowerCase());
+      rl.close();
+    });
+  });
+}
+
 function camelToDashCase(str) {
     return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
@@ -16,7 +32,7 @@ const excludeFields = (excludeFields, fields) =>{
     return fields.filter(f => !excludeFields.includes(f))
 }
 
-const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKeyInfo = 'table', defaultKey = 'schema') => {
+const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKeyInfo = 'table', defaultKey = 'schema', checkFileExist=false) => {
     let jsonContent = `{${defaultKey}:{}}`
     let obj = {}
     obj[defaultKey] = {}
@@ -26,6 +42,9 @@ const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKe
         obj = JSON.parse(jsonContent)
     }catch(e){
         console.error(`Could not open input file ${json_path} error = ${e.errno}`)
+        if(checkFileExist){
+            return null
+        }
     }
 
     if(setDefaultChildKey){
@@ -38,5 +57,18 @@ const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKe
     return obj
     
 }
-
-export {writeFile,camelToDashCase,excludeFields, jsonParseFile }
+async function renameFile(oldPath, newPath) {
+    return new Promise((resolve, reject)=>{
+        fs.rename(oldPath, newPath, (error) => {
+            if (error) {
+              console.error('An error occurred while renaming the file:', error)
+              reject(error)
+            } else {
+                resolve(true)
+              console.log(`Rename ${oldPath} --> ${newPath}.`)
+            }
+          });
+    })
+    
+  }
+export {writeFile,camelToDashCase,excludeFields, jsonParseFile , confirm, renameFile}

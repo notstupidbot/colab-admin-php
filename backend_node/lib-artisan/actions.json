@@ -1,90 +1,123 @@
 {
-    "availables" : {
-        "createReactComponent" : {
-            "arguments" : {
-                "name" : {
-                    "type" : "string",
-                    "desc" : "Component name",
-                    "required" : true
-                },
-                "target_dir" : {
-                    "type" : "string",
-                    "desc" : "Target directory",
-                    "required" : true
-
-                }
-            }
+  "availables": {
+    "createReactComponent": {
+      "arguments": {
+        "name": {
+          "type": "string",
+          "desc": "Component name",
+          "required": true
         },
-        "createModelEntity" : {
-            "arguments" : {
-                "table_name" : {
-                    "type" : "string",
-                    "desc" : "Table name",
-                    "required" : true
-                },
-                "target_dir" : {
-                    "type" : "string",
-                    "desc" : "Target directory",
-                    "required" : true
-                },
-                "json_path" : {
-                    "type" : "string",
-                    "desc" : "Model entity definition",
-                    "required" : false,
-                    "defaultValue" : "./model_entities.json"
-                }
-            }
-        },
-        "createModelAPIRoute" : {
-            "arguments" : {
-                "table_name" : {
-                    "type" : "string",
-                    "desc" : "Table name",
-                    "required" : true
-                },
-                "target_dir" : {
-                    "type" : "string",
-                    "desc" : "Target directory",
-                    "required" : true
-                },
-                "json_path" : {
-                    "type" : "string",
-                    "desc" : "Model entity definition",
-                    "required" : false,
-                    "defaultValue" : "./model_entities.json"
-                }
-            }
-            
-        },
-        "listModelAPIRoutes" : {
-            "arguments" : {
-                "json_path" : {
-                    "type" : "string",
-                    "desc" : "Model entity definition",
-                    "required" : false,
-                    "defaultValue" : "./model_entities.json"
-                }
-            }
-        },
-        "createModuleAction" : {
-            "arguments" : {
-                "actionName" : {
-                    "type" : "string",
-                    "desc" : "Action name",
-                    "required" : true
-                },
-                "arguments" : {
-                    "type" : "string",
-                    "desc" : "Argument list separated by comma",
-                    "required" : true
-                },
-                "json_path" : {
-                    "type" : "string",
-                    "desc" : "Actions definition",
-                    "required" : false,
-                    "defaultValue" : "./lib-artisan/asctions.json"
-                }
-            }
+        "target_dir": {
+          "type": "string",
+          "desc": "Target directory",
+          "required": true
         }
+      }
+    },
+    "createModelEntity": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "desc": "Table name",
+          "required": true
+        },
+        "target_dir": {
+          "type": "string",
+          "desc": "Target directory",
+          "required": true
+        },
+        "json_path": {
+          "type": "string",
+          "desc": "Model entity definition",
+          "required": false,
+          "defaultValue": "./model_entities.json"
+        }
+      }
+    },
+    "createModelAPIRoute": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "desc": "Table name",
+          "required": true
+        },
+        "target_dir": {
+          "type": "string",
+          "desc": "Target directory",
+          "required": true
+        },
+        "json_path": {
+          "type": "string",
+          "desc": "Model entity definition",
+          "required": false,
+          "defaultValue": "./model_entities.json"
+        }
+      }
+    },
+    "listModelAPIRoutes": {
+      "arguments": {
+        "json_path": {
+          "type": "string",
+          "desc": "Model entity definition",
+          "required": false,
+          "defaultValue": "./model_entities.json"
+        }
+      }
+    },
+    "createModuleAction": {
+      "arguments": {
+        "actionName": {
+          "type": "string",
+          "desc": "Action name",
+          "required": true
+        },
+        "arguments": {
+          "type": "string",
+          "desc": "Argument list separated by comma",
+          "required": true
+        },
+        "json_path": {
+          "type": "string",
+          "desc": "Actions definition",
+          "required": false,
+          "defaultValue": "./lib-artisan/actions.json"
+        }
+      }
+    },
+    "sideMenu": {
+      "arguments": {
+        "list|add|rm": {
+          "type": "string",
+          "required": 0,
+          "desc": ""
+        },
+        "menu_key": {
+          "type": "string",
+          "required": 0,
+          "desc": ""
+        },
+        "title": {
+          "type": "string",
+          "required": 0,
+          "desc": ""
+        },
+        "path": {
+          "type": "string",
+          "required": 0,
+          "desc": ""
+        },
+        "icon": {
+          "type": "string",
+          "required": 0,
+          "desc": ""
+        },
+        "--json_path=side_menu.json": {
+            "type": "string",
+            "required": false,
+            "desc": "kwargs",
+            "defaultValue": "side_menu.json"
+        }
+      }
     }
+  }
 }

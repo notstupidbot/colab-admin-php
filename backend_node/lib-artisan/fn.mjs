@@ -5,22 +5,46 @@ const importActionModules = async (availables) => {
         // console.log(action)
         const modulePath = `./actions/${actionName}.mjs`
         // const moduleExists = await fs.existsSync(modulePath)
+        // console.log(moduleExists)
+
         // if(!moduleExists){
         //     console.error(`WARN: ${modulePath} NOT EXISTS`)
         //     continue
         // }
-        const moduleImport = await import(modulePath)
-        actionModules[actionName] = moduleImport.default
+        try{
+            const moduleImport = await import(modulePath)
+            // console.log(moduleImport)
+            actionModules[actionName] = moduleImport.default
+        }catch(e){
+            console.error(e)
+            // console.error(`${modulePath} ${e.code}`)
+        }
+        
         // console.log(actions[action])
     }
 
     return actionModules
 }
-
+const getFlagArgs = flag =>{
+    const {argv} = process
+    for(let i in argv){
+        const arg = argv[i]
+        const regex = new RegExp(`--${flag}`)
+        if(arg.match(regex)){
+            const argSplit = arg.split('=')
+            const [flag, value] = argSplit
+            return [true,value]
+            break
+        }
+        // console.log(arg)
+    }
+    return [false, null]
+}
 const showHelp = (availables, moduleActions) => {
     console.log('Welcome to artisan')
 
-    const helps = Object.keys(availables).map(actionName => {
+    const helps = Object.keys(availables).filter(item=>!item.match(/_\d+$/)).map(actionName => {
+     
         let usageCmd = `${actionName} `
         const availableArguments = availables[actionName].arguments 
         for(let avaArgItem in availableArguments){
@@ -155,4 +179,4 @@ const processAction = async (actionName, argv, actionModules, availables) => {
         
 //     }
 // }
-export {importActionModules, showHelp, getActionArgs, processAction}
+export {importActionModules, showHelp, getActionArgs, processAction, getFlagArgs}
