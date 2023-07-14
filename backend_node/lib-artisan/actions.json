@@ -17,35 +17,72 @@
         },
         "createModelEntity" : {
             "arguments" : {
-                "name" : {
+                "table_name" : {
                     "type" : "string",
-                    "desc" : "Component name"
+                    "desc" : "Table name",
+                    "required" : true
                 },
                 "target_dir" : {
                     "type" : "string",
-                    "desc" : "Target directory"
+                    "desc" : "Target directory",
+                    "required" : true
+                },
+                "json_path" : {
+                    "type" : "string",
+                    "desc" : "Model entity definition",
+                    "required" : false,
+                    "defaultValue" : "./model_entities.json"
                 }
             }
         },
         "createModelAPIRoute" : {
             "arguments" : {
-                "name" : {
+                "table_name" : {
                     "type" : "string",
-                    "desc" : "Component name"
+                    "desc" : "Table name",
+                    "required" : true
                 },
                 "target_dir" : {
                     "type" : "string",
-                    "desc" : "Target directory"
+                    "desc" : "Target directory",
+                    "required" : true
+                },
+                "json_path" : {
+                    "type" : "string",
+                    "desc" : "Model entity definition",
+                    "required" : false,
+                    "defaultValue" : "./model_entities.json"
                 }
             }
+            
         },
         "listModelAPIRoutes" : {
             "arguments" : {
                 "json_path" : {
                     "type" : "string",
-                    "desc" : "Component name",
+                    "desc" : "Model entity definition",
                     "required" : false,
                     "defaultValue" : "./model_entities.json"
+                }
+            }
+        },
+        "createModuleAction" : {
+            "arguments" : {
+                "actionName" : {
+                    "type" : "string",
+                    "desc" : "Action name",
+                    "required" : true
+                },
+                "arguments" : {
+                    "type" : "string",
+                    "desc" : "Argument list separated by comma",
+                    "required" : true
+                },
+                "json_path" : {
+                    "type" : "string",
+                    "desc" : "Actions definition",
+                    "required" : false,
+                    "defaultValue" : "./lib-artisan/asctions.json"
                 }
             }
         }

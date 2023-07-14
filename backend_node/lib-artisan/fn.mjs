@@ -1,8 +1,15 @@
+import fs from "fs"
 const importActionModules = async (availables) => {
     const actionModules = {}
     for(const actionName of Object.keys(availables)){
         // console.log(action)
-        const moduleImport = await import(`./actions/${actionName}.mjs`)
+        const modulePath = `./actions/${actionName}.mjs`
+        // const moduleExists = await fs.existsSync(modulePath)
+        // if(!moduleExists){
+        //     console.error(`WARN: ${modulePath} NOT EXISTS`)
+        //     continue
+        // }
+        const moduleImport = await import(modulePath)
         actionModules[actionName] = moduleImport.default
         // console.log(actions[action])
     }
@@ -12,11 +19,42 @@ const importActionModules = async (availables) => {
 
 const showHelp = (availables, moduleActions) => {
     console.log('Welcome to artisan')
-    Object.keys(availables).map(actionName => console.log(moduleActions[actionName].HELP))
+
+    const helps = Object.keys(availables).map(actionName => {
+        let usageCmd = `${actionName} `
+        const availableArguments = availables[actionName].arguments 
+        for(let avaArgItem in availableArguments){
+            const {required} = availableArguments[avaArgItem]
+            usageCmd += required ? ` <${avaArgItem}>`:` [${avaArgItem}]`
+        }
+
+        return  usageCmd 
+    })
+
+    console.log(helps.join("\n"))
 }
 
 const getActionArgs = (argv) => {
     return argv.length >= 3 ? argv[2] : null 
+}
+
+const createHelpByAvaArgs = ( actionName, availableArguments) => {
+    let usageIntro = "Usage :"
+    let usageCmd = `${actionName} `
+    let usageBuffer = ""
+    for(let avaArgItem in availableArguments){
+        const {defaultValue, required, desc} = availableArguments[avaArgItem]
+        usageCmd += required ? ` <${avaArgItem}>`:` [${avaArgItem}]`
+        const displayDefault = !required? `(default ${defaultValue})`:''
+        usageBuffer += `\t${avaArgItem} \t ${desc} ${displayDefault}\n`
+    }
+
+    return `
+${usageIntro}
+    ${usageCmd}
+${usageBuffer}
+`
+
 }
 const processAction = async (actionName, argv, actionModules, availables) => {
     argv.splice(0,3)
@@ -37,7 +75,9 @@ const processAction = async (actionName, argv, actionModules, availables) => {
         
         if(!argv[argIndex]){
             if(required){
-                console.error(actionModules[actionName].HELP)
+                //console.error(actionModules[actionName].HELP)
+                const help = createHelpByAvaArgs(actionName, availableArguments)
+                console.error(help)
                 process.exit(1)
             }
         }else{
