@@ -8,6 +8,7 @@
             "model" : "Job",
             "schema" : "JobSchema"
         },
+        
         "messaging" : {
             "fields" : ["id", "subscriber_id", "ip_addr", "create_date", "last_updated"],
             "types" : ["int","varchar","varchar","datetime","datetime"],

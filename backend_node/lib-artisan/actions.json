@@ -1,0 +1,53 @@
+{
+    "availables" : {
+        "createReactComponent" : {
+            "arguments" : {
+                "name" : {
+                    "type" : "string",
+                    "desc" : "Component name",
+                    "required" : true
+                },
+                "target_dir" : {
+                    "type" : "string",
+                    "desc" : "Target directory",
+                    "required" : true
+
+                }
+            }
+        },
+        "createModelEntity" : {
+            "arguments" : {
+                "name" : {
+                    "type" : "string",
+                    "desc" : "Component name"
+                },
+                "target_dir" : {
+                    "type" : "string",
+                    "desc" : "Target directory"
+                }
+            }
+        },
+        "createModelAPIRoute" : {
+            "arguments" : {
+                "name" : {
+                    "type" : "string",
+                    "desc" : "Component name"
+                },
+                "target_dir" : {
+                    "type" : "string",
+                    "desc" : "Target directory"
+                }
+            }
+        },
+        "listModelAPIRoutes" : {
+            "arguments" : {
+                "json_path" : {
+                    "type" : "string",
+                    "desc" : "Component name",
+                    "required" : false,
+                    "defaultValue" : "./model_entities.json"
+                }
+            }
+        }
+    }
+}

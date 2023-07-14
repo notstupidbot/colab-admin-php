@@ -25,7 +25,7 @@ const jsonParseFile = async(json_path, setDefaultChildKey = null, defaultChildKe
         jsonContent = jsonContent.toString()
         obj = JSON.parse(jsonContent)
     }catch(e){
-        console.error(e)
+        console.error(`Could not open input file ${json_path} error = ${e.errno}`)
     }
 
     if(setDefaultChildKey){

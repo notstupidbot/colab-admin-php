@@ -1,91 +1,25 @@
-import createReactComponent from './actions/createReactComponent.mjs'
-import createModelEntity from "./actions/createModelEntity.js"
-import createModelAPIRoute from "./actions/createModelAPIRoute.mjs"
-import listModelAPIRoutes from "./actions/listModelAPIRoutes.mjs"
+// import createReactComponent from './actions/createReactComponent.mjs'
+// import createModelEntity from "./actions/createModelEntity.mjs"
+// import createModelAPIRoute from "./actions/createModelAPIRoute.mjs"
+// import listModelAPIRoutes from "./actions/listModelAPIRoutes.mjs"
 
-const availableActions = ['createReactComponent', 'createModelEntity','createModelAPIRoute','listModelAPIRoutes']
-const argv = process.argv
-const showHelp = f => {
-    console.log('Welcome to artisan')
-    console.log(createReactComponent.HELP)
-    console.log(createModelEntity.HELP)
-    console.log(createModelAPIRoute.HELP)
-    console.log(listModelAPIRoutes.HELP)
-}
-
-const parseCmd = () => {
-
-    return argv.length >= 3 ? argv[2] : null 
-}
-
-const processCmd = async (cmd) => {
-    if(!availableActions.includes(cmd)){
-        console.error(`${cmd} is not valid action`)
-        process.exit(1)
-    }
-    if(cmd === 'createReactComponent'){
-        argv.splice(0,3)
-        const [name, target_dir] = argv
-        if(name && target_dir){
-            await createReactComponent(name, target_dir)
-        }else{
-            console.log(createReactComponent.HELP)
-
-        }
-    }
-    if(cmd === 'createModelEntity'){
-        argv.splice(0,3)
-        let json_path = null
-        const [table_name, target_dir, json_path_arg] = argv
-        json_path = json_path_arg
-        if(!json_path){
-            json_path = "./model_entities.json"
-        }
-        if(table_name && target_dir){
-            await createModelEntity(table_name, target_dir, json_path)
-        }else{
-            console.log(createModelEntity.HELP)
-
-        }
-    }
-    if(cmd === 'createModelAPIRoute'){
-        argv.splice(0,3)
-        let json_path = null
-        const [table_name, target_dir, json_path_arg] = argv
-        json_path = json_path_arg
-        if(!json_path){
-            json_path = "./model_entities.json"
-        }
-        if(table_name && target_dir){
-            await createModelAPIRoute(table_name, target_dir, json_path)
-        }else{
-            console.log(createModelAPIRoute.HELP)
-
-        }
-    }
-    if(cmd === 'listModelAPIRoutes'){
-        argv.splice(0,3)
-        let json_path = null
-        const [json_path_arg] = argv
-        json_path = json_path_arg
-        if(!json_path){
-            json_path = "./model_entities.json"
-        }
-        await listModelAPIRoutes(json_path)
-        
-    }
-}
+import config from "./actions.json" assert { type: "json" }
+import {importActionModules, showHelp, getActionArgs, processAction} from "./fn.mjs"
 
 const main = async () => {
-    const cmd = parseCmd()
+    const {argv} = process
+    const {availables} = config
+    
+    const moduleActions = await importActionModules(availables)
+    const actionName = getActionArgs(argv)
 
-    if(cmd){
-        await processCmd(cmd)
+    if(actionName){
+        await processAction(actionName, argv, moduleActions, availables)
     }else{
-        showHelp()
+        showHelp(availables, moduleActions)
     }
 
-    process.exit(0)
+    // process.exit(0)
 }
 
 main()
