@@ -108,6 +108,11 @@
           "desc": "Argument list separated by comma",
           "required": true
         },
+        "desc": {
+          "type": "string",
+          "desc": "Description of action",
+          "required": true
+        },
         "json_path": {
           "type": "string",
           "desc": "Actions definition",
@@ -197,6 +202,7 @@
       }
     },
     "html2React": {
+      "desc" : "Convert html document to React Component",
       "arguments": {
         "input": {
           "type": "string",

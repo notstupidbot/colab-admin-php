@@ -1,17 +1,25 @@
 import path from "path"
 import fs from "fs"
-import jsdom from "jsdom"
-import jquery from "jquery"
+// import jsdom from "jsdom"
+// import jquery from "jquery"
 import {writeFile} from "./lib.js"
 import {Parser} from "htmlparser2"
+// import htmlparser2 from 'htmlparser2'
 import htmlEntities from 'html-entities'
-const {AllHtmlEntities} = htmlEntities
-const {JSDOM} = jsdom
+import cheerio from 'cheerio'
+
+// const {AllHtmlEntities} = htmlEntities
+// const {JSDOM} = jsdom
 async function convertToXHTML(html, tidy, entities) {
     return new Promise((resolve, reject) => {
       const parser = new Parser({
         onend: resolve,
         onerror: reject,
+        oncomment: (data) => {
+            // Handle comments as needed
+            // console.log('Comment:', data);
+            tidy.push(`{/*${data}*/}`);
+        },
         onopentag: (name, attributes) => {
           let xhtml = `<${name}`;
           for (const attr in attributes) {
@@ -45,16 +53,15 @@ const html2React = async (input, output) => {
     let inputBuffer = await fs.readFileSync(input)
     
 
-    const componentClass = path.basename(output).replace(/\..*$/,'')
     inputBuffer = inputBuffer.toString()
-    const { window } = new JSDOM()
-    const { document } = window 
-    let $ = jquery(window)
+   
+    let tidy = []
+    await convertToXHTML(inputBuffer, tidy, htmlEntities)
+    inputBuffer =  tidy.join(" ")
+    let $ = cheerio.load(inputBuffer, {xml: {xmlMode: true}}, false)
 
-    // $ = await documentReady($, document)
-    const $rootEl = $(`<div>${inputBuffer}</div>`)
-
-    let els = $rootEl.find("*[class]")
+    const componentClass = path.basename(output).replace(/\..*$/,'')
+    let els = $("*[class]")
     let clsList = []
     let clsListBuffer = ""
     let clsIdx = 0
@@ -64,33 +71,37 @@ const html2React = async (input, output) => {
         let oldValue = element.attr('class')
         if(!clsList.includes(oldValue)){
             clsList.push(oldValue)
-            clsListBuffer += `\tconst cls${clsIdx} = "cls-${clsIdx} ${oldValue}"\n`
+            clsListBuffer += `${elIdx==0?"":"\t\t"}const cls${clsIdx} = "cls-${clsIdx} ${oldValue}"\n`
             clsIdx += 1
         }
         const clsIndex = clsList.indexOf(oldValue)
         element.removeAttr('class')
         element.attr('className', `CLS_INDEX_${clsIndex}`)
     })
-    // console.log(els)
-    const tidy = []
-    // console.log(htmlEntities)
-    // return
-    // const entities = new AllHtmlEntities()
 
-    await convertToXHTML($rootEl.html(), tidy, htmlEntities)
-    inputBuffer =  tidy.join(" ")
-    inputBuffer = inputBuffer.replace(/classname/g,'className')
-    inputBuffer = inputBuffer.replace(/(<!--.*-->)/g,"{/*$1*/}")
-    inputBuffer = inputBuffer.replace(/(\"CLS_INDEX_)(\d+)(\")/g,"{cls$2}")
-    inputBuffer = inputBuffer.replace(/clip-rule=/g,"clipRule=")
-    inputBuffer = inputBuffer.replace(/fill-rule=/g,"fillRule=")
-    inputBuffer = inputBuffer.replace(/viewbox=/g,"viewBox=")
-    inputBuffer = inputBuffer.replace(/value=/g,"defaultValue=")
-    inputBuffer = inputBuffer.replace(/for=/g,"htmlFor=")
-    inputBuffer = inputBuffer.replace(/autocomplete=/g,"autoComplete=")
-    inputBuffer = inputBuffer.replace(/\>\s*\<\/input\>/g,"\/>")
-    inputBuffer = inputBuffer.replace(/\>\s*\<\/textarea\>/g,"\/>")
-    inputBuffer = inputBuffer.replace(/stroke-width=/g,"strokeWidth=")
+   
+    inputBuffer = $.html()
+    const rgxRplcs = [
+        [/classname/g,'className'],
+        // [/(<!--.*-->)/g,"{/*$1*/}"],
+        [/(\"CLS_INDEX_)(\d+)(\")/g,"{cls$2}"],
+        [/clip-rule=/g,"clipRule="],
+        [/fill-rule=/g,"fillRule="],
+        [/viewbox=/g,"viewBox="],
+        [/value=/g,"defaultValue="],
+        [/for=/g,"htmlFor="],
+        [/autocomplete=/g,"autoComplete="],
+        [/stroke-width=/g,"strokeWidth="],
+        [/\>\s*\<\/input\>/g,"\/>"],
+        [/\>\s*\<\/img\>/g,"\/>"],
+        [/\>\s*\<\/br\>/g,"\/>"]
+
+    ]
+    rgxRplcs.map((rgxRplc, index)=>{
+        // console.log(rgxRplc)
+        const [rgx,rplc] = rgxRplc
+        inputBuffer = inputBuffer.replace(rgx,rplc)
+    })
     inputBuffer = `
  const ${componentClass} = ({})=>{
     ${clsListBuffer}

@@ -1,32 +1,32 @@
 
  const Contact = ({})=>{
-    	const cls0 = "cls-0 max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"
-	const cls1 = "cls-1 max-w-xl mx-auto"
-	const cls2 = "cls-2 text-center"
-	const cls3 = "cls-3 text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white"
-	const cls4 = "cls-4 mt-1 text-gray-600 dark:text-gray-400"
-	const cls5 = "cls-5 mt-12 max-w-lg mx-auto"
-	const cls6 = "cls-6 flex flex-col border rounded-xl p-4 sm:p-6 lg:p-8 dark:border-gray-700"
-	const cls7 = "cls-7 mb-8 text-xl font-semibold text-gray-800 dark:text-gray-200"
-	const cls8 = "cls-8 grid gap-4 lg:gap-6"
-	const cls9 = "cls-9 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6"
-	const cls10 = "cls-10 block text-sm text-gray-700 font-medium dark:text-white"
-	const cls11 = "cls-11 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-	const cls12 = "cls-12 mt-6 grid"
-	const cls13 = "cls-13 inline-flex justify-center items-center gap-x-3 text-center bg-blue-600 hover:bg-blue-700 border border-transparent text-sm lg:text-base text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white transition py-3 px-4 dark:focus:ring-offset-gray-800"
-	const cls14 = "cls-14 mt-3 text-center"
-	const cls15 = "cls-15 text-sm text-gray-500"
-	const cls16 = "cls-16 mt-12 grid sm:grid-cols-2 lg:grid-cols-3 items-center gap-4 lg:gap-8"
-	const cls17 = "cls-17 flex flex-col h-full text-center rounded-md hover:bg-gray-100 p-4 sm:p-6 dark:hover:bg-white/[.05]"
-	const cls18 = "cls-18 w-9 h-9 text-gray-800 mx-auto dark:text-gray-200"
-	const cls19 = "cls-19 grow"
-	const cls20 = "cls-20 text-lg font-semibold text-gray-800 dark:text-gray-200"
-	const cls21 = "cls-21 mt-1 text-gray-500"
-	const cls22 = "cls-22 mt-5 inline-flex items-center gap-x-2 font-medium text-blue-600 dark:text-blue-500"
-	const cls23 = "cls-23 w-2.5 h-2.5 transition ease-in-out group-hover:translate-x-1"
+    const cls0 = "cls-0 max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"
+		const cls1 = "cls-1 max-w-xl mx-auto"
+		const cls2 = "cls-2 text-center"
+		const cls3 = "cls-3 text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white"
+		const cls4 = "cls-4 mt-1 text-gray-600 dark:text-gray-400"
+		const cls5 = "cls-5 mt-12 max-w-lg mx-auto"
+		const cls6 = "cls-6 flex flex-col border rounded-xl p-4 sm:p-6 lg:p-8 dark:border-gray-700"
+		const cls7 = "cls-7 mb-8 text-xl font-semibold text-gray-800 dark:text-gray-200"
+		const cls8 = "cls-8 grid gap-4 lg:gap-6"
+		const cls9 = "cls-9 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6"
+		const cls10 = "cls-10 block text-sm text-gray-700 font-medium dark:text-white"
+		const cls11 = "cls-11 py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+		const cls12 = "cls-12 mt-6 grid"
+		const cls13 = "cls-13 inline-flex justify-center items-center gap-x-3 text-center bg-blue-600 hover:bg-blue-700 border border-transparent text-sm lg:text-base text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-white transition py-3 px-4 dark:focus:ring-offset-gray-800"
+		const cls14 = "cls-14 mt-3 text-center"
+		const cls15 = "cls-15 text-sm text-gray-500"
+		const cls16 = "cls-16 mt-12 grid sm:grid-cols-2 lg:grid-cols-3 items-center gap-4 lg:gap-8"
+		const cls17 = "cls-17 flex flex-col h-full text-center rounded-md hover:bg-gray-100 p-4 sm:p-6 dark:hover:bg-white/[.05]"
+		const cls18 = "cls-18 w-9 h-9 text-gray-800 mx-auto dark:text-gray-200"
+		const cls19 = "cls-19 grow"
+		const cls20 = "cls-20 text-lg font-semibold text-gray-800 dark:text-gray-200"
+		const cls21 = "cls-21 mt-1 text-gray-500"
+		const cls22 = "cls-22 mt-5 inline-flex items-center gap-x-2 font-medium text-blue-600 dark:text-blue-500"
+		const cls23 = "cls-23 w-2.5 h-2.5 transition ease-in-out group-hover:translate-x-1"
 
     return <>
-    
+    {/* Contact Us */} 
  <div className={cls0}> 
      <div className={cls1}> 
        <div className={cls2}> 
@@ -40,7 +40,7 @@
      </div> 
   
      <div className={cls5}> 
-       
+       {/* Card */} 
        <div className={cls6}> 
          <h2 className={cls7}> 
           Fill in the form
@@ -48,7 +48,7 @@
   
          <form> 
            <div className={cls8}> 
-             
+             {/* Grid */} 
              <div className={cls9}> 
                <div> 
                  <label htmlFor="hs-firstname-contacts-1" className={cls10}> First Name </label> 
@@ -60,9 +60,9 @@
                  <input type="text" name="hs-lastname-contacts-1" id="hs-lastname-contacts-1" className={cls11}/> 
                </div> 
              </div> 
-             
+             {/* End Grid */} 
   
-             
+             {/* Grid */} 
              <div className={cls9}> 
                <div> 
                  <label htmlFor="hs-email-contacts-1" className={cls10}> Email </label> 
@@ -74,14 +74,14 @@
                  <input type="text" name="hs-phone-number-1" id="hs-phone-number-1" className={cls11}/> 
                </div> 
              </div> 
-             
+             {/* End Grid */} 
   
              <div> 
                <label htmlFor="hs-about-contacts-1" className={cls10}> Details </label> 
-               <textarea id="hs-about-contacts-1" name="hs-about-contacts-1" rows="4" className={cls11}/> 
+               <textarea id="hs-about-contacts-1" name="hs-about-contacts-1" rows="4" className={cls11}> </textarea> 
              </div> 
            </div> 
-           
+           {/* End Grid */} 
   
            <div className={cls12}> 
              <button type="submit" className={cls13}> Send inquiry </button> 
@@ -94,11 +94,11 @@
            </div> 
          </form> 
        </div> 
-       
+       {/* End Card */} 
      </div> 
   
      <div className={cls16}> 
-       
+       {/* Icon Block */} 
        <a href="#" className={cls17}> 
          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls18}> 
            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"> </path> 
@@ -115,9 +115,9 @@
            </p> 
          </div> 
        </a> 
-       
+       {/* End Icon Block */} 
   
-       
+       {/* Icon Block */} 
        <a href="#" className={cls17}> 
          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls18}> 
            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"> </path> 
@@ -134,9 +134,9 @@
            </p> 
          </div> 
        </a> 
-       
+       {/* End Icon Block */} 
   
-       
+       {/* Icon Block */} 
        <a href="#" className={cls17}> 
          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls18}> 
            <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9zM3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"> </path> 
@@ -153,10 +153,10 @@
            </p> 
          </div> 
        </a> 
-       
+       {/* End Icon Block */} 
      </div> 
    </div> 
-  
+   {/* End Contact Us */}
     </>
  }   
 

@@ -65,7 +65,7 @@ const getActionArgs = (argv) => {
     return argv.length >= 3 ? argv[2] : null 
 }
 
-const createHelpByAvaArgs = ( actionName, availableArguments) => {
+const createHelpByAvaArgs = ( actionName, availableArguments, registry) => {
     let usageIntro = "Usage :"
     let usageCmd = `${actionName} `
     let usageBuffer = ""
@@ -76,7 +76,7 @@ const createHelpByAvaArgs = ( actionName, availableArguments) => {
         usageBuffer += `\t${avaArgItem} \t ${desc} ${displayDefault}\n`
     }
 
-    return `
+    return `${registry.desc??""}    
 ${usageIntro}
     ${usageCmd}
 ${usageBuffer}
@@ -106,7 +106,7 @@ const processAction = async (actionName, iArgv, actionModules, availables) => {
         if(!argv[argIndex]){
             if(required){
                 //console.error(actionModules[actionName].HELP)
-                const help = createHelpByAvaArgs(actionName, availableArguments)
+                const help = createHelpByAvaArgs(actionName, availableArguments,availables[actionName])
                 console.error(help)
                 process.exit(1)
             }
