@@ -9,4 +9,10 @@ components/side_menu.json
 
 
 ./artisan createModelEntity cms_user custom  --schema=src/api/data-source/config.json --out-model-dir=src/api/models --out-entity-dir=src/api/entities
+
+/artisan createModuleAction createSchemaDef table_name,pk,columns,types,nullables,lengths,validations ./lib-artisan/actions.json 
+
+
+./artisan createSchemaDef cms_setup id [already_setup,theme,create_date,last_updated] [varchar,varchar,datetime,datetime] [create_date,last_updated] [null,null,null,null] [[required,min=8],null,null] --schema=src/api/data-source/config.json 
+
 ```

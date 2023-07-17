@@ -65,7 +65,6 @@
           "defaultValue": "./model_entities.json"
         }
       }
-      
     },
     "createModelAPIRouteV2": {
       "arguments": {
@@ -86,7 +85,6 @@
           "defaultValue": "./model_entities.json"
         }
       }
-      
     },
     "listModelAPIRoutes": {
       "arguments": {
@@ -146,10 +144,107 @@
           "desc": ""
         },
         "--json_path=side_menu.json": {
-            "type": "string",
-            "required": false,
-            "desc": "kwargs",
-            "defaultValue": "side_menu.json"
+          "type": "string",
+          "required": false,
+          "desc": "kwargs",
+          "defaultValue": "side_menu.json"
+        }
+      }
+    },
+    "createSchemaDef": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "required": true,
+          "desc": "Table name to be stored on the schema definition json"
+        },
+        "pk": {
+          "type": "string",
+          "required": true,
+          "desc": "Primary key of the table"
+        },
+        "columns": {
+          "type": "string",
+          "required": true,
+          "desc": "Column field list must be in array format [field1,field2,field3]"
+        },
+        "types": {
+          "type": "string",
+          "required": true,
+          "desc": "Column field type must be in array format based on field index [int,varchar,datetime]"
+        },
+        "nullables": {
+          "type": "string",
+          "required": false,
+          "desc": "Column field list wich nullable must be in array format [field1,field2]"
+        },
+        "lengths": {
+          "type": "number",
+          "required": false,
+          "desc": "Column field length must be in array format based on field index [null,20,null]"
+        },
+        "validations": {
+          "type": "string",
+          "required": false,
+          "desc": "Column field validation method to be created as validation model [[required,min=8],null,null]"
+        },
+        "--schema=model_entities.json": {
+          "type": "string",
+          "required": false,
+          "desc": "flags",
+          "defaultValue": "./model_entities.json"
+        }
+      }
+    },
+    "html2React": {
+      "arguments": {
+        "input": {
+          "type": "string",
+          "required": true,
+          "desc": "Input file html"
+        },
+        "output": {
+          "type": "string",
+          "required": true,
+          "desc": "Output File jsx"
+        }
+      }
+    },
+    "createModelFormComponent": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        },
+        "target_dir": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        },
+        "json_path": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        }
+      }
+    },
+    "createModelGridComponent": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        },
+        "target_dir": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        },
+        "json_path": {
+          "type": "string",
+          "required": true,
+          "desc": ""
         }
       }
     }

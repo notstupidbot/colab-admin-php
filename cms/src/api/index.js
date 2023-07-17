@@ -1,11 +1,16 @@
 import express from 'express'
 
 import {datasource} from "./data-source/index.js"
-datasource.initialize()
-const app = express();
+import routers from "./routes/routers.js"
 
-app.get("/api/cms/hello", (req, res) => {
-  res.json({ hello: "world" })
-});
+const app = express()
+
+datasource.initialize().then(f=>{
+  routers.attach(app, datasource)
+}).catch(e=>{
+  console.log(e)
+})
+
+
 
 export const handler = app

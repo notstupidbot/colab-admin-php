@@ -1,7 +1,10 @@
 import config from "./actions.json" assert { type: "json" }
 import {importActionModules, showHelp, getActionArgs, processAction} from "./fn.mjs"
 
+
 const main = async () => {
+    // process.removeAllListeners('warning')
+
     let {argv} = process
     const {availables} = config
     

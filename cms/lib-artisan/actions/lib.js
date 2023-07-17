@@ -72,4 +72,19 @@ async function renameFile(oldPath, newPath) {
     })
     
   }
-export {writeFile,camelToDashCase,excludeFields, jsonParseFile , confirm, renameFile}
+function strToArray(str){
+  str = str.replace(/([\w=]+)/g,"\"$1\"")
+  // console.log(str)
+  let outStrArr = JSON.parse(str)
+  // return outStrArr
+  //str.replace(/^\[/,'').replace(/\]$/,'').split(',')
+
+  for(let i in outStrArr){
+    const s = outStrArr[i]
+    if(Array.isArray(s)){
+      outStrArr[i] = s.join(',')
+    }
+  }
+  return outStrArr
+}  
+export {writeFile,camelToDashCase,excludeFields, jsonParseFile , confirm, renameFile, strToArray}

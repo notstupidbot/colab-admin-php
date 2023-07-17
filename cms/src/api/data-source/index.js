@@ -5,17 +5,34 @@ import config from "./config.json"
 import 'dotenv/config' 
 
 async function getEntities(schemaDef){
-    console.log(schemaDef)
+    // console.log(schemaDef)
     const entitySchemas = []
+    const models = {}
     for(let table in schemaDef){
         const item = schemaDef[table]
         const entityModulePath = `../entities/${item.schema}`
-        const moduleImport = await import( entityModulePath)
+        const modelModulePath = `../models/${item.model}`
+        
+        try{
+            const moduleImport = await import(/* @vite-ignore */  entityModulePath)
 
-        entitySchemas.push(moduleImport.default)
+            entitySchemas.push(moduleImport.default)
+        }catch(e){
+            console.error(e)
+        }
+
+        try{
+            const modelImport = await import(/* @vite-ignore */  modelModulePath)
+
+            models[item.model]= modelImport.default
+            models[`M${item.model}`]=modelImport[`M${item.model}`]
+        }catch(e){
+            console.error(e)
+        }
+        
     }
 
-    return entitySchemas
+    return [entitySchemas, models]
 }
 
 const {CMS_DB_ENGINE, CMS_DB_LOCATION} = process.env
@@ -25,11 +42,26 @@ const {CMS_DB_ENGINE, CMS_DB_LOCATION} = process.env
 class DS{
     datasource = null
     manager = null
+    models = {}
     getDataSource(){
         return this.datasourse
     } 
+    getModel(modelName){
+        return this.models[modelName]
+    }
+    factory(modelName,m=false){
+        let instance 
+        if(m){
+            instance = new this.models[modelName](this.datasource)
+        }else{
+            instance = new this.models(modelName)
+        }
+        return instance
+    }
     async initialize(){
-        const entities = await getEntities(config.schema)
+        const [entities, models] = await getEntities(config.schema)
+        // console.log(models)
+        this.models = models
         // console.log(entities)
         return new Promise(async(resolve, reject)=>{
             if(CMS_DB_ENGINE == 'sqlite'){
@@ -38,7 +70,7 @@ class DS{
                         type: "better-sqlite3",
                         database:CMS_DB_LOCATION,
                         synchronize: true,
-                        logging: true,
+                        logging: 0,
                         entities,
                         subscribers: [],
                         migrations: [],

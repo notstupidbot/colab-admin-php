@@ -25,11 +25,13 @@ const importActionModules = async (availables) => {
 
     return actionModules
 }
-const getFlagArgs = flag =>{
+const getFlagArgs = (flag,numFlag=2) =>{
+    let flagSign = ('').repeat(numFlag)
+
     const {argv} = process
     for(let i in argv){
         const arg = argv[i]
-        const regex = new RegExp(`--${flag}`)
+        const regex = new RegExp(`${flagSign}${flag}`)
         if(arg.match(regex)){
             const argSplit = arg.split('=')
             const [flag, value] = argSplit
@@ -41,8 +43,8 @@ const getFlagArgs = flag =>{
     return [false, null]
 }
 const showHelp = (availables, moduleActions) => {
-    console.log('Welcome to artisan')
-
+    console.log(`\nWelcome to Web Artisan v0.0.0\n`)
+    console.log(`Available actions:\n`)
     const helps = Object.keys(availables).filter(item=>!item.match(/_\d+$/)).map(actionName => {
      
         let usageCmd = `${actionName} `
@@ -55,7 +57,8 @@ const showHelp = (availables, moduleActions) => {
         return  usageCmd 
     })
 
-    console.log(helps.join("\n"))
+    console.log(`  `+helps.join("\n  "))
+    console.log(`\nPowered by Malink Corporation Inc. 2023\n`)
 }
 
 const getActionArgs = (argv) => {
@@ -80,8 +83,11 @@ ${usageBuffer}
 `
 
 }
-const processAction = async (actionName, argv, actionModules, availables) => {
+const processAction = async (actionName, iArgv, actionModules, availables) => {
+    let argv = iArgv 
     argv.splice(0,3)
+
+    argv = argv.filter(a => !a.match(/^-/))
 
     if(!Object.keys(availables).includes(actionName)){
         console.error(`${actionName} is not valid action`)
