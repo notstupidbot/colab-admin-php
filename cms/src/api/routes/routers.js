@@ -1,5 +1,5 @@
 
-import routerConfig from "./config.json" 
+import routerConfig from "./config.json" assert { type: "json" }
 
  
 class DynamicRouter{

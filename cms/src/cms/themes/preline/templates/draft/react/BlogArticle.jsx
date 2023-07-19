@@ -1,65 +1,65 @@
 
  const BlogArticle = ({})=>{
-    	const cls0 = "cls-0 max-w-3xl px-4 pt-6 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto"
-	const cls1 = "cls-1 max-w-2xl"
-	const cls2 = "cls-2 flex justify-between items-center mb-6"
-	const cls3 = "cls-3 flex w-full sm:items-center gap-x-5 sm:gap-x-3"
-	const cls4 = "cls-4 flex-shrink-0"
-	const cls5 = "cls-5 h-12 w-12 rounded-full"
-	const cls6 = "cls-6 grow"
-	const cls7 = "cls-7 grid sm:flex sm:justify-between sm:items-center gap-2"
-	const cls8 = "cls-8 hs-tooltip inline-block [--trigger:hover] [--placement:bottom]"
-	const cls9 = "cls-9 hs-tooltip-toggle sm:mb-1 block text-left cursor-pointer"
-	const cls10 = "cls-10 font-semibold text-gray-800 dark:text-gray-200"
-	const cls11 = "cls-11 hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 max-w-xs cursor-default bg-gray-900 divide-y divide-gray-700 shadow-lg rounded-xl dark:bg-black"
-	const cls12 = "cls-12 p-4 sm:p-5"
-	const cls13 = "cls-13 mb-2 flex w-full sm:items-center gap-x-5 sm:gap-x-3"
-	const cls14 = "cls-14 h-8 w-8 rounded-full"
-	const cls15 = "cls-15 text-lg font-semibold text-gray-200"
-	const cls16 = "cls-16 text-sm text-gray-400"
-	const cls17 = "cls-17 flex justify-between items-center px-4 py-3 sm:px-5"
-	const cls18 = "cls-18 text-xs space-x-3"
-	const cls19 = "cls-19 inline-block"
-	const cls20 = "cls-20 font-semibold text-gray-200"
-	const cls21 = "cls-21 text-gray-400"
-	const cls22 = "cls-22 py-1.5 px-2.5 inline-flex justify-center items-center gap-x-1.5 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-xs"
-	const cls23 = "cls-23 w-3.5 h-3.5"
-	const cls24 = "cls-24 text-xs text-gray-500"
-	const cls25 = "cls-25 inline-block relative pr-6 last:pr-0 last-of-type:before:hidden before:absolute before:top-1/2 before:right-2 before:-translate-y-1/2 before:w-1 before:h-1 before:bg-gray-300 before:rounded-full dark:text-gray-400 dark:before:bg-gray-600"
-	const cls26 = "cls-26 py-1.5 px-2.5 sm:py-2 sm:px-3 inline-flex justify-center items-center gap-x-1.5 sm:gap-x-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-xs sm:text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
-	const cls27 = "cls-27 space-y-5 md:space-y-8"
-	const cls28 = "cls-28 space-y-3"
-	const cls29 = "cls-29 text-2xl font-bold md:text-3xl dark:text-white"
-	const cls30 = "cls-30 text-lg text-gray-800 dark:text-gray-200"
-	const cls31 = "cls-31 w-full object-cover rounded-xl"
-	const cls32 = "cls-32 mt-3 text-sm text-center text-gray-500"
-	const cls33 = "cls-33 text-blue-600 decoration-2 hover:underline font-medium"
-	const cls34 = "cls-34 text-center p-4 sm:px-7"
-	const cls35 = "cls-35 text-xl font-medium text-gray-800 md:text-2xl md:leading-normal xl:text-2xl xl:leading-normal dark:text-gray-200"
-	const cls36 = "cls-36 mt-5 text-gray-800 dark:text-gray-200"
-	const cls37 = "cls-37 text-2xl font-semibold dark:text-white"
-	const cls38 = "cls-38 list-disc list-outside space-y-5 pl-5 text-lg text-gray-800 dark:text-gray-200"
-	const cls39 = "cls-39 pl-2"
-	const cls40 = "cls-40 m-1 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200"
-	const cls41 = "cls-41 sticky bottom-6 inset-x-0 text-center"
-	const cls42 = "cls-42 inline-block bg-white shadow-md rounded-full py-3 px-4 dark:bg-gray-800"
-	const cls43 = "cls-43 flex items-center gap-x-1.5"
-	const cls44 = "cls-44 hs-tooltip inline-block"
-	const cls45 = "cls-45 hs-tooltip-toggle flex items-center gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-	const cls46 = "cls-46 w-4 h-4"
-	const cls47 = "cls-47 hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded-md shadow-sm dark:bg-black"
-	const cls48 = "cls-48 block h-3 border-r border-gray-300 mx-3 dark:border-gray-600"
-	const cls49 = "cls-49 hs-dropdown relative inline-flex"
-	const cls50 = "cls-50 hs-dropdown-toggle flex items-center gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-	const cls51 = "cls-51 hs-dropdown-menu w-56 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden mb-1 z-10 bg-gray-900 shadow-md rounded-xl p-2 dark:bg-black"
-	const cls52 = "cls-52 flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-400 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-gray-400"
-	const cls53 = "cls-53 border-t border-gray-600 my-2"
+    const cls0 = "cls-0 max-w-3xl px-4 pt-6 lg:pt-10 pb-12 sm:px-6 lg:px-8 mx-auto"
+		const cls1 = "cls-1 max-w-2xl"
+		const cls2 = "cls-2 flex justify-between items-center mb-6"
+		const cls3 = "cls-3 flex w-full sm:items-center gap-x-5 sm:gap-x-3"
+		const cls4 = "cls-4 flex-shrink-0"
+		const cls5 = "cls-5 h-12 w-12 rounded-full"
+		const cls6 = "cls-6 grow"
+		const cls7 = "cls-7 grid sm:flex sm:justify-between sm:items-center gap-2"
+		const cls8 = "cls-8 hs-tooltip inline-block [--trigger:hover] [--placement:bottom]"
+		const cls9 = "cls-9 hs-tooltip-toggle sm:mb-1 block text-left cursor-pointer"
+		const cls10 = "cls-10 font-semibold text-gray-800 dark:text-gray-200"
+		const cls11 = "cls-11 hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 max-w-xs cursor-default bg-gray-900 divide-y divide-gray-700 shadow-lg rounded-xl dark:bg-black"
+		const cls12 = "cls-12 p-4 sm:p-5"
+		const cls13 = "cls-13 mb-2 flex w-full sm:items-center gap-x-5 sm:gap-x-3"
+		const cls14 = "cls-14 h-8 w-8 rounded-full"
+		const cls15 = "cls-15 text-lg font-semibold text-gray-200"
+		const cls16 = "cls-16 text-sm text-gray-400"
+		const cls17 = "cls-17 flex justify-between items-center px-4 py-3 sm:px-5"
+		const cls18 = "cls-18 text-xs space-x-3"
+		const cls19 = "cls-19 inline-block"
+		const cls20 = "cls-20 font-semibold text-gray-200"
+		const cls21 = "cls-21 text-gray-400"
+		const cls22 = "cls-22 py-1.5 px-2.5 inline-flex justify-center items-center gap-x-1.5 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-xs"
+		const cls23 = "cls-23 w-3.5 h-3.5"
+		const cls24 = "cls-24 text-xs text-gray-500"
+		const cls25 = "cls-25 inline-block relative pr-6 last:pr-0 last-of-type:before:hidden before:absolute before:top-1/2 before:right-2 before:-translate-y-1/2 before:w-1 before:h-1 before:bg-gray-300 before:rounded-full dark:text-gray-400 dark:before:bg-gray-600"
+		const cls26 = "cls-26 py-1.5 px-2.5 sm:py-2 sm:px-3 inline-flex justify-center items-center gap-x-1.5 sm:gap-x-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-xs sm:text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800"
+		const cls27 = "cls-27 space-y-5 md:space-y-8"
+		const cls28 = "cls-28 space-y-3"
+		const cls29 = "cls-29 text-2xl font-bold md:text-3xl dark:text-white"
+		const cls30 = "cls-30 text-lg text-gray-800 dark:text-gray-200"
+		const cls31 = "cls-31 w-full object-cover rounded-xl"
+		const cls32 = "cls-32 mt-3 text-sm text-center text-gray-500"
+		const cls33 = "cls-33 text-blue-600 decoration-2 hover:underline font-medium"
+		const cls34 = "cls-34 text-center p-4 sm:px-7"
+		const cls35 = "cls-35 text-xl font-medium text-gray-800 md:text-2xl md:leading-normal xl:text-2xl xl:leading-normal dark:text-gray-200"
+		const cls36 = "cls-36 mt-5 text-gray-800 dark:text-gray-200"
+		const cls37 = "cls-37 text-2xl font-semibold dark:text-white"
+		const cls38 = "cls-38 list-disc list-outside space-y-5 pl-5 text-lg text-gray-800 dark:text-gray-200"
+		const cls39 = "cls-39 pl-2"
+		const cls40 = "cls-40 m-1 inline-flex items-center gap-1.5 py-2 px-3 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200"
+		const cls41 = "cls-41 sticky bottom-6 inset-x-0 text-center"
+		const cls42 = "cls-42 inline-block bg-white shadow-md rounded-full py-3 px-4 dark:bg-gray-800"
+		const cls43 = "cls-43 flex items-center gap-x-1.5"
+		const cls44 = "cls-44 hs-tooltip inline-block"
+		const cls45 = "cls-45 hs-tooltip-toggle flex items-center gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+		const cls46 = "cls-46 w-4 h-4"
+		const cls47 = "cls-47 hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded-md shadow-sm dark:bg-black"
+		const cls48 = "cls-48 block h-3 border-r border-gray-300 mx-3 dark:border-gray-600"
+		const cls49 = "cls-49 hs-dropdown relative inline-flex"
+		const cls50 = "cls-50 hs-dropdown-toggle flex items-center gap-x-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+		const cls51 = "cls-51 hs-dropdown-menu w-56 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden mb-1 z-10 bg-gray-900 shadow-md rounded-xl p-2 dark:bg-black"
+		const cls52 = "cls-52 flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-400 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-gray-400"
+		const cls53 = "cls-53 border-t border-gray-600 my-2"
 
     return <>
-    <div> 
+    {/* Blog Article */} 
  <div className={cls0}> 
      <div className={cls1}> 
-       
+       {/* Avatar Media */} 
        <div className={cls2}> 
          <div className={cls3}> 
            <div className={cls4}> 
@@ -69,16 +69,16 @@
            <div className={cls6}> 
              <div className={cls7}> 
                <div> 
-                 
+                 {/* Tooltip */} 
                  <div className={cls8}> 
                    <div className={cls9}> 
                      <span className={cls10}> 
                       Leyla Ludic
                      </span> 
   
-                     
+                     {/* Dropdown Card */} 
                      <div role="tooltip" className={cls11}> 
-                       
+                       {/* Body */} 
                        <div className={cls12}> 
                          <div className={cls13}> 
                            <div className={cls4}> 
@@ -95,9 +95,9 @@
                           Leyla is a Customer Success Specialist at Preline and spends her time speaking to in-house recruiters all over the world.
                          </p> 
                        </div> 
-                       
+                       {/* End Body */} 
   
-                       
+                       {/* Footer */} 
                        <div className={cls17}> 
                          <ul className={cls18}> 
                            <li className={cls19}> 
@@ -120,12 +120,12 @@
                            </button> 
                          </div> 
                        </div> 
-                       
+                       {/* End Footer */} 
                      </div> 
-                     
+                     {/* End Dropdown Card */} 
                    </div> 
                  </div> 
-                 
+                 {/* End Tooltip */} 
   
                  <ul className={cls24}> 
                    <li className={cls25}> 
@@ -137,7 +137,7 @@
                  </ul> 
                </div> 
   
-               
+               {/* Button Group */} 
                <div> 
                  <button type="button" className={cls26}> 
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls23}> 
@@ -146,14 +146,14 @@
                   Tweet
                  </button> 
                </div> 
-               
+               {/* End Button Group */} 
              </div> 
            </div> 
          </div> 
        </div> 
-       
+       {/* End Avatar Media */} 
   
-       
+       {/* Content */} 
        <div className={cls27}> 
          <div className={cls28}> 
            <h2 className={cls29}> Announcing a free plan for small teams </h2> 
@@ -218,16 +218,16 @@
            </a> 
          </div> 
        </div> 
-       
+       {/* End Content */} 
      </div> 
    </div> 
-   
+   {/* End Blog Article */} 
   
-   
+   {/* Sticky Share Group */} 
    <div className={cls41}> 
      <div className={cls42}> 
        <div className={cls43}> 
-         
+         {/* Button */} 
          <div className={cls44}> 
            <button type="button" className={cls45}> 
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls46}> 
@@ -239,11 +239,11 @@
              </span> 
            </button> 
          </div> 
-         
+         {/* Button */} 
   
          <div className={cls48}> </div> 
   
-         
+         {/* Button */} 
          <div className={cls44}> 
            <button type="button" className={cls45}> 
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls46}> 
@@ -255,11 +255,11 @@
              </span> 
            </button> 
          </div> 
-         
+         {/* Button */} 
   
          <div className={cls48}> </div> 
   
-         
+         {/* Button */} 
          <div className={cls49}> 
            <button type="button" id="blog-article-share-dropdown" className={cls50}> 
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className={cls46}> 
@@ -297,11 +297,11 @@
              </a> 
            </div> 
          </div> 
-         
+         {/* Button */} 
        </div> 
      </div> 
    </div> 
-   </div>
+   {/* End Sticky Share Group */}
     </>
  }   
 

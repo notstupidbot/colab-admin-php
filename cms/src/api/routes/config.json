@@ -1,5 +1,12 @@
 {
   "availables": {
+    "theme" : {
+      "routes" : {
+        "getDraft" : {
+          "path" : "{routePath}/draft" 
+        }
+      }
+    },
     "user": {
       "routePath": "/api/cms/user",
       "routes": {

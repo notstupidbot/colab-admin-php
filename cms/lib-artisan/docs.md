@@ -15,4 +15,9 @@ components/side_menu.json
 
 ./artisan createSchemaDef cms_setup id [already_setup,theme,create_date,last_updated] [varchar,varchar,datetime,datetime] [create_date,last_updated] [null,null,null,null] [[required,min=8],null,null] --schema=src/api/data-source/config.json 
 
+./artisan html2React -draft contact.html
+
+./artisan extractPrelineExample ~/websites/preline_co/preline.co/examples/navigations-navbars.html navigations_navbars -draft
+
+
 ```

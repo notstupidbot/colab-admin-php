@@ -1,5 +1,7 @@
 import fs from 'fs'
 import readline from 'readline'
+import {Parser} from "htmlparser2"
+import htmlEntities from 'html-entities'
 
 function confirm(question) {
   const rl = readline.createInterface({
@@ -87,4 +89,59 @@ function strToArray(str){
   }
   return outStrArr
 }  
-export {writeFile,camelToDashCase,excludeFields, jsonParseFile , confirm, renameFile, strToArray}
+function ucfirst(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+function dashToCamelCase(str) {
+  return str.replace(/-([a-z])/g, function (match, letter) {
+    return letter.toUpperCase();
+  });
+}
+function styleToObj(str, toStr=true){
+  const style = '{' + str.replace(/;/,',').replace(/([\w\.\%]+)/g,"\"$1\"") + '}'
+  if(toStr)
+    return style
+  let obj = {}
+  try {
+    obj = JSON.parse(style)
+  } catch (error) {
+    
+  }
+  return obj
+ 
+}
+async function convertToXHTML(html) {
+  const entities = htmlEntities
+  const tidy = []
+  return new Promise((resolve, reject) => {
+    const parser = new Parser({
+      onend: f =>{
+        resolve(tidy.join(" "))
+      },
+      onerror: reject,
+      oncomment: (data) => {
+          // Handle comments as needed
+          // console.log('Comment:', data);
+          tidy.push(`<!--${data}-->`);
+      },
+      onopentag: (name, attributes) => {
+        let xhtml = `<${name}`;
+        for (const attr in attributes) {
+          xhtml += ` ${attr}="${entities.encode(attributes[attr])}"`;
+        }
+        xhtml += '>';
+        tidy.push(xhtml);
+      },
+      ontext: (text) => {
+        tidy.push(entities.encode(text));
+      },
+      onclosetag: (tagname) => {
+        tidy.push(`</${tagname}>`);
+      }
+    });
+    parser.write(html);
+    parser.end();
+  });
+}
+
+export {convertToXHTML,styleToObj,dashToCamelCase,ucfirst, writeFile,camelToDashCase,excludeFields, jsonParseFile , confirm, renameFile, strToArray}

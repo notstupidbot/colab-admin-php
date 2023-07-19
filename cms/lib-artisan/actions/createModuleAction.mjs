@@ -1,10 +1,10 @@
 import {jsonParseFile, writeFile, confirm, renameFile} from "./lib.js"
 import fs from "fs"
 import path from "path"
-const createModuleAction = async(actionName, argListStr, jsonPath)=>{
-    // console.log(actionName)
+const createModuleAction = async(actionName, argListStr, desc,jsonPath)=>{
+    console.log(actionName, argListStr,desc, jsonPath)
     const dt = new Date
-    const config = await jsonParseFile(jsonPath)
+    const config = await jsonParseFile(jsonPath,null,'',null,true)
     const configBackupKey = `${actionName}_${dt.getTime()}`
     const actionFilename = `${actionName}.mjs`
     const actionBackupFilename = `${configBackupKey}.mjs`
@@ -12,8 +12,12 @@ const createModuleAction = async(actionName, argListStr, jsonPath)=>{
     const targetDir  = path.dirname(jsonPath)
     const outputFile = `${targetDir}/actions/${actionFilename}` 
     const outputFileBackup = `${targetDir}/actions/${actionBackupFilename}` 
-
-    // console.log(config)
+    console.log(config)
+    
+    if(!config){
+        console.error(`could not load ${jsonPath}`)
+        process.exit()
+    }
 
     if(config.availables[actionName]){
         config.availables[configBackupKey] = Object.assign({}, config.availables[actionName])
@@ -29,7 +33,7 @@ const ${actionName} = async (${argListSplit.join(', ')}) => {
 export default ${actionName}
     `
 
-    let actionConf = {arguments:{}}
+    let actionConf = {arguments:{}, desc}
     argListSplit.map(arg => {
         actionConf.arguments[arg] = {
             type : "string",

@@ -104,11 +104,27 @@ const processAction = async (actionName, iArgv, actionModules, availables) => {
         // check arg is required and set from argv
         
         if(!argv[argIndex]){
+            let breakArgRequired = true
             if(required){
-                //console.error(actionModules[actionName].HELP)
-                const help = createHelpByAvaArgs(actionName, availableArguments,availables[actionName])
-                console.error(help)
-                process.exit(1)
+                if(typeof required == 'object'){
+                    if(Array.isArray(required.flagNotExists)){
+                        for(const flagArgOpt of required.flagNotExists){
+                            const [flag,flagLen] = flagArgOpt
+                            const [flagPresent,flagValue] = getFlagArgs(flag, flagLen)
+                            // console.log(flagPresent, flagValue)
+                            if(flagPresent){
+                                breakArgRequired = false
+                            }
+                        }
+                    }
+                }
+                if(breakArgRequired){
+                    //console.error(actionModules[actionName].HELP)
+                    const help = createHelpByAvaArgs(actionName, availableArguments,availables[actionName])
+                    console.error(help)
+                    process.exit(1)
+                }
+                
             }
         }else{
             inputArguments[argIndex] = argv[argIndex]
@@ -128,61 +144,5 @@ const processAction = async (actionName, iArgv, actionModules, availables) => {
     await actionModules[actionName].apply(null, inputArguments)
 }
 
-// const processCmd_old = async (cmd) => {
-//     if(!availableActions.includes(cmd)){
-//         console.error(`${cmd} is not valid action`)
-//         process.exit(1)
-//     }
-//     if(cmd === 'createReactComponent'){
-//         argv.splice(0,3)
-//         const [name, target_dir] = argv
-//         if(name && target_dir){
-//             await createReactComponent(name, target_dir)
-//         }else{
-//             console.log(createReactComponent.HELP)
 
-//         }
-//     }
-//     if(cmd === 'createModelEntity'){
-//         argv.splice(0,3)
-//         let json_path = null
-//         const [table_name, target_dir, json_path_arg] = argv
-//         json_path = json_path_arg
-//         if(!json_path){
-//             json_path = "./model_entities.json"
-//         }
-//         if(table_name && target_dir){
-//             await createModelEntity(table_name, target_dir, json_path)
-//         }else{
-//             console.log(createModelEntity.HELP)
-
-//         }
-//     }
-//     if(cmd === 'createModelAPIRoute'){
-//         argv.splice(0,3)
-//         let json_path = null
-//         const [table_name, target_dir, json_path_arg] = argv
-//         json_path = json_path_arg
-//         if(!json_path){
-//             json_path = "./model_entities.json"
-//         }
-//         if(table_name && target_dir){
-//             await createModelAPIRoute(table_name, target_dir, json_path)
-//         }else{
-//             console.log(createModelAPIRoute.HELP)
-
-//         }
-//     }
-//     if(cmd === 'listModelAPIRoutes'){
-//         argv.splice(0,3)
-//         let json_path = null
-//         const [json_path_arg] = argv
-//         json_path = json_path_arg
-//         if(!json_path){
-//             json_path = "./model_entities.json"
-//         }
-//         await listModelAPIRoutes(json_path)
-        
-//     }
-// }
 export {importActionModules, showHelp, getActionArgs, processAction, getFlagArgs}

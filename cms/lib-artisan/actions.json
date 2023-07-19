@@ -202,7 +202,7 @@
       }
     },
     "html2React": {
-      "desc" : "Convert html document to React Component",
+      "desc": "Convert html document to React Component",
       "arguments": {
         "input": {
           "type": "string",
@@ -211,8 +211,21 @@
         },
         "output": {
           "type": "string",
-          "required": true,
-          "desc": "Output File jsx"
+          "required": {
+            "flagNotExists": [
+              [
+                "draft",
+                1
+              ]
+            ]
+          },
+          "desc": "Output File jsx, optional if -draft flag exists"
+        },
+        "-draft": {
+          "defaultValue": null,
+          "type": "string",
+          "required": false,
+          "desc": "Set default base dir to src/cms/themes/preline/templates/draft/{html,react}"
         }
       }
     },
@@ -253,6 +266,28 @@
           "desc": ""
         }
       }
+    },
+    "extractPrelineExample": {
+      "arguments": {
+        "input": {
+          "type": "string",
+          "required": true,
+          "desc": "Input file html"
+        },
+        "target_dir": {
+          "type": "string",
+          "required": true,
+          "desc": "Target directory , relative to to src/cms/themes/preline/templates/draft/ if -draft flag is on"
+        },
+        "-draft": {
+          "type": "string",
+          "defaultValue":null,
+          "required": false,
+          "desc": "Enable draft mode"
+
+        }
+      },
+      "desc": "Extract html component from preline example"
     }
   }
 }

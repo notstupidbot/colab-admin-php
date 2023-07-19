@@ -1,68 +1,56 @@
 import path from "path"
 import fs from "fs"
-// import jsdom from "jsdom"
-// import jquery from "jquery"
-import {writeFile} from "./lib.js"
-import {Parser} from "htmlparser2"
-// import htmlparser2 from 'htmlparser2'
-import htmlEntities from 'html-entities'
+import {convertToXHTML, dashToCamelCase,writeFile, ucfirst,jsonParseFile,styleToObj} from "./lib.js"
+import {getFlagArgs} from "../fn.mjs"
+
 import cheerio from 'cheerio'
 
-// const {AllHtmlEntities} = htmlEntities
-// const {JSDOM} = jsdom
-async function convertToXHTML(html, tidy, entities) {
-    return new Promise((resolve, reject) => {
-      const parser = new Parser({
-        onend: resolve,
-        onerror: reject,
-        oncomment: (data) => {
-            // Handle comments as needed
-            // console.log('Comment:', data);
-            tidy.push(`{/*${data}*/}`);
-        },
-        onopentag: (name, attributes) => {
-          let xhtml = `<${name}`;
-          for (const attr in attributes) {
-            xhtml += ` ${attr}="${entities.encode(attributes[attr])}"`;
-          }
-          xhtml += '>';
-          tidy.push(xhtml);
-        },
-        ontext: (text) => {
-          tidy.push(entities.encode(text));
-        },
-        onclosetag: (tagname) => {
-          tidy.push(`</${tagname}>`);
-        }
-      });
-      parser.write(html);
-      parser.end();
-    });
-  }
-  
 
-const documentReady = async ($, document) => {
-    return new Promise((resolve, reject)=>{
-        $(document).ready(function() {
-            // Your jQuery code here
-            resolve($)
-        })
-    })
-}
+
+
 const html2React = async (input, output) => {
+    const original = path.basename(input)
+    const [draftFlagPresent,draftFlagValue] = getFlagArgs('draft', 1)
+    let componentClass 
+    let componentListJsonPath = null
+    if(draftFlagPresent){
+      componentClass = ucfirst(original.replace(/\..*$/,''))
+      componentClass = dashToCamelCase(componentClass)
+
+      const cwd = process.cwd()
+      const draftDir = `src/cms/themes/preline/templates/draft`
+      const htmlDir = `${cwd}/${draftDir}/html`
+      const reactDir = `${cwd}/${draftDir}/react`
+      input = `${htmlDir}/${input}`
+      output = `${reactDir}/${componentClass}.jsx`
+      componentListJsonPath = `${reactDir}/components.json`
+
+
+
+      if(! await fs.existsSync(input)){
+        console.error(`Could not open input file :${input} `)
+        process.exit(1)
+      }
+      // console.log(input, output)
+      // return
+    }else{
+      componentClass = ucfirst(path.basename(output).replace(/\..*$/,''))
+      componentClass = dashToCamelCase(componentClass)
+
+    }
     let inputBuffer = await fs.readFileSync(input)
     
 
     inputBuffer = inputBuffer.toString()
    
-    let tidy = []
-    await convertToXHTML(inputBuffer, tidy, htmlEntities)
-    inputBuffer =  tidy.join(" ")
+    inputBuffer =   await convertToXHTML(inputBuffer)
     let $ = cheerio.load(inputBuffer, {xml: {xmlMode: true}}, false)
 
-    const componentClass = path.basename(output).replace(/\..*$/,'')
+    // fix className
     let els = $("*[class]")
     let clsList = []
+    let styleList = []
+    let styleListBuffer = ""
     let clsListBuffer = ""
     let clsIdx = 0
     els.map(elIdx=>{
@@ -78,13 +66,41 @@ const html2React = async (input, output) => {
         element.removeAttr('class')
         element.attr('className', `CLS_INDEX_${clsIndex}`)
     })
+    // fix style
+    els = $("*[style]")
+    let styleObjs ={}
+    let stlIdx = 0
+
+    els.map(elIdx=>{
+      let element = $(els[elIdx])
+      let oldValue = element.attr('style')
+      if(!styleList.includes(oldValue)){
+          const stlKey = `stl${stlIdx}`
+          styleList.push(oldValue)
+          styleObjs[stlKey] = styleToObj(oldValue, false)
+          stlIdx += 1
+      }
+      const styleIdx = styleList.indexOf(oldValue)
+      element.removeAttr('style')
+        element.attr('style', `STL_INDEX_${styleIdx}`)
+    })
+
+    styleList.map((stl,styleIdx)=>{
+      const stlKey = `stl${styleIdx}`
+      let stlContent = []
+      for(let p in styleObjs[stlKey]){
+        stlContent.push(`${p} : "${styleObjs[stlKey][p]}"`)
+      }
+      styleListBuffer += ` ${stlKey} : { ${stlContent.join(',')} },`
+    })
 
    
     inputBuffer = $.html()
     const rgxRplcs = [
         [/classname/g,'className'],
-        // [/(<!--.*-->)/g,"{/*$1*/}"],
+        [/(<!--.*-->)/g,"{/*$1*/}"],
         [/(\"CLS_INDEX_)(\d+)(\")/g,"{cls$2}"],
+        [/(\"STL_INDEX_)(\d+)(\")/g,"{styles.stl$2}"],
         [/clip-rule=/g,"clipRule="],
         [/fill-rule=/g,"fillRule="],
         [/viewbox=/g,"viewBox="],
@@ -93,6 +109,7 @@ const html2React = async (input, output) => {
         [/autocomplete=/g,"autoComplete="],
         [/stroke-width=/g,"strokeWidth="],
         [/\>\s*\<\/input\>/g,"\/>"],
+        [/\>\s*\<\/textarea\>/g,"\/>"],
         [/\>\s*\<\/img\>/g,"\/>"],
         [/\>\s*\<\/br\>/g,"\/>"]
 
@@ -104,6 +121,7 @@ const html2React = async (input, output) => {
     })
     inputBuffer = `
  const ${componentClass} = ({})=>{
+    const styles = { ${styleListBuffer} }
     ${clsListBuffer}
     return <>
     ${inputBuffer}
@@ -113,9 +131,18 @@ const html2React = async (input, output) => {
  export default  ${componentClass}
     `
     await writeFile(output, inputBuffer,`writing ${output}`)
-    // console.log(inputBuffer)
+    const config = await jsonParseFile(componentListJsonPath,null,'',null,true)
+    // console.log(config)
 
-    // console.log(`html2React`)
+    if(config){
+      
+      if(config.availables){
+        config.availables[componentClass] = { original }
+        await writeFile(componentListJsonPath, JSON.stringify(config,null,2), `updating ${componentListJsonPath}`)
+      }
+    }else{
+      console.error(`Invalid json definition ${componentListJsonPath}`)
+    }
 }
 
 export default html2React

@@ -1,6 +1,6 @@
 
 import {DataSource} from 'typeorm'
-import config from "./config.json"
+import config from "./config.json" assert { type: "json" }
 
 import 'dotenv/config' 
 
@@ -10,8 +10,8 @@ async function getEntities(schemaDef){
     const models = {}
     for(let table in schemaDef){
         const item = schemaDef[table]
-        const entityModulePath = `../entities/${item.schema}`
-        const modelModulePath = `../models/${item.model}`
+        const entityModulePath = `../entities/${item.schema}.js`
+        const modelModulePath = `../models/${item.model}.js`
         
         try{
             const moduleImport = await import(/* @vite-ignore */  entityModulePath)

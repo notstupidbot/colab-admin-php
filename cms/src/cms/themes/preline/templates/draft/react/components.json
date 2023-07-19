@@ -1,0 +1,20 @@
+{
+  "availables": {
+    "AnnouncementBanner": {
+      "original": "announcement-banner.html"
+    },
+    "BlogArticle": {
+      "original": "blogArticle.html"
+    },
+    "ApplicationAiPrompt": {
+      "type": "app",
+      "original": "application-ai-prompt.html"
+    },
+    "Contact": {
+      "original": "contact.html"
+    },
+    "IconSections": {
+      "original": "icon-sections.html"
+    }
+  }
+}
