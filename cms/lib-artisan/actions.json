@@ -281,13 +281,27 @@
         },
         "-draft": {
           "type": "string",
-          "defaultValue":null,
+          "defaultValue": null,
           "required": false,
           "desc": "Enable draft mode"
-
         }
       },
       "desc": "Extract html component from preline example"
+    },
+    "injectImportComponent": {
+      "arguments": {
+        "source_component_path": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        },
+        "destination_component_path": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        }
+      },
+      "desc": "Automagically add import source Component to destination Component relatively"
     }
   }
 }

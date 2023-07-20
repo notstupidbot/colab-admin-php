@@ -96,6 +96,7 @@ const html2React = async (input, output) => {
 
    
     inputBuffer = $.html()
+    // const svgProps = ["stroke-linecap","clip-rule","fill-rule","viewbox"]
     const rgxRplcs = [
         [/classname/g,'className'],
         [/(<!--.*-->)/g,"{/*$1*/}"],
@@ -108,6 +109,7 @@ const html2React = async (input, output) => {
         [/for=/g,"htmlFor="],
         [/autocomplete=/g,"autoComplete="],
         [/stroke-width=/g,"strokeWidth="],
+        [/stroke-linecap=/g,"strokeLinecap="],
         [/\>\s*\<\/input\>/g,"\/>"],
         [/\>\s*\<\/textarea\>/g,"\/>"],
         [/\>\s*\<\/img\>/g,"\/>"],

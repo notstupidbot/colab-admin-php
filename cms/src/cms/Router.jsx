@@ -1,3 +1,4 @@
+import LayoutEditor from "../apps/layout-editor/LayoutEditor"
 import {useEffect, useState, useRef} from "react"
 import {  RouterProvider,
   createRoutesFromElements,
@@ -14,7 +15,7 @@ export default function Router({config}){
 		   <Route path="/" errorElement={<ErrorPage />} element={<Template config={config}/>}>
 		      <Route path="/" element={<Public />} />
               <Route path="public" element={<Public config={config} />}/>
-		      <Route path="admin" element={<Admin config={config} />}/>
+		      <Route path="admin" element={<LayoutEditor config={config} />}/>
 		      {/* <Route path="*" element={<Navigate to="/public" replace={true}/>} /> */}
 
 			</Route>
