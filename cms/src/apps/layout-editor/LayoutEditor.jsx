@@ -1,10 +1,13 @@
-import Admin from "../../cms/Admin"
- 
+import ContextMenu from "./ContextMenu"
+import Canvas from "./Canvas"
+
+import "./style.css"
+
 const LayoutEditor = ({}) => {
     return (<><div className="layouteditor">
-        Hello LayoutEditor
-        <Admin/>
-
+        
+        <Canvas/>
+        <ContextMenu />
     </div></>)
 }
 

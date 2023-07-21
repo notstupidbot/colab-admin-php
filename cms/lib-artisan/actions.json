@@ -293,12 +293,12 @@
         "source_component_path": {
           "type": "string",
           "required": true,
-          "desc": ""
+          "desc": "Component path to inject import"
         },
         "destination_component_path": {
           "type": "string",
           "required": true,
-          "desc": ""
+          "desc": "Component path destination"
         }
       },
       "desc": "Automagically add import source Component to destination Component relatively"

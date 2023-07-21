@@ -15,6 +15,9 @@
     },
     "IconSections": {
       "original": "icon-sections.html"
+    },
+    "TreeMenu": {
+      "original": "tree-menu.html"
     }
   }
 }

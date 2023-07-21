@@ -1,0 +1,26 @@
+@layer compoment{
+
+.selectable-div {
+    @apply w-[80%] relative border-solid border-2 border-indigo-600 p-[8px] select-none !important;
+  }
+  
+  .handle {
+    @apply absolute -top-[-0px] -left-[0px] w-[12px] h-[12px] border border-solid border-gray-600 bg-white cursor-move select-none !important;
+  }
+  .gutter {
+    background-color: #e5e7eb;
+    background-repeat: no-repeat;
+    background-position: 50%;
+  }
+  
+  .gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
+  }
+  
+  .gutter.gutter-vertical {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+    cursor: row-resize;
+  }
+}
+  
